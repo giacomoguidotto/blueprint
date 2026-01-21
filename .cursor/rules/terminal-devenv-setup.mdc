@@ -1,0 +1,288 @@
+---
+description: "Devenv-specific terminal setup for this project. Automatically detects and activates devenv environment."
+alwaysApply: true
+---
+
+# Devenv Terminal Environment Setup
+
+## Critical: All Development Tools Require Devenv
+
+**IMPORTANT**: This project uses **devenv** for ALL development tools. The ONLY tools available globally (without devenv) are:
+- `git`
+- `docker`
+
+**Everything else** requires devenv activation, including but not limited to:
+- `bun` (JavaScript/TypeScript runtime)
+- `uv` (Python package manager)
+- `cargo` (Rust toolchain)
+- `go` (Go toolchain)
+- `node`, `npm`, `pnpm`
+- `python`, `pip`
+- Any other development tools listed in `devenv.nix`
+
+## Locating the Devenv Environment
+
+### Important: Devenv May Be in Parent Directory
+
+The `devenv.nix` file and `.devenv/` directory might be located:
+
+1. **In the project root** (for owned repositories)
+2. **In a parent directory** (for third-party repositories where you don't want to modify `.gitignore` or commit devenv files)
+
+### Finding the Devenv Root
+
+Before activating, locate where devenv is configured:
+
+```bash
+# Check current directory first
+if [ -f "devenv.nix" ]; then
+  DEVENV_ROOT="."
+# Check parent directory
+elif [ -f "../devenv.nix" ]; then
+  DEVENV_ROOT=".."
+# Check two levels up
+elif [ -f "../../devenv.nix" ]; then
+  DEVENV_ROOT="../.."
+else
+  # Ask user or report error
+  echo "devenv.nix not found"
+fi
+```
+
+**Shorthand**: Look for `devenv.nix` starting from current directory and walking up parent directories.
+
+## Activation Pattern
+
+### Standard Activation (devenv in project root)
+
+```bash
+cd <project-root> && export PATH=".devenv/profile/bin:$PATH" && <command>
+```
+
+**Example** (using bun):
+```bash
+cd <project-root> && export PATH=".devenv/profile/bin:$PATH" && bun install
+```
+
+**Example** (using cargo):
+```bash
+cd <project-root> && export PATH=".devenv/profile/bin:$PATH" && cargo build
+```
+
+### Activation (devenv in parent directory)
+
+```bash
+cd <devenv-root> && export PATH=".devenv/profile/bin:$PATH" && cd <project-root> && <command>
+```
+
+**Example**:
+```bash
+cd .. && export PATH=".devenv/profile/bin:$PATH" && cd my-project && cargo test
+```
+
+### Generic Pattern (Auto-detect)
+
+For commands, prefer this pattern that works regardless of devenv location:
+
+```bash
+# Find devenv root and activate
+DEVENV_DIR=$(dirname $(find . .. ../.. -maxdepth 1 -name "devenv.nix" 2>/dev/null | head -1))
+cd "$DEVENV_DIR" && export PATH=".devenv/profile/bin:$PATH" && <command>
+```
+
+## Verification
+
+After activation, verify tools are available:
+
+```bash
+# Example for bun
+which bun && bun --version
+
+# Example for cargo
+which cargo && cargo --version
+
+# Example for go
+which go && go version
+```
+
+**Expected**: Should show path under `.devenv/profile/bin/` and proper version.
+
+## Alternative: Using direnv
+
+If direnv is configured (`.envrc` present), use `direnv exec`:
+
+```bash
+cd <devenv-root> && direnv exec . <command>
+```
+
+**Example**:
+```bash
+cd <devenv-root> && direnv exec . bun install
+```
+
+This works even if devenv is in a parent directory, as long as you execute from the directory containing `.envrc`.
+
+## Handling Activation Failures
+
+### Step 1: Locate devenv.nix
+
+```bash
+find . .. ../.. -maxdepth 1 -name "devenv.nix" 2>/dev/null
+```
+
+**Expected**: Should find `devenv.nix` in current directory or up to 2 levels up.
+
+**If not found**: Ask the user where devenv is configured.
+
+### Step 2: Check .devenv/profile exists
+
+```bash
+ls -la <devenv-root>/.devenv/profile
+```
+
+**If missing**: The devenv environment hasn't been built yet.
+
+**Solution**: User needs to run `direnv allow` (if using direnv) or `devenv shell` to initialize.
+
+### Step 3: Verify direnv status
+
+```bash
+cd <devenv-root> && direnv status
+```
+
+**Expected**: Should show that `.envrc` is allowed and loaded.
+
+**If not allowed**:
+```bash
+cd <devenv-root> && direnv allow
+```
+
+### Step 4: Use direnv exec as fallback
+
+If PATH export doesn't work:
+
+```bash
+cd <devenv-root> && direnv exec . <command>
+```
+
+### Step 5: Last resort - Rebuild
+
+```bash
+cd <devenv-root> && devenv shell
+```
+
+This rebuilds the environment if needed.
+
+## Working with Sandboxed Commands
+
+When using `run_terminal_cmd`, remember:
+
+- **Each command runs in a fresh shell** - environment variables don't persist
+- **Always chain activation and command** using `&&`
+- **Always locate devenv root first** before activating
+- **Request `network` permission** for package installation commands
+
+### Example Patterns
+
+**Good** (single chain):
+```bash
+cd <devenv-root> && export PATH=".devenv/profile/bin:$PATH" && cargo build --release
+```
+
+**Bad** (won't work - separate commands):
+```bash
+cd <devenv-root>
+export PATH=".devenv/profile/bin:$PATH"
+cargo build  # ❌ PATH not set in this shell
+```
+
+## Interactive Shell vs. Tool Commands
+
+**Interactive Shell** (Terminal.app, iTerm, etc.):
+- Direnv automatically loads environment when you `cd` into the directory containing `.envrc`
+- No manual activation needed if direnv hooks are configured
+
+**Tool Terminal Commands** (via `run_terminal_cmd`):
+- **ALWAYS** locate devenv root first
+- **ALWAYS** use the activation pattern
+- **NEVER** assume environment is pre-loaded
+- **NEVER** assume tools are globally available (except git and docker)
+
+## Project Structure Examples
+
+### Example 1: Owned Repository (devenv in root)
+
+```
+my-project/
+├── .devenv/           # Generated by devenv
+├── .envrc             # Direnv config
+├── devenv.nix         # Devenv config
+├── src/
+└── Cargo.toml
+```
+
+**Activation**:
+```bash
+cd my-project && export PATH=".devenv/profile/bin:$PATH" && cargo build
+```
+
+### Example 2: Third-party Repository (devenv in parent)
+
+```
+parent-directory/
+├── .devenv/       # Generated by devenv
+├── .envrc         # Direnv config (points to this dir)
+├── devenv.nix     # Devenv config
+└── actual-repo/
+    ├── src/
+    └── Cargo.toml     # Original repo, not modified
+```
+
+**Activation**:
+```bash
+cd parent-directory && export PATH=".devenv/profile/bin:$PATH" && cd actual-repo && cargo build
+```
+
+## Quick Reference
+
+**Locate devenv**:
+```bash
+find . .. ../.. -maxdepth 1 -name "devenv.nix" 2>/dev/null | head -1
+```
+
+**Minimal activation** (if devenv is in current dir):
+```bash
+export PATH=".devenv/profile/bin:$PATH"
+```
+
+**Full activation** (auto-locate devenv):
+```bash
+cd $(dirname $(find . .. ../.. -maxdepth 1 -name "devenv.nix" 2>/dev/null | head -1)) && export PATH=".devenv/profile/bin:$PATH"
+```
+
+**Using direnv**:
+```bash
+cd <devenv-root> && direnv exec . <command>
+```
+
+## Best Practices
+
+1. **Always locate devenv root first** - don't assume it's in project root
+2. **Check for devenv.nix** in current dir and parent dirs
+3. **Chain all operations** in a single command for sandboxed execution
+4. **Use direnv exec** as a reliable fallback
+5. **Never assume tools are globally available** (except git and docker)
+6. **Verify activation worked** before running complex operations
+7. **Request appropriate permissions** for sandboxed commands (e.g., `network` for installs)
+
+## Common Mistakes to Avoid
+
+- ❌ **Don't assume devenv is in project root**
+- ❌ **Don't assume any dev tools are globally available**
+- ❌ **Don't run activation in one command and use it in another**
+- ❌ **Don't forget to locate devenv.nix first**
+
+- ✅ **Do check for devenv.nix in current and parent directories**
+- ✅ **Do chain activation with command execution**
+- ✅ **Do use direnv exec when unsure**
+- ✅ **Do remember: only git and docker are globally available**
