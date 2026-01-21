@@ -1,11 +1,16 @@
 import { authkitMiddleware } from "@workos-inc/authkit-nextjs";
+import type { NextFetchEvent, NextRequest } from "next/server";
 
-export default authkitMiddleware({
+const authMiddleware = authkitMiddleware({
   middlewareAuth: {
     enabled: true,
     unauthenticatedPaths: ["/", "/sign-in", "/sign-up"],
   },
 });
+
+export async function proxy(req: NextRequest, ev: NextFetchEvent) {
+  return await authMiddleware(req, ev);
+}
 
 export const config = {
   matcher: [
