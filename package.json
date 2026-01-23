@@ -15,20 +15,22 @@
     "@convex-dev/workos": "^0.0.1",
     "@convex-dev/workos-authkit": "^0.1.5",
     "@workos-inc/authkit-nextjs": "^2.13.0",
-    "convex": "^1.31.5",
+    "convex": "^1.31.6",
     "next": "16.1.4",
+    "next-intl": "^4.7.0",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.11",
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
+    "@tailwindcss/postcss": "^4.1.18",
+    "@types/node": "^20.19.30",
+    "@types/react": "^19.2.9",
+    "@types/react-dom": "^19.2.3",
     "babel-plugin-react-compiler": "1.0.0",
-    "tailwindcss": "^4",
-    "typescript": "^5",
+    "tailwindcss": "^4.1.18",
+    "typescript": "^5.9.3",
     "ultracite": "7.0.12"
   },
   "ignoreScripts": [
