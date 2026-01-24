@@ -5,8 +5,7 @@
     "signOut": "Sign Out"
   },
   "home": {
-    "title": "Welcome to Prism",
-    "description": "Your app description here"
+    "title": "Blueprint"
   },
   "auth": {
     "signInTitle": "Sign in to your account",

@@ -28,13 +28,13 @@ export async function generateMetadata({
   const { locale } = await params;
 
   const titles: Record<Locale, string> = {
-    en: "Prism",
-    it: "Prism",
+    en: "Blueprint",
+    it: "Blueprint",
   };
 
   const descriptions: Record<Locale, string> = {
-    en: "Your personal life management app",
-    it: "La tua app di gestione della vita personale",
+    en: "Modern web app starter with Next.js, Convex, and TypeScript",
+    it: "Starter moderno per web app con Next.js, Convex e TypeScript",
   };
 
   function getLocaleValue<T extends Record<Locale, string>>(
@@ -52,23 +52,24 @@ export async function generateMetadata({
     return getLocaleValue(descriptions, loc);
   }
 
-  const baseUrl = "https://prism.guidotto.dev";
+  const baseUrl = "https://blueprint.example.com";
 
   return {
     metadataBase: new URL(baseUrl),
     title: {
       default: getTitle(locale),
-      template: "%s | Prism",
+      template: "%s | Blueprint",
     },
     description: getDescription(locale),
     keywords: [
-      "notes",
-      "management",
-      "colors",
-      "collaboration",
-      "project management",
-      "planning",
-      "productivity",
+      // your site-specific keywords here
+      "nextjs",
+      "react",
+      "typescript",
+      "convex",
+      "starter",
+      "template",
+      "boilerplate",
     ],
     authors: [{ name: "Giacomo Guidotto" }],
     creator: "Giacomo Guidotto",
@@ -82,7 +83,7 @@ export async function generateMetadata({
       type: "website",
       locale: locale === "it" ? "it_IT" : "en_US",
       alternateLocale: locale === "it" ? "en_US" : "it_IT",
-      siteName: "Prism",
+      siteName: "Blueprint",
       title: getTitle(locale),
       description: getDescription(locale),
     },
