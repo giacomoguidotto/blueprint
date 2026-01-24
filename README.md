@@ -61,6 +61,26 @@ A production-ready Next.js starter template with modern tooling and best practic
 - ✅ Next.js optimizations (fonts, images, code splitting)
 - ✅ Modern CSS with Tailwind 4 (faster builds)
 
+## Roadmap
+
+### ✅ Completed
+- [x] **Framework**: Next.js 16, React 19, TypeScript
+- [x] **Backend**: Convex (database, auth, real-time)
+- [x] **Auth**: WorkOS AuthKit
+- [x] **Styling**: Tailwind CSS 4, shadcn/ui, next-themes
+- [x] **i18n**: next-intl
+- [x] **Code Quality**: Biome, Ultracite, Husky
+- [x] **Dev Env**: devenv, direnv
+
+### 🚧 Planned / To Do
+- [ ] Testing framework (recommend Vitest + Playwright)
+- [ ] Analytics (Vercel Analytics, PostHog, etc.)
+- [ ] Error tracking (Sentry)
+- [ ] CI/CD pipelines
+- [ ] Database migrations tooling
+- [ ] Email service integration
+- [ ] File upload handling
+
 ## Getting Started
 
 ### Prerequisites
@@ -145,35 +165,3 @@ bun run format    # Format code
 ## Deployment
 
 Follow the various [Convex deployment guides](https://docs.convex.dev/production/hosting/) to deploy your app.
-
-## What's Included
-
-| Category | Tools |
-|----------|-------|
-| Framework | Next.js 16, React 19, TypeScript |
-| Backend | Convex (database, auth, real-time) |
-| Auth | WorkOS AuthKit |
-| Styling | Tailwind CSS 4, shadcn/ui, next-themes |
-| i18n | next-intl |
-| Code Quality | Biome, Ultracite, Husky |
-| Testing | (Add Vitest/Playwright as needed) |
-| Dev Env | devenv, direnv |
-
-## What's Not Included
-
-Add as needed based on your project:
-- Testing framework (recommend Vitest + Playwright)
-- Analytics (Vercel Analytics, PostHog, etc.)
-- Error tracking (Sentry)
-- CI/CD pipelines
-- Database migrations tooling
-- Email service integration
-- File upload handling
-
-## License
-
-MIT (or your preference)
-
-## Credits
-
-Built with modern tools and community-driven patterns. Adjust and extend as needed.

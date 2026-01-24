@@ -5,7 +5,44 @@
     "signOut": "Sign Out"
   },
   "home": {
-    "title": "Blueprint"
+    "title": "Blueprint",
+    "subtitle": "Modern web app starter",
+    "description": "Production-ready Next.js template with authentication, real-time database, i18n, and modern tooling.",
+    "getStarted": "Get Started",
+    "learnMore": "View Documentation",
+    "features": {
+      "title": "What's Included",
+      "auth": {
+        "title": "Authentication",
+        "description": "WorkOS AuthKit with SSO, magic links, and OAuth"
+      },
+      "database": {
+        "title": "Real-time Database",
+        "description": "Convex backend with type-safe queries and subscriptions"
+      },
+      "i18n": {
+        "title": "Internationalization",
+        "description": "Multi-language support with next-intl"
+      },
+      "ui": {
+        "title": "Modern UI",
+        "description": "shadcn/ui components with dark mode"
+      },
+      "security": {
+        "title": "Security First",
+        "description": "CSP headers, error boundaries, and best practices"
+      },
+      "dx": {
+        "title": "Developer Experience",
+        "description": "TypeScript, Biome, hot reload, and more"
+      }
+    },
+    "authenticated": {
+      "welcome": "Welcome back, {name}",
+      "subtitle": "You're signed in and ready to build",
+      "github": "GitHub Repository",
+      "dashboard": "Your Dashboard"
+    }
   },
   "auth": {
     "signInTitle": "Sign in to your account",
