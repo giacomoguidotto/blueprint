@@ -3,11 +3,12 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 import type { Locale } from "@/i18n/routing";
 import { routing } from "@/i18n/routing";
-import { ConvexClientProvider } from "../../lib/convex-client-provider";
+import { cn } from "@/lib/utils";
+import { ConvexClientProvider } from "../../components/providers/convex-provider";
 import "../globals.css";
-import { cn } from "@/lib/cn";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -117,7 +118,9 @@ export default async function LocaleLayout({ children, params }: Props) {
         className={cn(geistSans.variable, geistMono.variable, "antialiased")}
       >
         <NextIntlClientProvider messages={messages}>
-          <ConvexClientProvider>{children}</ConvexClientProvider>
+          <ThemeProvider>
+            <ConvexClientProvider>{children}</ConvexClientProvider>
+          </ThemeProvider>
         </NextIntlClientProvider>
       </body>
     </html>

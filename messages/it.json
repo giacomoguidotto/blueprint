@@ -16,5 +16,9 @@
     "forgotPassword": "Password dimenticata?",
     "noAccount": "Non hai un account?",
     "hasAccount": "Hai già un account?"
+  },
+  "intl": {
+    "en": "Inglese",
+    "it": "Italiano"
   }
 }

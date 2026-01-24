@@ -4,6 +4,7 @@ import { useAuth } from "@workos-inc/authkit-nextjs/components";
 import { Authenticated, Unauthenticated } from "convex/react";
 import { useTranslations } from "next-intl";
 import { LanguageSelector } from "@/components/language-selector";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Link } from "@/i18n/routing";
 
 export default function Home() {
@@ -15,6 +16,7 @@ export default function Home() {
       <div className="mb-4 flex items-center justify-between">
         <h1>{t("title")}</h1>
         <div className="flex items-center gap-3">
+          <ThemeToggle />
           <LanguageSelector />
           {user ? (
             <button onClick={() => signOut()} type="button">
