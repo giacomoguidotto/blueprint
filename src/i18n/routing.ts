@@ -9,5 +9,10 @@ export const routing = defineRouting({
 
 export type Locale = (typeof routing.locales)[number];
 
+export const localeNativeName: Record<Locale, string> = {
+  en: "English",
+  it: "Italiano",
+};
+
 export const { Link, redirect, usePathname, useRouter, getPathname } =
   createNavigation(routing);

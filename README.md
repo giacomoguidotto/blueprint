@@ -2,66 +2,34 @@
 
 A production-ready Next.js starter template with modern tooling and best practices built-in.
 
-## Stack
+## ✨ Features
 
-- **Framework**: Next.js 16 (App Router) + React 19
-- **Backend**: Convex (real-time database & auth)
-- **Authentication**: WorkOS AuthKit
-- **Styling**: Tailwind CSS 4 + shadcn/ui components
-- **i18n**: next-intl with English & Italian
-- **Type Safety**: TypeScript (strict mode)
-- **Code Quality**: Biome (linting & formatting) + Ultracite
-- **Runtime**: Bun
-- **Dev Environment**: devenv + direnv
+### Key Features
 
-## Features
+- 🔒 Modern authentication (WorkOS AuthKit) with protected routes
+- ⚡ Real-time database (Convex) with type-safe React hooks
+- 🌍 Multi-language, type-safe i18n (next-intl)
+- 🎨 shadcn/ui component library & Tailwind CSS 4
+- 🌓 Dark mode & accessible, responsive design
+- 🛡️ Security best practices (CSP, headers, env validation)
+- 🚀 Optimized for performance (React Compiler, Next.js)
+- 🧑‍💻 Fast linting/formatting (Biome), reproducible dev env (devenv)
 
-### Core Setup
-- ✅ Server & Client Components with proper data flow
-- ✅ Type-safe environment with strict TypeScript
-- ✅ Path aliases (`@/components`, `@/lib`, etc.)
-- ✅ React Compiler enabled for automatic memoization
+### Stack choices
 
-### Authentication & Data
-- ✅ WorkOS AuthKit integration (SSO, magic links, OAuth)
-- ✅ Convex real-time database with React hooks
-- ✅ Protected routes with `<Authenticated>` / `<Unauthenticated>`
-- ✅ User session management
+| **Category**    | **Choice**                                                                                  |
+| --------------- | ------------------------------------------------------------------------------------------- |
+| Framework       | [Next.js](https://nextjs.org/) 16 (App Router) + [React](https://react.dev/) 19             |
+| Backend         | [Convex](https://www.convex.dev/) (real-time database & auth)                               |
+| Authentication  | [WorkOS AuthKit](https://workos.com/authkit)                                                |
+| Styling         | [Tailwind CSS](https://tailwindcss.com/) 4 + [shadcn/ui](https://ui.shadcn.com/) components |
+| i18n            | [next-intl](https://next-intl-docs.vercel.app/)                                             |
+| Type Safety     | [TypeScript](https://www.typescriptlang.org/) (strict mode)                                 |
+| Code Quality    | [Biome](https://biomejs.dev/) (linting & formatting) + [Ultracite](https://ultracite.dev/)  |
+| Runtime         | [Bun](https://bun.sh/)                                                                      |
+| Dev Environment | [devenv](https://devenv.sh/) + [direnv](https://direnv.net/)                                |
 
-### Internationalization
-- ✅ Multi-language support (English, Italian)
-- ✅ Type-safe translations with `next-intl`
-- ✅ Language switcher component
-- ✅ SEO-optimized with `hreflang` alternates
-
-### UI/UX
-- ✅ shadcn/ui component library (customizable)
-- ✅ Dark mode with `next-themes`
-- ✅ Modern design system with CSS variables
-- ✅ Responsive layouts
-- ✅ Accessible components (ARIA, keyboard navigation)
-- ✅ Error boundaries (route & global level)
-- ✅ Loading states with skeleton loaders
-
-### Security
-- ✅ Content Security Policy (CSP) with nonces
-- ✅ Security headers (X-Frame-Options, CSP, etc.)
-- ✅ Protected routes with authentication middleware
-- ✅ Type-safe environment variables
-
-### Developer Experience
-- ✅ Biome for fast linting & formatting
-- ✅ Pre-commit hooks with Husky (auto-format staged files)
-- ✅ Hot reload for frontend & backend (`bun run dev`)
-- ✅ Reproducible dev environment (devenv)
-- ✅ VS Code & Zed settings included
-
-### Performance
-- ✅ React Compiler for optimized re-renders
-- ✅ Next.js optimizations (fonts, images, code splitting)
-- ✅ Modern CSS with Tailwind 4 (faster builds)
-
-## Roadmap
+## 🚧 Roadmap
 
 ### ✅ Completed
 - [x] **Framework**: Next.js 16, React 19, TypeScript
@@ -80,8 +48,9 @@ A production-ready Next.js starter template with modern tooling and best practic
 - [ ] Database migrations tooling
 - [ ] Email service integration
 - [ ] File upload handling
+- [ ] Renovate for dependency management
 
-## Getting Started
+## 🚀 Quickstart
 
 ### Prerequisites
 - Bun runtime
@@ -128,40 +97,68 @@ bun run lint      # Lint & check code
 bun run format    # Format code
 ```
 
-## Project Structure
+## 🛠️ Build your project on top of Blueprint
 
+### Add a new feature
+
+1. Add the entities definitions in `convex/schema.ts`
+2. Create all the feature-specific backend functions in `convex/[feature].ts`
+3. Expand the frontend using a **feature-based folder structure**.
+
+### Add a new locale
+
+1. **Register the locale** in `src/i18n/routing.ts` and add its native name:
+
+```typescript
+export const routing = defineRouting({
+  locales: ["en", "it", "es"], // Add your locale
+  defaultLocale: "en",
+  localePrefix: "always",
+});
+
+export const localeNativeName: Record<Locale, string> = {
+  en: "English",
+  it: "Italiano",
+  es: "Español", // Add its native name here
+};
 ```
-├── src/
-│   ├── app/                    # Next.js App Router
-│   │   ├── [locale]/           # i18n routes
-│   │   ├── sign-in/            # Sign in page
-│   │   ├── sign-up/            # Sign up page
-│   │   └── callback/           # Auth callback
-│   ├── components/
-│   │   ├── ui/                 # shadcn/ui components
-│   │   └── providers/          # React context providers
-│   ├── i18n/                   # Internationalization config
-│   └── lib/                    # Utilities
-├── convex/                     # Convex backend (DB + functions)
-│   ├── schema.ts               # Database schema definition
-│   ├── tasks.ts                # Example queries & mutations
-│   └── auth.config.ts          # Auth configuration
-├── messages/                   # Translation files (en, it)
-├── public/                     # Static assets
-└── .cursor/rules/              # AI assistant guidelines
+
+2. **Create translation file** in `messages/[locale].json` using the same structure as `messages/en.json`:
+
+```json
+{
+  "common": {
+    "signIn": "Iniciar sesión",
+    "signUp": "Registrarse"
+  },
+  "home": {
+    "title": "Blueprint"
+  }
+}
 ```
 
-## Configuration
+**Best Practices**:
+- Organize translations by page/feature namespace
+- Use nested keys for better organization
+- Keep translation keys descriptive
+- Provide fallback values for missing translations
+- Use parameters for dynamic content: `t("welcome", { name: "Jack" })`
 
-### Customization
+Learn more: [next-intl Documentation](https://next-intl-docs.vercel.app/)
 
-- **Colors**: Edit CSS variables in `src/app/globals.css`
-- **Components**: Add shadcn/ui components with `bunx shadcn@latest add [component]`
-- **Locales**: Add languages in `src/i18n/routing.ts` + create `messages/[locale].json`
-- **Auth**: Configure providers in `convex/auth.config.ts`
-- **Database**: Define tables in `convex/schema.ts` and create functions in `convex/*.ts`
-- **Security**: Adjust CSP directives in `src/proxy.ts` as needed for your integrations
 
-## Deployment
+### Add a new UI component
+
+Expand the components collection with shadcn/ui. 
+
+Learn more: [shadcn/ui Documentation](https://ui.shadcn.com/)
+
+### Configure the authenticated routes
+
+Configure the authentication in `convex/auth.config.ts`
+
+Learn more: [WorkOS AuthKit Documentation](https://workos.com/authkit)
+
+## 📦 Deployment
 
 Follow the various [Convex deployment guides](https://docs.convex.dev/production/hosting/) to deploy your app.

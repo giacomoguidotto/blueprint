@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckIcon, GlobeIcon, LoaderCircleIcon } from "lucide-react";
+import { CheckIcon, LanguagesIcon, LoaderCircleIcon } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useTransition } from "react";
@@ -12,13 +12,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { Locale } from "@/i18n/routing";
-import { routing, usePathname, useRouter } from "@/i18n/routing";
+import {
+  localeNativeName,
+  routing,
+  usePathname,
+  useRouter,
+} from "@/i18n/routing";
 import { cn } from "@/lib/utils";
-
-const LOCALES: Record<Locale, { label: string; nativeName: string }> = {
-  en: { label: "EN", nativeName: "English" },
-  it: { label: "IT", nativeName: "Italiano" },
-};
 
 interface LanguageSelectorProps {
   className?: string;
@@ -56,9 +56,11 @@ export function LanguageSelector({ className }: LanguageSelectorProps) {
           {isPending ? (
             <LoaderCircleIcon className="animate-spin" />
           ) : (
-            <GlobeIcon />
+            <LanguagesIcon />
           )}
-          <span className="font-semibold">{LOCALES[currentLocale].label}</span>
+          <span className="font-semibold">
+            {localeNativeName[currentLocale]}
+          </span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-[160px]">
@@ -70,7 +72,7 @@ export function LanguageSelector({ className }: LanguageSelectorProps) {
             onClick={() => handleLocaleChange(locale)}
           >
             <div className="flex flex-col gap-0.5">
-              <span className="font-medium">{LOCALES[locale].nativeName}</span>
+              <span className="font-medium">{localeNativeName[locale]}</span>
               <span className="text-muted-foreground text-xs">{t(locale)}</span>
             </div>
             {currentLocale === locale && <CheckIcon className="text-primary" />}
