@@ -12,8 +12,6 @@ import {
   Zap,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { LanguageSelector } from "@/components/language-selector";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,36 +24,14 @@ import {
 import { Link } from "@/i18n/routing";
 
 export default function Home() {
-  const t = useTranslations();
-
   return (
-    <div className="min-h-screen">
-      {/* Header */}
-      <header className="border-b">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <div className="flex items-center gap-2">
-            <div className="flex size-8 items-center justify-center rounded-lg bg-primary">
-              <Sparkles className="size-4 text-primary-foreground" />
-            </div>
-            <span className="font-semibold text-lg">{t("home.title")}</span>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <ThemeToggle />
-            <LanguageSelector />
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-16">
-        <Authenticated>
-          <AuthenticatedView />
-        </Authenticated>
-        <Unauthenticated>
-          <UnauthenticatedView />
-        </Unauthenticated>
-      </main>
+    <div className="container mx-auto px-4 py-16">
+      <Authenticated>
+        <AuthenticatedView />
+      </Authenticated>
+      <Unauthenticated>
+        <UnauthenticatedView />
+      </Unauthenticated>
     </div>
   );
 }

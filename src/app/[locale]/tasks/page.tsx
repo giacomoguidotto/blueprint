@@ -3,10 +3,8 @@
 import { useAuth } from "@workos-inc/authkit-nextjs/components";
 import { Authenticated, Unauthenticated } from "convex/react";
 import { useAtom } from "jotai";
-import { ArrowLeft, ListTodo, Plus, Sparkles } from "lucide-react";
+import { ListTodo, Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { LanguageSelector } from "@/components/language-selector";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { TaskFilters } from "@/features/tasks/components/task-filters";
 import { TaskForm } from "@/features/tasks/components/task-form";
@@ -29,43 +27,14 @@ import { Link } from "@/i18n/routing";
  * - Feature-based folder structure
  */
 export default function TasksPage() {
-  const t = useTranslations();
-
   return (
-    <div className="min-h-screen">
-      {/* Header */}
-      <header className="border-b">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <div className="flex items-center gap-4">
-            <Button asChild size="icon-sm" variant="ghost">
-              <Link aria-label={t("common.back")} href="/">
-                <ArrowLeft className="size-4" />
-              </Link>
-            </Button>
-            <div className="flex items-center gap-2">
-              <div className="flex size-8 items-center justify-center rounded-lg bg-primary">
-                <Sparkles className="size-4 text-primary-foreground" />
-              </div>
-              <span className="font-semibold text-lg">{t("tasks.title")}</span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <ThemeToggle />
-            <LanguageSelector />
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
-        <Authenticated>
-          <AuthenticatedTasksView />
-        </Authenticated>
-        <Unauthenticated>
-          <UnauthenticatedView />
-        </Unauthenticated>
-      </main>
+    <div className="container mx-auto px-4 py-8">
+      <Authenticated>
+        <AuthenticatedTasksView />
+      </Authenticated>
+      <Unauthenticated>
+        <UnauthenticatedView />
+      </Unauthenticated>
     </div>
   );
 }
