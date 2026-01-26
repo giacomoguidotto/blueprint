@@ -11,7 +11,7 @@
     "subtitle": "Starter per web app moderne",
     "description": "Template Next.js pronto per la produzione con autenticazione, database in tempo reale, i18n e strumenti moderni.",
     "getStarted": "Inizia",
-    "learnMore": "Vedi Documentazione",
+    "learnMore": "Vedi Repository",
     "features": {
       "title": "Cosa Include",
       "auth": {

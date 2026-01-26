@@ -1,14 +1,12 @@
 "use client";
 
 import { Authenticated, Unauthenticated } from "convex/react";
-import { ArrowLeft, Sparkles } from "lucide-react";
-import { useSelectedLayoutSegments } from "next/navigation";
+import { Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { AuthButtons } from "@/components/auth/auth-buttons";
 import { UserMenu } from "@/components/auth/user-menu";
 import { LanguageSelector } from "@/components/controls/language-selector";
 import { ThemeToggle } from "@/components/controls/theme-toggle";
-import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/routing";
 
 /**
@@ -28,23 +26,12 @@ import { Link } from "@/i18n/routing";
  */
 export function Header() {
   const t = useTranslations();
-  const segments = useSelectedLayoutSegments();
-
-  // Show back button if we're not at the locale root (e.g., /en/tasks has segments ["tasks"])
-  const showBackButton = segments.length > 0;
 
   return (
     <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="container mx-auto flex h-16 items-center justify-between gap-4 px-4">
         {/* Left: Back button + Logo */}
         <div className="flex items-center gap-3">
-          {showBackButton && (
-            <Button asChild size="icon-sm" variant="ghost">
-              <Link aria-label={t("common.back")} href="/">
-                <ArrowLeft className="size-4" />
-              </Link>
-            </Button>
-          )}
           <Link
             className="flex items-center gap-2 transition-opacity hover:opacity-80"
             href="/"

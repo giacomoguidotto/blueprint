@@ -97,7 +97,7 @@ function UnauthenticatedView() {
           </Button>
           <Button asChild size="lg" variant="outline">
             <a
-              href="https://github.com/yourusername/blueprint"
+              href="https://github.com/giacomoguidotto/blueprint"
               rel="noopener noreferrer"
               target="_blank"
             >
