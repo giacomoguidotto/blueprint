@@ -2,12 +2,13 @@
   "common": {
     "signIn": "Accedi",
     "signUp": "Registrati",
-    "signOut": "Esci"
+    "signOut": "Esci",
+    "back": "Torna indietro"
   },
   "home": {
     "title": "Blueprint",
-    "subtitle": "Starter moderno per web app",
-    "description": "Template Next.js pronto per la produzione con autenticazione, database real-time, i18n e strumenti moderni.",
+    "subtitle": "Starter per web app moderne",
+    "description": "Template Next.js pronto per la produzione con autenticazione, database in tempo reale, i18n e strumenti moderni.",
     "getStarted": "Inizia",
     "learnMore": "Vedi Documentazione",
     "features": {
@@ -17,23 +18,23 @@
         "description": "WorkOS AuthKit con SSO, magic link e OAuth"
       },
       "database": {
-        "title": "Database Real-time",
+        "title": "Database in Tempo Reale",
         "description": "Backend Convex con query type-safe e sottoscrizioni"
       },
       "i18n": {
         "title": "Internazionalizzazione",
-        "description": "Supporto multi-lingua con next-intl"
+        "description": "Supporto multilingua con next-intl"
       },
       "ui": {
         "title": "UI Moderna",
-        "description": "Componenti shadcn/ui con modalità scura"
+        "description": "Componenti shadcn/ui con tema scuro"
       },
       "security": {
-        "title": "Sicurezza Prioritaria",
+        "title": "Sicurezza Prima",
         "description": "Header CSP, error boundary e best practice"
       },
       "dx": {
-        "title": "Esperienza Sviluppatore",
+        "title": "Developer Experience",
         "description": "TypeScript, Biome, hot reload e altro"
       }
     },
@@ -41,7 +42,85 @@
       "welcome": "Bentornato, {name}",
       "subtitle": "Hai effettuato l'accesso e sei pronto a costruire",
       "github": "Repository GitHub",
-      "dashboard": "La Tua Dashboard"
+      "tasks": "Gestione Attività",
+      "tasksDescription": "Esplora le funzionalità real-time di Convex con un gestore di attività completo.",
+      "openTasks": "Apri Attività"
+    }
+  },
+  "tasks": {
+    "title": "Attività",
+    "heading": "Le Mie Attività",
+    "subheading": "Gestisci le tue attività con aggiornamenti in tempo reale powered by Convex",
+    "addTask": "Nuova Attività",
+    "signOut": "Esci",
+    "filter": {
+      "all": "Tutte",
+      "todo": "Da Fare",
+      "in_progress": "In Corso",
+      "done": "Completate",
+      "archived": "Archiviate"
+    },
+    "status": {
+      "todo": "Da Fare",
+      "in_progress": "In Corso",
+      "done": "Completata",
+      "archived": "Archiviata"
+    },
+    "priority": {
+      "low": "Bassa",
+      "medium": "Media",
+      "high": "Alta"
+    },
+    "actions": {
+      "menu": "Azioni attività",
+      "markTodo": "Segna come Da Fare",
+      "markInProgress": "Segna come In Corso",
+      "markDone": "Segna come Completata",
+      "archive": "Archivia",
+      "delete": "Elimina",
+      "moveTo": {
+        "in_progress": "Inizia",
+        "done": "Completa"
+      }
+    },
+    "form": {
+      "title": "Nuova Attività",
+      "description": "Crea una nuova attività da monitorare",
+      "titleLabel": "Titolo",
+      "titlePlaceholder": "Cosa bisogna fare?",
+      "descriptionLabel": "Descrizione",
+      "descriptionPlaceholder": "Aggiungi maggiori dettagli su questa attività...",
+      "priorityLabel": "Priorità",
+      "priorityPlaceholder": "Seleziona priorità",
+      "dueDateLabel": "Scadenza",
+      "tagsLabel": "Tag",
+      "tagsPlaceholder": "lavoro, personale, urgente",
+      "tagsHint": "Separa i tag con virgole",
+      "submit": "Crea Attività",
+      "cancel": "Annulla",
+      "priority": {
+        "low": "Bassa",
+        "medium": "Media",
+        "high": "Alta"
+      }
+    },
+    "empty": {
+      "title": "Nessuna attività",
+      "description": "Crea la tua prima attività per iniziare",
+      "filtered": "Nessuna attività corrisponde al filtro attuale"
+    },
+    "convexFeatures": {
+      "title": "Funzionalità Convex Dimostrate",
+      "realtime": "Sottoscrizioni real-time: Le modifiche si sincronizzano istantaneamente",
+      "typeSafe": "Query type-safe: Tipi generati dal tuo schema",
+      "transactions": "Transazioni ACID: Tutte le mutazioni sono atomiche",
+      "indexes": "Indici database: Query veloci con indici composti"
+    },
+    "unauthenticated": {
+      "title": "Demo Gestione Attività",
+      "description": "Accedi per esplorare le funzionalità real-time di Convex con un gestore di attività completo.",
+      "signIn": "Accedi",
+      "signUp": "Crea Account"
     }
   },
   "auth": {

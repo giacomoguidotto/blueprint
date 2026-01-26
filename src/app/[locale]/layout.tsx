@@ -3,11 +3,11 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
+import { ConvexClientProvider } from "@/components/providers/convex-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import type { Locale } from "@/i18n/routing";
 import { routing } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
-import { ConvexClientProvider } from "../../components/providers/convex-provider";
 import "../globals.css";
 
 const geistSans = Geist({

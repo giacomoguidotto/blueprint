@@ -204,16 +204,13 @@ function AuthenticatedView() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Database className="size-5" />
-              {t("dashboard")}
+              {t("tasks")}
             </CardTitle>
-            <CardDescription>
-              Build your application using the included database schema and
-              real-time queries.
-            </CardDescription>
+            <CardDescription>{t("tasksDescription")}</CardDescription>
           </CardHeader>
           <CardContent>
             <Button asChild>
-              <Link href="/dashboard">Open Dashboard</Link>
+              <Link href="/tasks">{t("openTasks")}</Link>
             </Button>
           </CardContent>
         </Card>
