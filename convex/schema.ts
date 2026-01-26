@@ -16,33 +16,17 @@ export default defineSchema({
    * Stores user profile information synchronized with WorkOS Auth.
    */
   users: defineTable({
-    // WorkOS token identifier for authentication
-    tokenIdentifier: v.string(),
-    // User's full name
-    name: v.string(),
-    // User's email address
-    email: v.string(),
-    // Optional profile picture URL
-    avatarUrl: v.optional(v.string()),
-    // Optional bio/description
-    bio: v.optional(v.string()),
+    // WorkOS user ID (matches identity.subject from JWT)
+    authId: v.string(),
     // User preferences
     preferences: v.optional(
       v.object({
-        locale: v.union(v.literal("en"), v.literal("it")),
-        theme: v.union(
-          v.literal("light"),
-          v.literal("dark"),
-          v.literal("system")
-        ),
         notifications: v.boolean(),
       })
     ),
   })
-    // Index for fast lookups by authentication token
-    .index("by_token", ["tokenIdentifier"])
-    // Index for email lookups (e.g., for search/invites)
-    .index("by_email", ["email"]),
+    // Index for fast lookups by WorkOS user ID
+    .index("by_auth_id", ["authId"]),
 
   /**
    * Example: Tasks table

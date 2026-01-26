@@ -41,14 +41,17 @@ A production-ready Next.js starter template with modern tooling and best practic
 - [x] **Dev Env**: devenv, direnv
 
 ### 🚧 Planned / To Do
-- [ ] Testing framework (recommend Vitest + Playwright)
-- [ ] Analytics (Vercel Analytics, PostHog, etc.)
-- [ ] Error tracking (Sentry)
+- [ ] Effect integration
+- [ ] Jotai for state management
+- [ ] Vitest + Playwright for testing
+- [ ] PostHog for analytics
+- [ ] Sentry for error tracking
 - [ ] CI/CD pipelines
+- [ ] Renovate for dependency management
+- [ ] CodeRabbit for AI code review
 - [ ] Database migrations tooling
 - [ ] Email service integration
 - [ ] File upload handling
-- [ ] Renovate for dependency management
 
 ## 🚀 Quickstart
 

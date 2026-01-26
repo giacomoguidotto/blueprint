@@ -19,18 +19,15 @@ export const getTasks = query({
     ),
   },
   handler: async (ctx, { status }) => {
-    // Get the current user from WorkOS auth
+    // Get the current user
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       throw new Error("Not authenticated");
     }
 
-    // Look up the user by their token identifier
     const user = await ctx.db
       .query("users")
-      .withIndex("by_token", (q) =>
-        q.eq("tokenIdentifier", identity.tokenIdentifier)
-      )
+      .withIndex("by_auth_id", (q) => q.eq("authId", identity.subject))
       .unique();
 
     if (!user) {
@@ -42,8 +39,8 @@ export const getTasks = query({
       .query("tasks")
       .withIndex("by_user", (q) => q.eq("userId", user._id));
 
-    // Optional: filter by status
     if (status) {
+      // Optional: filter by status
       tasksQuery = ctx.db
         .query("tasks")
         .withIndex("by_user_and_status", (q) =>
@@ -79,9 +76,7 @@ export const createTask = mutation({
 
     const user = await ctx.db
       .query("users")
-      .withIndex("by_token", (q) =>
-        q.eq("tokenIdentifier", identity.tokenIdentifier)
-      )
+      .withIndex("by_auth_id", (q) => q.eq("authId", identity.subject))
       .unique();
 
     if (!user) {
@@ -120,9 +115,7 @@ export const updateTaskStatus = mutation({
 
     const user = await ctx.db
       .query("users")
-      .withIndex("by_token", (q) =>
-        q.eq("tokenIdentifier", identity.tokenIdentifier)
-      )
+      .withIndex("by_auth_id", (q) => q.eq("authId", identity.subject))
       .unique();
 
     if (!user) {
@@ -159,9 +152,7 @@ export const deleteTask = mutation({
 
     const user = await ctx.db
       .query("users")
-      .withIndex("by_token", (q) =>
-        q.eq("tokenIdentifier", identity.tokenIdentifier)
-      )
+      .withIndex("by_auth_id", (q) => q.eq("authId", identity.subject))
       .unique();
 
     if (!user) {
