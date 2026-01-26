@@ -42,7 +42,6 @@ A production-ready Next.js starter template with modern tooling and best practic
 
 ### 🚧 Planned / To Do
 - [ ] Effect integration
-- [ ] Jotai for state management
 - [ ] Vitest + Playwright for testing
 - [ ] PostHog for analytics
 - [ ] Sentry for error tracking
