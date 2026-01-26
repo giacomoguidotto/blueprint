@@ -3,7 +3,8 @@
     "signIn": "Sign In",
     "signUp": "Sign Up",
     "signOut": "Sign Out",
-    "back": "Go back"
+    "back": "Go back",
+    "profile": "Profile"
   },
   "home": {
     "title": "Blueprint",

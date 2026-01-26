@@ -16,6 +16,7 @@
     "@convex-dev/workos": "^0.0.1",
     "@convex-dev/workos-authkit": "^0.1.5",
     "@hookform/resolvers": "^5.2.2",
+    "@radix-ui/react-avatar": "^1.1.11",
     "@radix-ui/react-dropdown-menu": "^2.1.16",
     "@radix-ui/react-label": "^2.1.8",
     "@radix-ui/react-select": "^2.2.6",

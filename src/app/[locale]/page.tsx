@@ -135,24 +135,6 @@ function UnauthenticatedView() {
           })}
         </div>
       </div>
-
-      {/* CTA Section */}
-      <div className="mx-auto max-w-2xl rounded-lg border bg-muted/50 p-8 text-center">
-        <div className="space-y-4">
-          <h3 className="font-semibold text-2xl">{t("getStarted")}</h3>
-          <p className="text-muted-foreground">
-            Sign up to explore the full capabilities of this template.
-          </p>
-          <div className="flex justify-center gap-3">
-            <Button asChild>
-              <Link href="/sign-up">{t("getStarted")}</Link>
-            </Button>
-            <Button asChild variant="ghost">
-              <Link href="/sign-in">Sign In</Link>
-            </Button>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

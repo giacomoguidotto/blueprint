@@ -41,7 +41,6 @@ A production-ready Next.js starter template with modern tooling and best practic
 - [x] **Dev Env**: devenv, direnv
 
 ### 🚧 Planned / To Do
-- [ ] Effect integration
 - [ ] Vitest + Playwright for testing
 - [ ] PostHog for analytics
 - [ ] Sentry for error tracking
@@ -51,6 +50,7 @@ A production-ready Next.js starter template with modern tooling and best practic
 - [ ] Database migrations tooling
 - [ ] Email service integration
 - [ ] File upload handling
+- [ ] Effect integration
 
 ## 🚀 Quickstart
 
@@ -99,17 +99,37 @@ bun run lint      # Lint & check code
 bun run format    # Format code
 ```
 
+## 📦 Deployment
+
+Follow the various [Convex deployment guides](https://docs.convex.dev/production/hosting/) to deploy your app.
+
 ## 🛠️ Build your project on top of Blueprint
+
+### Configure the app metadata
+
+Configure the app metadata in `src/app/[locale]/layout.tsx`
+
+Learn more: [Next.js Metadata Documentation](https://nextjs.org/docs/app/building-your-application/optimizing/metadata)
+
+
+### Configure the authenticated routes
+
+All routes are protected by authentication by default. To add an unauthenticated route, add it to the `unauthenticatedPaths` array in `src/proxy.ts`
+
+Learn more: [WorkOS AuthKit Documentation](https://workos.com/docs)
 
 ### Add a new feature
 
+The usual workflow:
+
 1. Add the entities definitions in `convex/schema.ts`
 2. Create all the feature-specific backend functions in `convex/[feature].ts`
-3. Expand the frontend using a **feature-based folder structure**.
+3. Create the feature-specific frontend components in `src/features/[feature]/`
+4. Extend the app routing, making sure to handle also the loading state and the error boundaries
 
 ### Add a new locale
 
-1. **Register the locale** in `src/i18n/routing.ts` and add its native name:
+First, register the locale in `src/i18n/routing.ts` and add its native name:
 
 ```typescript
 export const routing = defineRouting({
@@ -125,7 +145,7 @@ export const localeNativeName: Record<Locale, string> = {
 };
 ```
 
-2. **Create translation file** in `messages/[locale].json` using the same structure as `messages/en.json`:
+Then, create the translation file in `messages/[locale].json` using the same structure as `messages/en.json`:
 
 ```json
 {
@@ -139,28 +159,16 @@ export const localeNativeName: Record<Locale, string> = {
 }
 ```
 
-**Best Practices**:
-- Organize translations by page/feature namespace
-- Use nested keys for better organization
-- Keep translation keys descriptive
-- Provide fallback values for missing translations
-- Use parameters for dynamic content: `t("welcome", { name: "Jack" })`
-
 Learn more: [next-intl Documentation](https://next-intl-docs.vercel.app/)
 
+## 🎯 Best Practices Followed
 
-### Add a new UI component
+This project embeds production-grade patterns and architectural decisions:
 
-Expand the components collection with shadcn/ui. 
+- **Feature-based folder structure** (`src/features/[feature]/`): co-locates components, types, and state per feature for better maintainability and scalability
+- **Single source of truth**: configuration (routing, locales, auth) defined once and imported everywhere, eliminating drift and duplication
+- **shadcn/ui first**: composable, accessible components that you own and customize, not a rigid library dependency
+- **Separation of concerns**: clear frontend/backend boundaries (Next.js/Convex), avoiding tangled logic and improving testability
+- **Zero code duplication**: shared UI components (`src/components/ui/`), reusable layouts, and centralized utilities
 
-Learn more: [shadcn/ui Documentation](https://ui.shadcn.com/)
-
-### Configure the authenticated routes
-
-Configure the authentication in `convex/auth.config.ts`
-
-Learn more: [WorkOS AuthKit Documentation](https://workos.com/authkit)
-
-## 📦 Deployment
-
-Follow the various [Convex deployment guides](https://docs.convex.dev/production/hosting/) to deploy your app.
+**Why these choices?** They reduce cognitive load, prevent common bugs, make onboarding faster, and ensure the codebase scales cleanly from prototype to production.
