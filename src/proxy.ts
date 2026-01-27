@@ -29,13 +29,15 @@ const authMiddleware = authkitMiddleware({
  *
  * @see https://nextjs.org/docs/app/guides/content-security-policy
  */
-function generateCSPHeader(nonce: string): string {
-  const isDev = process.env.NODE_ENV === "development";
+function generateCSPHeader(_nonce: string): string {
+  // const isDev = process.env.NODE_ENV === "development";
 
   const cspDirectives = [
     `default-src 'self'`,
-    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' ${isDev ? "'unsafe-eval'" : ""}`,
-    `style-src 'self' ${isDev ? "'unsafe-inline'" : `'nonce-${nonce}'`}`,
+    // `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' ${isDev ? "'unsafe-eval'" : ""}`,
+    // `style-src 'self' ${isDev ? "'unsafe-inline'" : `'nonce-${nonce}'`}`,
+    `script-src 'self' 'unsafe-inline' 'unsafe-eval'`,
+    `style-src 'self' 'unsafe-inline'`,
     `img-src 'self' data: blob: https:`,
     `font-src 'self' data:`,
     `connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://api.workos.com`,
