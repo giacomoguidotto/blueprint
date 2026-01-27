@@ -40,7 +40,7 @@ function generateCSPHeader(_nonce: string): string {
     `style-src 'self' 'unsafe-inline'`,
     `img-src 'self' data: blob: https:`,
     `font-src 'self' data:`,
-    `connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://api.workos.com`,
+    // `connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://api.workos.com`,
     `frame-ancestors 'none'`,
     `base-uri 'self'`,
     `form-action 'self'`,
