@@ -10,6 +10,7 @@ import type { Locale } from "@/i18n/routing";
 import { routing } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 import "../globals.css";
+import { getNonce } from "@/lib/security";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -110,6 +111,11 @@ export default async function LocaleLayout({ children, params }: Props) {
   if (!hasLocale(routing.locales, locale)) {
     notFound();
   }
+
+  // CRITICAL: Force dynamic rendering by reading headers
+  // This is required for nonce-based CSP to work properly
+  // Without this, pages will be statically generated and nonces won't be injected
+  await getNonce();
 
   setRequestLocale(locale);
   const messages = await getMessages();
