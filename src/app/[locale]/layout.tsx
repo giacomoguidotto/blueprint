@@ -10,6 +10,7 @@ import type { Locale } from "@/i18n/routing";
 import { routing } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 import "../globals.css";
+import { getNonce } from "@/lib/security";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -110,6 +111,9 @@ export default async function LocaleLayout({ children, params }: Props) {
   if (!hasLocale(routing.locales, locale)) {
     notFound();
   }
+
+  // force dynamic rendering to make nonce working properly
+  await getNonce();
 
   setRequestLocale(locale);
   const messages = await getMessages();

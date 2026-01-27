@@ -1,5 +1,9 @@
 import { authkitMiddleware } from "@workos-inc/authkit-nextjs";
-import type { NextFetchEvent, NextRequest, NextResponse } from "next/server";
+import {
+  type NextFetchEvent,
+  NextRequest,
+  type NextResponse,
+} from "next/server";
 import createIntlMiddleware from "next-intl/middleware";
 import { routing } from "./i18n/routing";
 
@@ -22,16 +26,20 @@ const authMiddleware = authkitMiddleware({
  *
  * Protects against XSS attacks, clickjacking, and code injection.
  * Uses nonce-based CSP for inline scripts and styles.
+ *
+ * @see https://nextjs.org/docs/app/guides/content-security-policy
  */
 function generateCSPHeader(nonce: string): string {
   const isDev = process.env.NODE_ENV === "development";
 
   const cspDirectives = [
     `default-src 'self'`,
-    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https:`,
-    isDev
-      ? `style-src 'self' 'unsafe-inline'`
-      : `style-src 'self' 'nonce-${nonce}'`,
+    // `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' ${isDev ? `'unsafe-eval'` : ""}`,
+    // `style-src 'self' ${isDev ? `'unsafe-inline'` : `'nonce-${nonce}'`}`,
+    `script-src 'self' 'unsafe-inline' ${isDev ? `'unsafe-eval'` : `'nonce-${nonce}'`}`,
+    `style-src 'self' 'unsafe-inline' ${isDev ? "" : `'nonce-${nonce}'`}`,
+    // `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' ${isDev ? "'unsafe-eval'" : ""}`,
+    // `style-src 'self' ${isDev ? "'unsafe-inline'" : `'nonce-${nonce}'`}`,
     `img-src 'self' data: blob: https:`,
     `font-src 'self' data:`,
     `connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://api.workos.com`,
@@ -44,7 +52,22 @@ function generateCSPHeader(nonce: string): string {
   return cspDirectives.join("; ");
 }
 
-export async function proxy(request: NextRequest, event: NextFetchEvent) {
+export async function proxy(
+  initialRequest: NextRequest,
+  event: NextFetchEvent
+) {
+  const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
+  const cspHeader = generateCSPHeader(nonce);
+
+  // set CSP header and nonce in request
+  const requestHeaders = new Headers(initialRequest.headers);
+  requestHeaders.set("x-nonce", nonce);
+  requestHeaders.set("Content-Security-Policy", cspHeader);
+
+  const request = new NextRequest(initialRequest, {
+    headers: requestHeaders,
+  });
+
   const intlResponse = intlMiddleware(request);
 
   if (
@@ -73,12 +96,8 @@ export async function proxy(request: NextRequest, event: NextFetchEvent) {
     }
   }
 
-  // setting CSP header with nonce
-  const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
-  const cspHeader = generateCSPHeader(nonce);
+  // set CSP header and nonce in response
   response.headers.set("Content-Security-Policy", cspHeader);
-
-  // nonce available to the app via header
   response.headers.set("x-nonce", nonce);
 
   return response;
@@ -86,8 +105,24 @@ export async function proxy(request: NextRequest, event: NextFetchEvent) {
 
 export const config = {
   matcher: [
-    // Match all paths except internals, static files, and callback
-    "/((?!_next|callback|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    "/(api|trpc)(.*)",
+    /**
+     * Match all request paths except:
+     * - _next/static (static files)
+     * - _next/image (image optimization)
+     * - favicon.ico, other static assets
+     * - callback (auth callback)
+     */
+    {
+      source:
+        "/((?!_next/static|_next/image|callback|favicon.ico|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+      // Exclude prefetch requests (next/link prefetching)
+      missing: [
+        { type: "header", key: "next-router-prefetch" },
+        { type: "header", key: "purpose", value: "prefetch" },
+      ],
+    },
+    {
+      source: "/(api|trpc)(.*)",
+    },
   ],
 };
