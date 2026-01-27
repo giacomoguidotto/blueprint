@@ -34,12 +34,8 @@ function generateCSPHeader(nonce: string): string {
 
   const cspDirectives = [
     `default-src 'self'`,
-    // `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' ${isDev ? `'unsafe-eval'` : ""}`,
-    // `style-src 'self' ${isDev ? `'unsafe-inline'` : `'nonce-${nonce}'`}`,
-    `script-src 'self' 'unsafe-inline' ${isDev ? `'unsafe-eval'` : `'nonce-${nonce}'`}`,
-    `style-src 'self' 'unsafe-inline' ${isDev ? "" : `'nonce-${nonce}'`}`,
-    // `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' ${isDev ? "'unsafe-eval'" : ""}`,
-    // `style-src 'self' ${isDev ? "'unsafe-inline'" : `'nonce-${nonce}'`}`,
+    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' ${isDev ? "'unsafe-eval'" : ""}`,
+    `style-src 'self' ${isDev ? "'unsafe-inline'" : `'nonce-${nonce}'`}`,
     `img-src 'self' data: blob: https:`,
     `font-src 'self' data:`,
     `connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://api.workos.com`,

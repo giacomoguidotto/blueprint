@@ -111,9 +111,6 @@ export default async function LocaleLayout({ children, params }: Props) {
     notFound();
   }
 
-  // force dynamic rendering to make nonce working properly
-  // await getNonce();
-
   setRequestLocale(locale);
   const messages = await getMessages();
 
