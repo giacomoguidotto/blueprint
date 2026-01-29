@@ -30,39 +30,39 @@ const authMiddleware = authkitMiddleware({
  *
  * @see https://nextjs.org/docs/app/guides/content-security-policy
  */
-// function generateCSPHeader(nonce: string): string {
-//   const isDev = process.env.NODE_ENV === "development";
+function generateCSPHeader(nonce: string): string {
+  const isDev = process.env.NODE_ENV === "development";
 
-//   const cspDirectives = [
-//     `default-src 'self'`,
-//     // Development: Allow unsafe-inline and unsafe-eval for hot reloading
-//     // Production: Use nonce with unsafe-inline as fallback for older browsers
-//     isDev
-//       ? `script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live`
-//       : `script-src 'self' 'nonce-${nonce}' 'unsafe-inline' https://vercel.live`,
-//     isDev
-//       ? `style-src 'self' 'unsafe-inline'`
-//       : `style-src 'self' 'nonce-${nonce}' 'unsafe-inline'`,
-//     `img-src 'self' data: blob: https:`,
-//     `font-src 'self' data:`,
-//     // Allow connections to Convex backend, WorkOS auth, and Vercel Live
-//     `connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://api.workos.com https://vercel.live`,
-//     // Allow forms to submit to WorkOS auth endpoints
-//     `form-action 'self' https://api.workos.com`,
-//     `frame-ancestors 'none'`,
-//     `base-uri 'self'`,
-//     "upgrade-insecure-requests",
-//   ];
+  const cspDirectives = [
+    `default-src 'self'`,
+    // Development: Allow unsafe-inline and unsafe-eval for hot reloading
+    // Production: Use nonce with unsafe-inline as fallback for older browsers
+    isDev
+      ? `script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live`
+      : `script-src 'self' 'nonce-${nonce}' 'unsafe-inline' https://vercel.live`,
+    isDev
+      ? `style-src 'self' 'unsafe-inline'`
+      : `style-src 'self' 'nonce-${nonce}' 'unsafe-inline'`,
+    `img-src 'self' data: blob: https:`,
+    `font-src 'self' data:`,
+    // Allow connections to Convex backend, WorkOS auth, and Vercel Live
+    `connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://api.workos.com https://vercel.live`,
+    // Allow forms to submit to WorkOS auth endpoints
+    `form-action 'self' https://api.workos.com`,
+    `frame-ancestors 'none'`,
+    `base-uri 'self'`,
+    "upgrade-insecure-requests",
+  ];
 
-//   return cspDirectives.join("; ");
-// }
+  return cspDirectives.join("; ");
+}
 
 export async function proxy(
   initialRequest: NextRequest,
   event: NextFetchEvent
 ) {
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
-  // const cspHeader = generateCSPHeader(nonce);
+  const cspHeader = generateCSPHeader(nonce);
 
   // Add nonce to request headers so Next.js can apply it during SSR
   const requestHeaders = new Headers(initialRequest.headers);
@@ -101,7 +101,7 @@ export async function proxy(
   }
 
   // Set CSP header and nonce in response
-  // response.headers.set("Content-Security-Policy", cspHeader);
+  response.headers.set("Content-Security-Policy", cspHeader);
   response.headers.set("x-nonce", nonce);
 
   return response;
