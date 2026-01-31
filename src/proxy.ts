@@ -45,10 +45,11 @@ function generateCSPHeader(nonce: string): string {
       : `style-src 'self' 'nonce-${nonce}' 'unsafe-inline'`,
     `img-src 'self' data: blob: https:`,
     `font-src 'self' data:`,
-    // Allow connections to Convex backend, WorkOS auth, and Vercel Live
-    `connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://api.workos.com https://vercel.live`,
-    // Allow forms to submit to WorkOS auth endpoints
-    `form-action 'self' https://api.workos.com`,
+    // Add authkit.workos.com for the hosted UI iframe/redirects
+    `connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://api.workos.com https://authkit.workos.com https://vercel.live`,
+    `form-action 'self' https://api.workos.com https://authkit.workos.com`,
+    // Allow framing from WorkOS for hosted AuthKit
+    `frame-src 'self' https://authkit.workos.com`,
     `frame-ancestors 'none'`,
     `base-uri 'self'`,
     "upgrade-insecure-requests",
