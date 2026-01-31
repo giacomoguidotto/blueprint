@@ -38,8 +38,8 @@ function generateCSPHeader(nonce: string): string {
     // Development: Allow unsafe-inline and unsafe-eval for hot reloading
     // Production: Use nonce with unsafe-inline as fallback for older browsers
     isDev
-      ? `script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live`
-      : `script-src 'self' 'nonce-${nonce}' 'unsafe-inline' https://vercel.live`,
+      ? `script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live https://challenges.cloudflare.com`
+      : `script-src 'self' 'nonce-${nonce}' https://vercel.live https://challenges.cloudflare.com`,
     isDev
       ? `style-src 'self' 'unsafe-inline'`
       : `style-src 'self' 'nonce-${nonce}' 'unsafe-inline'`,
