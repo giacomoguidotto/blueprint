@@ -4,13 +4,14 @@ import { useAuth } from "@workos-inc/authkit-nextjs/components";
 import { Authenticated, Unauthenticated } from "convex/react";
 import {
   Database,
-  Github,
+  GitBranch,
   Globe,
   Lock,
   Palette,
   Sparkles,
   Zap,
 } from "lucide-react";
+import { motion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -75,14 +76,28 @@ function UnauthenticatedView() {
   return (
     <div className="space-y-16">
       {/* Hero Section */}
-      <div className="mx-auto max-w-3xl space-y-8 text-center">
+      <motion.div
+        animate={{ opacity: 1, y: 0 }}
+        className="mx-auto max-w-3xl space-y-8 text-center"
+        initial={{ opacity: 0, y: -20 }}
+        transition={{ duration: 0.2 }}
+      >
         <div className="space-y-4">
-          <Badge className="px-3 py-1" variant="secondary">
-            <Sparkles className="mr-1.5 size-3" />
-            {t("subtitle")}
-          </Badge>
+          <motion.div
+            animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            transition={{ delay: 0.1, duration: 0.15 }}
+          >
+            <Badge
+              className="border-brutal px-3 py-1 shadow-brutal-sm"
+              variant="secondary"
+            >
+              <Sparkles className="mr-1.5 size-3" />
+              {t("subtitle")}
+            </Badge>
+          </motion.div>
 
-          <h1 className="font-bold text-5xl tracking-tight sm:text-6xl">
+          <h1 className="font-bold font-mono text-5xl tracking-tight sm:text-6xl">
             {t("title")}
           </h1>
 
@@ -91,11 +106,16 @@ function UnauthenticatedView() {
           </p>
         </div>
 
-        <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <Button asChild size="lg">
+        <motion.div
+          animate={{ opacity: 1, y: 0 }}
+          className="flex flex-col items-center justify-center gap-3 sm:flex-row"
+          initial={{ opacity: 0, y: 10 }}
+          transition={{ delay: 0.2, duration: 0.15 }}
+        >
+          <Button asChild className="border-brutal shadow-brutal" size="lg">
             <Link href="/sign-up">{t("getStarted")}</Link>
           </Button>
-          <Button asChild size="lg" variant="outline">
+          <Button asChild className="border-brutal" size="lg" variant="outline">
             <a
               href="https://github.com/giacomoguidotto/blueprint"
               rel="noopener noreferrer"
@@ -104,33 +124,45 @@ function UnauthenticatedView() {
               {t("learnMore")}
             </a>
           </Button>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
       {/* Features Grid */}
       <div className="space-y-8">
-        <div className="text-center">
-          <h2 className="font-semibold text-3xl tracking-tight">
+        <motion.div
+          animate={{ opacity: 1 }}
+          className="text-center"
+          initial={{ opacity: 0 }}
+          transition={{ delay: 0.3, duration: 0.15 }}
+        >
+          <h2 className="font-mono font-semibold text-3xl tracking-tight">
             {t("features.title")}
           </h2>
-        </div>
+        </motion.div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {features.map((feature) => {
+          {features.map((feature, i) => {
             const Icon = feature.icon;
             return (
-              <Card
-                className="transition-colors hover:border-primary/50"
+              <motion.div
+                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 20 }}
                 key={feature.title}
+                transition={{ delay: 0.3 + i * 0.1, duration: 0.2 }}
+                whileHover={{ x: -2, y: -2 }}
               >
-                <CardHeader>
-                  <div className="mb-2 flex size-10 items-center justify-center rounded-lg bg-primary/10">
-                    <Icon className="size-5 text-primary" />
-                  </div>
-                  <CardTitle className="text-xl">{feature.title}</CardTitle>
-                  <CardDescription>{feature.description}</CardDescription>
-                </CardHeader>
-              </Card>
+                <Card className="border-brutal shadow-brutal transition-all hover:shadow-brutal-sm">
+                  <CardHeader>
+                    <div className="mb-2 flex size-10 items-center justify-center bg-primary">
+                      <Icon className="size-5 text-primary-foreground" />
+                    </div>
+                    <CardTitle className="font-mono text-xl">
+                      {feature.title}
+                    </CardTitle>
+                    <CardDescription>{feature.description}</CardDescription>
+                  </CardHeader>
+                </Card>
+              </motion.div>
             );
           })}
         </div>
@@ -149,86 +181,117 @@ function AuthenticatedView() {
   return (
     <div className="mx-auto max-w-4xl space-y-8">
       {/* Welcome Header */}
-      <div className="space-y-4 text-center">
-        <h1 className="font-bold text-4xl tracking-tight">
+      <motion.div
+        animate={{ opacity: 1, y: 0 }}
+        className="space-y-4 text-center"
+        initial={{ opacity: 0, y: -10 }}
+        transition={{ duration: 0.15 }}
+      >
+        <h1 className="font-bold font-mono text-4xl tracking-tight">
           {t("welcome", { name })}
         </h1>
         <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
-      </div>
+      </motion.div>
 
       {/* Quick Actions */}
       <div className="grid gap-6 md:grid-cols-2">
-        <Card className="transition-shadow hover:shadow-lg">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Database className="size-5" />
-              {t("tasks")}
-            </CardTitle>
-            <CardDescription>{t("tasksDescription")}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button asChild>
-              <Link href="/tasks">{t("openTasks")}</Link>
-            </Button>
-          </CardContent>
-        </Card>
+        <motion.div
+          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 20 }}
+          transition={{ delay: 0.1, duration: 0.2 }}
+          whileHover={{ x: -2, y: -2 }}
+        >
+          <Card className="border-brutal shadow-brutal transition-all">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 font-mono">
+                <Database className="size-5" />
+                {t("tasks")}
+              </CardTitle>
+              <CardDescription>{t("tasksDescription")}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button asChild className="border-brutal shadow-brutal-sm">
+                <Link href="/tasks">{t("openTasks")}</Link>
+              </Button>
+            </CardContent>
+          </Card>
+        </motion.div>
 
-        <Card className="transition-shadow hover:shadow-lg">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Github className="size-5" />
-              {t("github")}
-            </CardTitle>
-            <CardDescription>
-              Explore the GitHub repository for the template and contribute to
-              it.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button asChild variant="outline">
-              <a
-                href="https://github.com/giacomoguidotto/blueprint"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                View Repo
-              </a>
-            </Button>
-          </CardContent>
-        </Card>
+        <motion.div
+          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 20 }}
+          transition={{ delay: 0.2, duration: 0.2 }}
+          whileHover={{ x: -2, y: -2 }}
+        >
+          <Card className="border-brutal shadow-brutal transition-all">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 font-mono">
+                <GitBranch className="size-5" />
+                {t("github")}
+              </CardTitle>
+              <CardDescription>
+                Explore the GitHub repository for the template and contribute to
+                it.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button asChild className="border-brutal" variant="outline">
+                <a
+                  href="https://github.com/giacomoguidotto/blueprint"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  View Repo
+                </a>
+              </Button>
+            </CardContent>
+          </Card>
+        </motion.div>
       </div>
 
       {/* User Info */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Your Profile</CardTitle>
-          <CardDescription>Authenticated via WorkOS AuthKit</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            {user?.firstName && (
-              <div className="flex justify-between">
-                <span className="text-muted-foreground text-sm">Name:</span>
-                <span className="font-medium text-sm">
-                  {user.firstName} {user.lastName}
-                </span>
-              </div>
-            )}
-            {user?.email && (
-              <div className="flex justify-between">
-                <span className="text-muted-foreground text-sm">Email:</span>
-                <span className="font-medium text-sm">{user.email}</span>
-              </div>
-            )}
-          </div>
+      <motion.div
+        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, y: 20 }}
+        transition={{ delay: 0.3, duration: 0.2 }}
+      >
+        <Card className="border-brutal shadow-brutal">
+          <CardHeader>
+            <CardTitle className="font-mono">Your Profile</CardTitle>
+            <CardDescription>Authenticated via WorkOS AuthKit</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              {user?.firstName && (
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground text-sm">Name:</span>
+                  <span className="font-medium font-mono text-sm">
+                    {user.firstName} {user.lastName}
+                  </span>
+                </div>
+              )}
+              {user?.email && (
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground text-sm">Email:</span>
+                  <span className="font-medium font-mono text-sm">
+                    {user.email}
+                  </span>
+                </div>
+              )}
+            </div>
 
-          <div className="pt-4">
-            <Button onClick={() => signOut()} variant="outline">
-              {tCommon("signOut")}
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+            <div className="pt-4">
+              <Button
+                className="border-brutal"
+                onClick={() => signOut()}
+                variant="outline"
+              >
+                {tCommon("signOut")}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
     </div>
   );
 }

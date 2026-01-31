@@ -56,7 +56,7 @@ interface TaskFormProps {
  * Task Creation Form
  *
  * Uses react-hook-form with zod validation for type-safe form handling.
- * Integrates with Convex mutation for real-time data persistence.
+ * Features Neo-Brutalist styling with Motion animations.
  */
 export function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
   const t = useTranslations("tasks.form");
@@ -119,11 +119,11 @@ export function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
   );
 
   return (
-    <Card>
+    <Card className="border-brutal shadow-brutal">
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 font-mono">
               <Plus className="size-5" />
               {t("title")}
             </CardTitle>
@@ -146,10 +146,13 @@ export function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
         <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
           {/* Title */}
           <div className="space-y-2">
-            <Label htmlFor="title">{t("titleLabel")}</Label>
+            <Label className="font-mono" htmlFor="title">
+              {t("titleLabel")}
+            </Label>
             <Input
               aria-describedby={errors.title ? "title-error" : undefined}
               aria-invalid={!!errors.title}
+              className="border-brutal"
               id="title"
               placeholder={t("titlePlaceholder")}
               {...register("title")}
@@ -163,13 +166,15 @@ export function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
 
           {/* Description */}
           <div className="space-y-2">
-            <Label htmlFor="description">{t("descriptionLabel")}</Label>
+            <Label className="font-mono" htmlFor="description">
+              {t("descriptionLabel")}
+            </Label>
             <Textarea
               aria-describedby={
                 errors.description ? "description-error" : undefined
               }
               aria-invalid={!!errors.description}
-              className="min-h-20 resize-none"
+              className="min-h-20 resize-none border-brutal"
               id="description"
               placeholder={t("descriptionPlaceholder")}
               {...register("description")}
@@ -185,14 +190,16 @@ export function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
           <div className="grid gap-4 sm:grid-cols-2">
             {/* Priority */}
             <div className="space-y-2">
-              <Label htmlFor="priority">{t("priorityLabel")}</Label>
+              <Label className="font-mono" htmlFor="priority">
+                {t("priorityLabel")}
+              </Label>
               <Select
                 onValueChange={(value) =>
                   setValue("priority", value as TaskPriority)
                 }
                 value={priority}
               >
-                <SelectTrigger id="priority">
+                <SelectTrigger className="border-brutal" id="priority">
                   <SelectValue placeholder={t("priorityPlaceholder")} />
                 </SelectTrigger>
                 <SelectContent>
@@ -207,15 +214,25 @@ export function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
 
             {/* Due Date */}
             <div className="space-y-2">
-              <Label htmlFor="dueDate">{t("dueDateLabel")}</Label>
-              <Input id="dueDate" type="date" {...register("dueDate")} />
+              <Label className="font-mono" htmlFor="dueDate">
+                {t("dueDateLabel")}
+              </Label>
+              <Input
+                className="border-brutal"
+                id="dueDate"
+                type="date"
+                {...register("dueDate")}
+              />
             </div>
           </div>
 
           {/* Tags */}
           <div className="space-y-2">
-            <Label htmlFor="tags">{t("tagsLabel")}</Label>
+            <Label className="font-mono" htmlFor="tags">
+              {t("tagsLabel")}
+            </Label>
             <Input
+              className="border-brutal"
               id="tags"
               placeholder={t("tagsPlaceholder")}
               {...register("tags")}
@@ -225,12 +242,21 @@ export function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
 
           {/* Actions */}
           <div className="flex gap-2 pt-2">
-            <Button disabled={isSubmitting} type="submit">
+            <Button
+              className="border-brutal shadow-brutal-sm"
+              disabled={isSubmitting}
+              type="submit"
+            >
               {isSubmitting && <Loader2 className="animate-spin" />}
               {t("submit")}
             </Button>
             {onCancel && (
-              <Button onClick={onCancel} type="button" variant="outline">
+              <Button
+                className="border-brutal"
+                onClick={onCancel}
+                type="button"
+                variant="outline"
+              >
                 {t("cancel")}
               </Button>
             )}

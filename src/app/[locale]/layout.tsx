@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Space_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
@@ -11,13 +11,14 @@ import { routing } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 import "../globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-sans",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const spaceMono = Space_Mono({
+  variable: "--font-mono",
+  weight: ["400", "700"],
   subsets: ["latin"],
 });
 
@@ -119,9 +120,7 @@ export default async function LocaleLayout({ children, params }: Props) {
       lang={locale}
       suppressHydrationWarning={true} // suppress next-theme hydration mismatch. read more: https://github.com/pacocoursey/next-themes?tab=readme-ov-file#with-app
     >
-      <body
-        className={cn(geistSans.variable, geistMono.variable, "antialiased")}
-      >
+      <body className={cn(inter.variable, spaceMono.variable, "antialiased")}>
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider>
             <ConvexClientProvider>

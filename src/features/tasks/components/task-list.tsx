@@ -4,6 +4,7 @@ import { api } from "convex/_generated/api";
 import { useQuery } from "convex/react";
 import { useAtomValue } from "jotai";
 import { ClipboardList } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { useMemo } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -16,6 +17,7 @@ import { TaskCard } from "./task-card";
  *
  * Fetches and displays tasks from Convex with real-time updates.
  * Supports filtering by status using jotai state.
+ * Features Neo-Brutalist styling with Motion animations.
  */
 export function TaskList() {
   const t = useTranslations("tasks");
@@ -59,23 +61,41 @@ export function TaskList() {
   // Empty state
   if (sortedTasks.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-12">
+      <motion.div
+        animate={{ opacity: 1, scale: 1 }}
+        className="flex flex-col items-center justify-center border border-brutal border-dashed py-12"
+        initial={{ opacity: 0, scale: 0.95 }}
+        transition={{ duration: 0.15 }}
+      >
         <ClipboardList className="mb-4 size-12 text-muted-foreground/50" />
-        <h3 className="mb-1 font-medium text-lg">{t("empty.title")}</h3>
+        <h3 className="mb-1 font-medium font-mono text-lg">
+          {t("empty.title")}
+        </h3>
         <p className="text-muted-foreground text-sm">
           {statusFilter === "all"
             ? t("empty.description")
             : t("empty.filtered")}
         </p>
-      </div>
+      </motion.div>
     );
   }
 
   return (
     <div className="space-y-3">
-      {sortedTasks.map((task: Task) => (
-        <TaskCard key={task._id} task={task} />
-      ))}
+      <AnimatePresence mode="popLayout">
+        {sortedTasks.map((task: Task) => (
+          <motion.div
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, x: -20, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            key={task._id}
+            layout
+            transition={{ duration: 0.15, ease: "easeOut" }}
+          >
+            <TaskCard task={task} />
+          </motion.div>
+        ))}
+      </AnimatePresence>
     </div>
   );
 }
@@ -89,7 +109,7 @@ function TaskListSkeleton() {
   return (
     <div className="space-y-3">
       {SKELETON_KEYS.map((key) => (
-        <div className="rounded-lg border p-4" key={key}>
+        <div className="rounded-lg border border-brutal p-4" key={key}>
           <div className="flex items-start gap-3">
             <Skeleton className="size-5 rounded-full" />
             <div className="flex-1 space-y-2">
