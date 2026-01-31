@@ -39,7 +39,7 @@ function generateCSPHeader(_nonce: string): string {
     `style-src 'self' 'unsafe-inline'`,
     `img-src 'self' data: blob: https:`,
     `font-src 'self' data:`,
-    `connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://api.workos.com https://authkit.workos.com https://vercel.live`,
+    `connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://api.workos.com https://authkit.workos.com https://*.authkit.app https://vercel.live`,
     `form-action 'self' https://api.workos.com https://authkit.workos.com`,
     `frame-src 'self' https://authkit.workos.com https://vercel.live`,
     `frame-ancestors 'none'`,
