@@ -8,7 +8,6 @@ import { ConvexClientProvider } from "@/components/providers/convex-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import type { Locale } from "@/i18n/routing";
 import { routing } from "@/i18n/routing";
-import { getServerTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 import "../globals.css";
 
@@ -115,19 +114,16 @@ export default async function LocaleLayout({ children, params }: Props) {
   setRequestLocale(locale);
   const messages = await getMessages();
 
-  const serverTheme = await getServerTheme();
-
   return (
     <html
-      className={serverTheme}
       lang={locale}
-      style={{ colorScheme: serverTheme }}
+      suppressHydrationWarning={true} // suppress next-theme hydration mismatch. read more: https://github.com/pacocoursey/next-themes?tab=readme-ov-file#with-app
     >
       <body
         className={cn(geistSans.variable, geistMono.variable, "antialiased")}
       >
         <NextIntlClientProvider messages={messages}>
-          <ThemeProvider serverTheme={serverTheme}>
+          <ThemeProvider>
             <ConvexClientProvider>
               <div className="flex min-h-screen flex-col">
                 <Header />

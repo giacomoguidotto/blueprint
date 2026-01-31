@@ -37,10 +37,10 @@ function generateCSPHeader(nonce: string): string {
     `default-src 'self'`,
     // Development: Allow unsafe-inline and unsafe-eval for hot reloading
     // Production: Use nonce with 'strict-dynamic' which allows scripts loaded by trusted scripts
-    // 'unsafe-inline' is ignored when nonce is present (CSP Level 3) but kept for older browsers
     isDev
       ? `script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live https://challenges.cloudflare.com`
       : `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' 'unsafe-inline' https://vercel.live https://challenges.cloudflare.com`,
+    // : `script-src 'nonce-${nonce}' 'strict-dynamic'`,
     // Style nonces are impractical with component libraries that inject inline styles
     // Using 'unsafe-inline' for styles is acceptable as the XSS risk is much lower than scripts
     `style-src 'self' 'unsafe-inline'`,
