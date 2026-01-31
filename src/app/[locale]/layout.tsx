@@ -8,6 +8,7 @@ import { ConvexClientProvider } from "@/components/providers/convex-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import type { Locale } from "@/i18n/routing";
 import { routing } from "@/i18n/routing";
+import { getServerTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 import "../globals.css";
 
@@ -111,21 +112,22 @@ export default async function LocaleLayout({ children, params }: Props) {
     notFound();
   }
 
-  // // CRITICAL: Force dynamic rendering by reading headers
-  // // This is required for nonce-based CSP to work properly
-  // // Without this, pages will be statically generated and nonces won't be injected
-  // await getNonce();
-
   setRequestLocale(locale);
   const messages = await getMessages();
 
+  const serverTheme = await getServerTheme();
+
   return (
-    <html lang={locale}>
+    <html
+      className={serverTheme}
+      lang={locale}
+      style={{ colorScheme: serverTheme }}
+    >
       <body
         className={cn(geistSans.variable, geistMono.variable, "antialiased")}
       >
         <NextIntlClientProvider messages={messages}>
-          <ThemeProvider>
+          <ThemeProvider serverTheme={serverTheme}>
             <ConvexClientProvider>
               <div className="flex min-h-screen flex-col">
                 <Header />

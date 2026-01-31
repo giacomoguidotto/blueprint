@@ -66,7 +66,9 @@ Unauthenticated routes are configured in `src/proxy.ts` via `unauthenticatedPath
 
 ## Code Style
 
-Uses **Ultracite** (Biome preset) for linting/formatting. Key rules:
+Uses **Ultracite** (Biome preset) for linting/formatting. **Run `bunx ultracite fix` after any edit** to auto-fix formatting and lint issues.
+
+Key rules:
 - Prefer `for...of` over `.forEach()` and indexed loops
 - Use `const` by default, `let` only when needed, never `var`
 - Use optional chaining (`?.`) and nullish coalescing (`??`)
