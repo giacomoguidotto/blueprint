@@ -64,14 +64,70 @@ Unauthenticated routes are configured in `src/proxy.ts` via `unauthenticatedPath
 1. Add locale to `src/i18n/routing.ts` in `locales` array and `localeNativeName` record
 2. Create `messages/[locale].json` matching structure of `messages/en.json`
 
+## Convex Guidelines
+
+### Function Syntax
+Always use the new function syntax with explicit `args`, `returns`, and `handler`:
+```typescript
+import { query } from "./_generated/server";
+import { v } from "convex/values";
+
+export const getUser = query({
+  args: { userId: v.id("users") },
+  returns: v.object({ name: v.string() }),
+  handler: async (ctx, args) => {
+    const user = await ctx.db.get(args.userId);
+    return { name: user?.name ?? "Unknown" };
+  },
+});
+```
+
+### Function Registration
+- **Public functions**: `query`, `mutation`, `action` - exposed to clients
+- **Internal functions**: `internalQuery`, `internalMutation`, `internalAction` - only callable from other Convex functions
+- Always include argument and return validators. Use `returns: v.null()` for void functions
+
+### Function References
+- Use `api.filename.functionName` for public functions
+- Use `internal.filename.functionName` for internal functions
+- When calling functions in the same file, add type annotation to avoid circularity issues
+
+### Query Guidelines
+- **Never use `.filter()`** - define indexes in schema and use `.withIndex()` instead
+- Use `.unique()` for single document queries
+- Use `.order("asc")` or `.order("desc")` for ordering (defaults to ascending `_creationTime`)
+- Convex queries don't support `.delete()` - collect results and delete individually
+
+### Schema Guidelines
+- Define schema in `convex/schema.ts`
+- Include all index fields in index name (e.g., `by_user_and_status` for `["userId", "status"]`)
+- Index fields must be queried in order they're defined
+- System fields `_id` and `_creationTime` are automatic
+
+### Actions
+- Add `"use node";` at top of files using Node.js modules
+- Actions cannot access `ctx.db` - use `ctx.runQuery`/`ctx.runMutation` instead
+- Minimize query/mutation calls from actions to avoid race conditions
+
 ## Code Style
 
 Uses **Ultracite** (Biome preset) for linting/formatting. **Run `bunx ultracite fix` after any edit** to auto-fix formatting and lint issues.
 
-Key rules:
+### JavaScript/TypeScript
 - Prefer `for...of` over `.forEach()` and indexed loops
 - Use `const` by default, `let` only when needed, never `var`
 - Use optional chaining (`?.`) and nullish coalescing (`??`)
+- Prefer `unknown` over `any`, use `as const` for literals
+- Always `await` promises in async functions
+
+### React
 - Function components only (no class components)
 - Hooks at top level only, complete dependency arrays
+- Use `key` prop with unique IDs (not array indices)
+- Use semantic HTML and ARIA attributes for accessibility
+- Use Next.js `<Image>` component, not `<img>`
+
+### General
 - Remove console.log/debugger in production code
+- Throw `Error` objects with descriptive messages
+- Add `rel="noopener"` with `target="_blank"`

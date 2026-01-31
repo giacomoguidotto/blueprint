@@ -16,11 +16,6 @@
   },
   "packageRules": [
     {
-      "description": "Group all non-major updates together",
-      "matchUpdateTypes": ["minor", "patch"],
-      "groupName": "non-major dependencies"
-    },
-    {
       "description": "Automerge non-major updates",
       "matchUpdateTypes": ["minor", "patch", "digest"],
       "automerge": true
@@ -59,6 +54,11 @@
       "description": "Group linting/formatting tools",
       "matchPackageNames": ["@biomejs/biome", "ultracite"],
       "groupName": "linting"
+    },
+    {
+      "description": "Group all non-major updates together",
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "non-major dependencies"
     },
     {
       "description": "Major updates require manual approval",
