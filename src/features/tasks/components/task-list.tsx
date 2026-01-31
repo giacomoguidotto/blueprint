@@ -1,7 +1,7 @@
 "use client";
 
-import { api } from "convex/_generated/api";
-import { useQuery } from "convex/react";
+import type { api } from "convex/_generated/api";
+import { type Preloaded, usePreloadedQuery } from "convex/react";
 import { useAtomValue } from "jotai";
 import { ClipboardList } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
@@ -12,23 +12,30 @@ import { statusFilterAtom } from "../store/atoms";
 import type { Task, TaskStatus } from "../types";
 import { TaskCard } from "./task-card";
 
+interface TaskListProps {
+  preloadedTasks: Preloaded<typeof api.tasks.getTasks>;
+}
+
 /**
  * Task List Component
  *
- * Fetches and displays tasks from Convex with real-time updates.
- * Supports filtering by status using jotai state.
+ * Displays tasks from Convex with real-time updates.
+ * Uses preloaded tasks for instant initial render, then subscribes
+ * for real-time updates. Filters are applied client-side for instant UX.
  * Features Neo-Brutalist styling with Motion animations.
  */
-export function TaskList() {
+export function TaskList({ preloadedTasks }: TaskListProps) {
   const t = useTranslations("tasks");
   const statusFilter = useAtomValue(statusFilterAtom);
 
-  // Convex query with optional status filter
-  // When status is "all", we pass undefined to get all tasks
-  const tasks = useQuery(
-    api.tasks.getTasks,
-    statusFilter === "all" ? {} : { status: statusFilter as TaskStatus }
-  );
+  // Use preloaded tasks - automatically upgrades to live subscription
+  const allTasks = usePreloadedQuery(preloadedTasks);
+
+  // Filter tasks client-side for instant filter changes
+  const tasks =
+    statusFilter === "all"
+      ? allTasks
+      : allTasks.filter((task) => task.status === statusFilter);
 
   // Sort tasks: by status priority, then by creation time
   const sortedTasks = useMemo(() => {
