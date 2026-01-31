@@ -4,100 +4,118 @@ A production-ready Next.js starter template with modern tooling and best practic
 
 ## ✨ Features
 
-### Key Features
+🚀 Optimized for performance ([React Compiler](https://reactjs.org/), [Next.js](https://nextjs.org/))
 
-- 🔒 Modern authentication (WorkOS AuthKit) with protected routes
-- ⚡ Real-time database (Convex) with type-safe React hooks
-- 🌍 Multi-language, type-safe i18n (next-intl)
-- 🎨 shadcn/ui component library & Tailwind CSS 4
-- 🌓 Dark mode & accessible, responsive design
-- 🛡️ Security best practices (CSP, headers, env validation)
-- 🚀 Optimized for performance (React Compiler, Next.js)
-- 🧑‍💻 Fast linting/formatting (Biome), reproducible dev env (devenv)
+🔒 Modern authentication ([WorkOS AuthKit](https://workos.com/authkit)) with protected routes
 
-### Stack choices
+⚡ Real-time database ([Convex](https://www.convex.dev/)) with type-safe React hooks
 
-| **Category**    | **Choice**                                                                                  |
-| --------------- | ------------------------------------------------------------------------------------------- |
-| Framework       | [Next.js](https://nextjs.org/) 16 (App Router) + [React](https://react.dev/) 19             |
-| Backend         | [Convex](https://www.convex.dev/) (real-time database & auth)                               |
-| Authentication  | [WorkOS AuthKit](https://workos.com/authkit)                                                |
-| Styling         | [Tailwind CSS](https://tailwindcss.com/) 4 + [shadcn/ui](https://ui.shadcn.com/) components |
-| i18n            | [next-intl](https://next-intl-docs.vercel.app/)                                             |
-| Type Safety     | [TypeScript](https://www.typescriptlang.org/) (strict mode)                                 |
-| Code Quality    | [Biome](https://biomejs.dev/) (linting & formatting) + [Ultracite](https://ultracite.dev/)  |
-| Runtime         | [Bun](https://bun.sh/)                                                                      |
-| Dev Environment | [devenv](https://devenv.sh/) + [direnv](https://direnv.net/)                                |
+🌍 Multi-language, type-safe i18n ([next-intl](https://next-intl-docs.vercel.app/))
 
-## 🚧 Roadmap
+🎨 [shadcn/ui](https://ui.shadcn.com/) component library & [Tailwind CSS 4](https://tailwindcss.com/)
 
-### ✅ Completed
-- [x] **Framework**: Next.js 16, React 19, TypeScript
-- [x] **Backend**: Convex (database, auth, real-time)
-- [x] **Auth**: WorkOS AuthKit
-- [x] **Styling**: Tailwind CSS 4, shadcn/ui, next-themes
-- [x] **i18n**: next-intl
-- [x] **Code Quality**: Biome, Ultracite, Husky
-- [x] **Dev Env**: devenv, direnv
+🌓 Dark mode & accessible, responsive design
 
-### 🚧 Planned / To Do
-- [ ] Vitest + Playwright for testing
-- [ ] Axiom for observability
-- [ ] Sentry for error tracking
-- [ ] Database migrations tooling
-- [ ] Email service integration
-- [ ] Effect integration
+🛡️ Security best practices (CSP, headers, env validation)
+
+🧑‍💻 Fast linting/formatting ([Biome](https://biomejs.dev/)), reproducible dev env ([devenv](https://devenv.sh/))
 
 ## 🚀 Quickstart
 
-### Prerequisites
-- Bun runtime
-- (Optional) devenv + direnv for reproducible environment
-- a [WorkOS](https://workos.com/) account
+### 0. Prerequisites
 
-### Installation
+You can choose to use [devenv](https://devenv.sh/getting-started/) to take advantage of the environment already set up in `devenv.nix`.  
+Otherwise, make sure you have:
+- the latest LTS of [Node.js](https://nodejs.org/en/download/) installed.
+- the latest version of [Bun](https://bun.sh/docs/installation) runtime installed.
 
-Clone and install dependencies
+You'll then need to setup a WorkOS account. You can [start here](https://dashboard.workos.com/get-started). After the entire setup process, you should have the following credentials:
+- `WORKOS_API_KEY`
+- `WORKOS_CLIENT_ID`
+
+### 1. Installation
+
+Create a new GitHub repository from this template and clone it. 
+
+Then, install dependencies:
 ```bash
 bun install
 ```
 
-### Environment Variables
+### 2. Deploy in Convex
 
-Set up environment variables
+Setup a convex dev deployment by running:
 ```bash
-cp .env.example .env.local
+bun run dev:be
+```
+Read more [here](https://docs.convex.dev/cli#configure) to understand how to navigate through the `convex dev` prompts.
+
+TL;DR: Login; select 'create a new project'.  
+**Important**: when prompted: 'Create a WorkOS team and enable automatic AuthKit environment provisioning for team "\<your-team>"?', answer **'no'** and let it exit.
+
+This will setup a new project in the [Convex dashboard](https://dashboard.convex.dev/), and generate a `.env.local` file with the following variables:
+
+```env
+# Deployment used by `npx convex dev`
+CONVEX_DEPLOYMENT=dev:<your-deployment> # team: <your-team>, project: <your-project>
+
+NEXT_PUBLIC_CONVEX_URL=https://<your-deployment>.convex.cloud
+
+NEXT_PUBLIC_CONVEX_SITE_URL=https://<your-deployment>.convex.site
 ```
 
-Fill the missing `WORKOS_API_KEY` and `WORKOS_CLIENT_ID` in `.env.local` with your WorkOS credentials.
+### 3. Setup WorkOS webhooks
 
-Generate the `WORKOS_COOKIE_PASSWORD` with a strong password of at least 32 characters.
+Now that you have a CONVEX_SITE_URL, you can setup WorkOS webhooks following this [section of the docs](https://www.convex.dev/components/workos-authkit#configure-webhooks).
 
-Don't worry about the `CONVEX_DEPLOYMENT` and `NEXT_PUBLIC_CONVEX_URL` variables, they will be set automatically by Convex during the first boot.
+You should end up with a `WORKOS_WEBHOOK_SECRET` variable in your Convex environment variables.
 
-### Running the development server
+### 4. Setup WorkOS environment variables
 
-Run dev servers (frontend + Convex backend)
+Generate a password for the WorkOS cookie at least 32 characters long.
+
+Go in the `environment variables` settings of your project on the [Convex dashboard](https://dashboard.convex.dev/).
+
+Add the following variables:
+- `WORKOS_API_KEY` from the [WorkOS dashboard](https://dashboard.workos.com/)
+- `WORKOS_CLIENT_ID` from the [WorkOS dashboard](https://dashboard.workos.com/)
+- `WORKOS_COOKIE_PASSWORD` with the password you generated earlier
+
+### 5. Setup WorkOS redirect URI
+
+Go in the `redirects` page on the [WorkOS dashboard](https://dashboard.workos.com/). Setup a new redirect URI with the value `http://localhost:3000/callback`
+
+Add that URI in the `.env.local` file:
+```env
+NEXT_PUBLIC_WORKOS_REDIRECT_URI=http://localhost:3000/callback
+```
+
+### 6. Copy the Convex env to your local env
+
+Run:
+```bash
+bunx convex env list
+```
+
+to get all the environment variables for your deployment. Add them to your `.env.local` file.
+
+**Your `.env.local` file should look like the one in `.env.example`.**
+
+### 7. Running the development server
+
+Run both the Next.js frontend and the Convex backend:
 ```bash
 bun dev
 ```
-Open [http://localhost:3000](http://localhost:3000)
 
-### Available Commands
+## 📦 Deploy
 
-```bash
-bun run dev       # Start Next.js + Convex dev servers
-bun run dev:fe    # Start only Next.js dev server
-bun run dev:be    # Start only Convex dev server
-bun run build     # Build for production
-bun run start     # Start production server
-bun run lint      # Lint & check code
-bun run format    # Format code
-```
 
-## 📦 Deployment
 
-Follow the various [Convex deployment guides](https://docs.convex.dev/production/hosting/) to deploy your app.
+## 🔍 Preview
+
+- set default environment variables on convex
+- set environment variables on vercel
 
 ## 🛠️ Build your project on top of Blueprint
 
@@ -168,3 +186,22 @@ This project embeds production-grade patterns and architectural decisions:
 - **Zero code duplication**: shared UI components (`src/components/ui/`), reusable layouts, and centralized utilities
 
 **Why these choices?** They reduce cognitive load, prevent common bugs, make onboarding faster, and ensure the codebase scales cleanly from prototype to production.
+
+## 🚧 Roadmap
+
+### ✅ Completed
+- [x] **Framework**: Next.js 16, React 19, TypeScript
+- [x] **Backend**: Convex (database, auth, real-time)
+- [x] **Auth**: WorkOS AuthKit
+- [x] **Styling**: Tailwind CSS 4, shadcn/ui, next-themes
+- [x] **i18n**: next-intl
+- [x] **Code Quality**: Biome, Ultracite, Husky
+- [x] **Dev Env**: devenv, direnv
+
+### 🚧 Planned / To Do
+- [ ] Vitest + Playwright for testing
+- [ ] Axiom for observability
+- [ ] Sentry for error tracking
+- [ ] Database migrations tooling
+- [ ] Email service integration
+- [ ] Effect integration
