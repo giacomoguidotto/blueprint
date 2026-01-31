@@ -110,12 +110,23 @@ bun dev
 
 ## 📦 Deploy
 
-
+same as before:
+- provision a workos production environment
+- provision a convex production deployment
+- set up webhooks on workos
+- set environment variables on convex
+- setup redirect URI on workos
+new stuff:
+- create a deploy key in convex
+- create a new vercel project (https://vercel.com/new)
+- configure environment variables on vercel, only for production
+  - add the 5 auth variables
+  - add the deploy key
 
 ## 🔍 Preview
 
-- set default environment variables on convex
-- set environment variables on vercel
+- set default environment variables on convex, to use when generating the preview deployments
+- set environment variables on vercel, only for preview
 
 ## 🛠️ Build your project on top of Blueprint
 
