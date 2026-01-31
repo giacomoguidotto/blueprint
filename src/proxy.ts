@@ -30,27 +30,18 @@ const authMiddleware = authkitMiddleware({
  *
  * @see https://nextjs.org/docs/app/guides/content-security-policy
  */
-function generateCSPHeader(nonce: string): string {
-  const isDev = process.env.NODE_ENV === "development";
+function generateCSPHeader(_nonce: string): string {
+  // const isDev = process.env.NODE_ENV === "development";
 
   const cspDirectives = [
     `default-src 'self'`,
-    // Development: Allow unsafe-inline and unsafe-eval for hot reloading
-    // Production: Use nonce with 'strict-dynamic' which allows scripts loaded by trusted scripts
-    isDev
-      ? `script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live https://challenges.cloudflare.com`
-      : `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' 'unsafe-inline' https://vercel.live https://challenges.cloudflare.com`,
-    // : `script-src 'nonce-${nonce}' 'strict-dynamic'`,
-    // Style nonces are impractical with component libraries that inject inline styles
-    // Using 'unsafe-inline' for styles is acceptable as the XSS risk is much lower than scripts
+    `script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live`,
     `style-src 'self' 'unsafe-inline'`,
     `img-src 'self' data: blob: https:`,
     `font-src 'self' data:`,
-    // Add authkit.workos.com for the hosted UI iframe/redirects
     `connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://api.workos.com https://authkit.workos.com https://vercel.live`,
     `form-action 'self' https://api.workos.com https://authkit.workos.com`,
-    // Allow framing from WorkOS and Vercel Live feedback widget
-    `frame-src 'self' https://authkit.workos.com https://vercel.live https://challenges.cloudflare.com`,
+    `frame-src 'self' https://authkit.workos.com https://vercel.live`,
     `frame-ancestors 'none'`,
     `base-uri 'self'`,
     "upgrade-insecure-requests",
