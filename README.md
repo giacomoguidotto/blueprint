@@ -42,14 +42,10 @@ A production-ready Next.js starter template with modern tooling and best practic
 
 ### 🚧 Planned / To Do
 - [ ] Vitest + Playwright for testing
-- [ ] PostHog for analytics
+- [ ] Axiom for observability
 - [ ] Sentry for error tracking
-- [ ] CI/CD pipelines
-- [ ] Renovate for dependency management
-- [ ] CodeRabbit for AI code review
 - [ ] Database migrations tooling
 - [ ] Email service integration
-- [ ] File upload handling
 - [ ] Effect integration
 
 ## 🚀 Quickstart
