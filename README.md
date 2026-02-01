@@ -186,8 +186,31 @@ On subsequent, already logged in sessions, the user will be redirected to the co
 
 ## 🔍 Preview
 
-- set default environment variables on convex, to use when generating the preview deployments
-- set environment variables on vercel, only for preview
+When working on a git branch different from `main`, Vercel will automatically generate a preview deployment. You need to configure both Convex and Vercel to be able to automatically deploy correctly.
+
+### 1. Configure the Convex preview deployments
+
+Copy all the environment variables from your Convex development environment.
+
+Go to the `settings` -> `project settings` page on the [Convex dashboard](https://dashboard.convex.dev/) and paste them in the `Default Environment Variables` field.
+
+### 2. Generate a preview deployment key
+
+Go to the `settings` -> `project settings` page on the [Convex dashboard](https://dashboard.convex.dev/) and generate a new preview deployment key. It should look like `preview:<your-team>:<your-project>|eyJ2...`.
+
+### 3. Configure the Vercel preview deployments
+
+Add the key from the previous step to your Vercel environment variables as `CONVEX_DEPLOY_KEY`, **only for Preview**.
+
+Copy the following environment variables from your `.env.local` file:
+- `WORKOS_API_KEY`
+- `WORKOS_CLIENT_ID`
+- `WORKOS_WEBHOOK_SECRET`
+- `WORKOS_COOKIE_PASSWORD`
+- `NEXT_PUBLIC_WORKOS_REDIRECT_URI`
+Add them **only for Preview**.
+
+Not you can work on your branch with no worries.
 
 ## 🛠️ Build your project on top of Blueprint
 
