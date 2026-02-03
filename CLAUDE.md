@@ -1,6 +1,34 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides **strict** guidance to Claude Code when working with this repository. Follow these rules without exception.
+
+## Workflow Requirements
+
+### Before Writing Any Code
+
+1. **Read first, code second** — Never propose changes to code you haven't read. Use `Read` to understand existing patterns.
+2. **Check existing components** — Before creating any UI, check `src/components/ui/` for existing shadcn/ui components.
+3. **Understand the feature structure** — Review `src/features/` to understand how features are organized.
+
+### After Every Code Change
+
+1. **Run lint/format** — Execute `bunx ultracite fix` after every edit. No exceptions.
+2. **Run CodeRabbit review** — If available, invoke `/coderabbit:review` or `/coderabbit:code-review` to get AI code review feedback before finalizing changes.
+3. **Verify types** — Ensure TypeScript compiles without errors.
+
+### Code Review Checklist
+
+Before considering any task complete:
+
+- [ ] Lint passes (`bunx ultracite fix`)
+- [ ] TypeScript compiles without errors
+- [ ] No `any` types introduced (use `unknown` if truly unknown)
+- [ ] No `console.log` or `debugger` statements
+- [ ] All UI uses shadcn/ui components
+- [ ] Convex functions have `args`, `returns`, and `handler`
+- [ ] Indexes used instead of `.filter()` in Convex queries
+
+---
 
 ## Build & Development Commands
 
@@ -13,22 +41,31 @@ bun lint         # Lint & check code (Biome)
 bun format       # Format code (Biome)
 ```
 
-The project uses **devenv** for reproducible development environment. Only `git` and `docker` are globally available - all other tools (including `bun`) require devenv activation:
+### Devenv Environment
+
+This project uses **devenv** for reproducible development. Only `git` and `docker` are globally available — all other tools require devenv activation:
+
 ```bash
 export PATH=".devenv/profile/bin:$PATH"
 ```
 
+**NEVER assume `bun`, `node`, or any dev tool is globally available.** Always activate devenv first.
+
+---
+
 ## Architecture Overview
 
 ### Stack
+
 - **Frontend**: Next.js 16 (App Router) + React 19 with React Compiler
 - **Backend**: Convex (real-time database, serverless functions)
 - **Auth**: WorkOS AuthKit (JWT-based, synced to Convex via webhook)
-- **Styling**: Tailwind CSS 4 + shadcn/ui components
+- **Styling**: Tailwind CSS 4 + **shadcn/ui components (MANDATORY)**
 - **i18n**: next-intl with locale prefix routing
 - **State**: Jotai for client-side state, Convex for server state
 
-### Key Directory Structure
+### Directory Structure
+
 ```
 convex/              # Backend: schema, queries, mutations, actions
   schema.ts          # Database schema (single source of truth for types)
@@ -36,38 +73,57 @@ convex/              # Backend: schema, queries, mutations, actions
 src/
   app/[locale]/      # Next.js App Router pages with i18n
   features/[name]/   # Feature modules (components, types, store)
-  components/ui/     # shadcn/ui components
+  components/ui/     # shadcn/ui components — USE THESE
   components/providers/  # Context providers (Convex, Theme, i18n)
   i18n/routing.ts    # Locale configuration (single source of truth)
   proxy.ts           # Middleware: auth + i18n + CSP
 messages/            # Translation JSON files per locale
 ```
 
-### Auth Flow
-1. WorkOS AuthKit handles sign-in/sign-up (routes in `src/app/[locale]/sign-in/` and `/sign-up/`)
-2. Auth callback at `/callback` exchanges code for session
-3. ConvexClientProvider wraps app with `ConvexProviderWithAuth` using WorkOS tokens
-4. Convex backend validates JWT and looks up user via `authId` (WorkOS subject)
+---
 
-### Middleware Chain (src/proxy.ts)
-The middleware runs: i18n routing → WorkOS auth → CSP headers with nonce injection
+## UI Component Rules (STRICT)
 
-Unauthenticated routes are configured in `src/proxy.ts` via `unauthenticatedPaths` array.
+### Always Use shadcn/ui
 
-### Adding Features
-1. Define entities in `convex/schema.ts`
-2. Create backend functions in `convex/[feature].ts`
-3. Create frontend in `src/features/[feature]/` (components, types, store)
-4. Add routes in `src/app/[locale]/`
+**MANDATORY**: All UI must be built on top of shadcn/ui components from `src/components/ui/`.
 
-### Adding Locales
-1. Add locale to `src/i18n/routing.ts` in `locales` array and `localeNativeName` record
-2. Create `messages/[locale].json` matching structure of `messages/en.json`
+- **DO**: Use `<Button>`, `<Card>`, `<Dialog>`, `<Input>`, etc. from shadcn/ui
+- **DO NOT**: Create custom buttons, inputs, cards, or modals from scratch
+- **DO NOT**: Use raw HTML elements when a shadcn/ui component exists
 
-## Convex Guidelines
+### Before Creating Any UI Component
 
-### Function Syntax
-Always use the new function syntax with explicit `args`, `returns`, and `handler`:
+1. Check `src/components/ui/` for existing components
+2. If a component doesn't exist, add it via `bunx shadcn@latest add <component>`
+3. Compose complex UI from existing shadcn/ui primitives
+
+### Component Patterns
+
+```typescript
+// CORRECT: Using shadcn/ui
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+// WRONG: Custom implementations
+<button className="...">Click me</button>  // NO
+<div className="rounded border p-4">...</div>  // NO — use Card
+```
+
+### Styling Rules
+
+- Use Tailwind CSS utility classes
+- Follow the existing design system (check `src/app/globals.css` for CSS variables)
+- Use semantic HTML with ARIA attributes for accessibility
+- Use Next.js `<Image>` component, never `<img>`
+- Add `rel="noopener"` with `target="_blank"`
+
+---
+
+## Convex Guidelines (STRICT)
+
+### Function Syntax — ALWAYS Use This Format
+
 ```typescript
 import { query } from "./_generated/server";
 import { v } from "convex/values";
@@ -82,52 +138,242 @@ export const getUser = query({
 });
 ```
 
-### Function Registration
-- **Public functions**: `query`, `mutation`, `action` - exposed to clients
-- **Internal functions**: `internalQuery`, `internalMutation`, `internalAction` - only callable from other Convex functions
-- Always include argument and return validators. Use `returns: v.null()` for void functions
+**REQUIRED**: Every function must have `args`, `returns`, and `handler`. Use `returns: v.null()` for void functions.
+
+### Function Types
+
+| Type | Registration | Visibility | Use Case |
+|------|--------------|------------|----------|
+| `query` | Public | Client-accessible | Read data |
+| `mutation` | Public | Client-accessible | Write data |
+| `action` | Public | Client-accessible | External APIs |
+| `internalQuery` | Private | Convex-only | Internal reads |
+| `internalMutation` | Private | Convex-only | Internal writes |
+| `internalAction` | Private | Convex-only | Internal external calls |
 
 ### Function References
+
 - Use `api.filename.functionName` for public functions
 - Use `internal.filename.functionName` for internal functions
-- When calling functions in the same file, add type annotation to avoid circularity issues
+- Add type annotation when calling functions in same file to avoid circularity
 
-### Query Guidelines
-- **Never use `.filter()`** - define indexes in schema and use `.withIndex()` instead
+### Query Rules
+
+```typescript
+// CORRECT: Use withIndex
+const messages = await ctx.db
+  .query("messages")
+  .withIndex("by_channel", (q) => q.eq("channelId", args.channelId))
+  .order("desc")
+  .take(10);
+
+// WRONG: Never use filter
+const messages = await ctx.db
+  .query("messages")
+  .filter((q) => q.eq(q.field("channelId"), args.channelId))  // NO
+  .collect();
+```
+
+- **NEVER use `.filter()`** — define indexes and use `.withIndex()`
 - Use `.unique()` for single document queries
-- Use `.order("asc")` or `.order("desc")` for ordering (defaults to ascending `_creationTime`)
-- Convex queries don't support `.delete()` - collect results and delete individually
+- Use `.order("asc")` or `.order("desc")` for ordering
+- Collect results before deleting (no chained `.delete()`)
 
-### Schema Guidelines
+### Schema Rules
+
 - Define schema in `convex/schema.ts`
-- Include all index fields in index name (e.g., `by_user_and_status` for `["userId", "status"]`)
-- Index fields must be queried in order they're defined
+- Index name must include all fields: `by_user_and_status` for `["userId", "status"]`
+- Index fields must be queried in definition order
 - System fields `_id` and `_creationTime` are automatic
 
 ### Actions
+
 - Add `"use node";` at top of files using Node.js modules
-- Actions cannot access `ctx.db` - use `ctx.runQuery`/`ctx.runMutation` instead
-- Minimize query/mutation calls from actions to avoid race conditions
+- Actions cannot access `ctx.db` — use `ctx.runQuery`/`ctx.runMutation`
+- Minimize query/mutation calls to avoid race conditions
 
-## Code Style
+### HTTP Endpoints
 
-Uses **Ultracite** (Biome preset) for linting/formatting. **Run `bunx ultracite fix` after any edit** to auto-fix formatting and lint issues.
+```typescript
+import { httpRouter } from "convex/server";
+import { httpAction } from "./_generated/server";
 
-### JavaScript/TypeScript
-- Prefer `for...of` over `.forEach()` and indexed loops
-- Use `const` by default, `let` only when needed, never `var`
-- Use optional chaining (`?.`) and nullish coalescing (`??`)
-- Prefer `unknown` over `any`, use `as const` for literals
+const http = httpRouter();
+http.route({
+  path: "/webhook",
+  method: "POST",
+  handler: httpAction(async (ctx, req) => {
+    const body = await req.json();
+    return new Response(null, { status: 200 });
+  }),
+});
+export default http;
+```
+
+---
+
+## TypeScript Rules (STRICT)
+
+### Type Safety
+
+- **NEVER use `any`** — use `unknown` if type is genuinely unknown
+- Use `as const` for string literals and immutable values
+- Use `Id<"tableName">` for Convex document IDs, not `string`
+- Prefer type narrowing over type assertions
+
+### Modern Patterns
+
+```typescript
+// CORRECT
+const value = obj?.nested?.prop ?? "default";
+for (const item of items) { /* ... */ }
+const doubled = numbers.map((n) => n * 2);
+
+// WRONG
+const value = obj && obj.nested && obj.nested.prop || "default";  // NO
+items.forEach((item, i) => { /* ... */ });  // NO — use for...of
+```
+
+### Variable Declarations
+
+- Use `const` by default
+- Use `let` only when reassignment is needed
+- **NEVER use `var`**
+
+### Async/Await
+
 - Always `await` promises in async functions
+- Use `async/await` over promise chains
+- Handle errors with try-catch blocks
+- Don't use async functions as Promise executors
 
-### React
-- Function components only (no class components)
-- Hooks at top level only, complete dependency arrays
-- Use `key` prop with unique IDs (not array indices)
-- Use semantic HTML and ARIA attributes for accessibility
-- Use Next.js `<Image>` component, not `<img>`
+---
 
-### General
-- Remove console.log/debugger in production code
+## React Rules (STRICT)
+
+### Component Patterns
+
+- Function components only — no class components
+- Hooks at top level only — never conditionally
+- Complete dependency arrays — no missing deps, no unnecessary deps
+- Use `key` prop with unique IDs — never array indices
+
+### Accessibility
+
+- Provide meaningful `alt` text for images
+- Use proper heading hierarchy (h1 → h2 → h3)
+- Add labels for form inputs
+- Include keyboard handlers alongside mouse events
+- Use semantic elements (`<button>`, `<nav>`) not divs with roles
+
+### Next.js Specific
+
+- Use `<Image>` from `next/image`, not `<img>`
+- Use App Router metadata API for head elements
+- Use Server Components for data fetching
+
+---
+
+## Code Style (Ultracite/Biome)
+
+### Formatting
+
+Run after every edit:
+
+```bash
+bunx ultracite fix
+```
+
+Check for issues:
+
+```bash
+bunx ultracite check
+```
+
+### Enforced Rules
+
+- 2-space indentation
+- Double quotes for strings
+- Trailing commas in multiline
+- Semicolons required
+- Sorted imports
+
+### Forbidden Patterns
+
+- `console.log`, `debugger`, `alert` in production code
+- Throwing non-Error values
+- `eval()` or direct `document.cookie` assignment
+- Spread syntax in loop accumulators
+- Barrel files (index re-exports)
+- Components defined inside other components
+
+---
+
+## Auth Flow
+
+1. WorkOS AuthKit handles sign-in/sign-up (`src/app/[locale]/sign-in/` and `/sign-up/`)
+2. Auth callback at `/callback` exchanges code for session
+3. ConvexClientProvider wraps app with `ConvexProviderWithAuth` using WorkOS tokens
+4. Convex backend validates JWT and looks up user via `authId` (WorkOS subject)
+
+Unauthenticated routes are configured in `src/proxy.ts` via `unauthenticatedPaths` array.
+
+---
+
+## Adding Features
+
+### Workflow
+
+1. Define entities in `convex/schema.ts`
+2. Create backend functions in `convex/[feature].ts`
+3. Create frontend in `src/features/[feature]/` (components, types, store)
+4. Add routes in `src/app/[locale]/`
+5. Run `bunx ultracite fix`
+6. Run CodeRabbit review if available
+
+### Adding Locales
+
+1. Add locale to `src/i18n/routing.ts` in `locales` array and `localeNativeName` record
+2. Create `messages/[locale].json` matching structure of `messages/en.json`
+
+---
+
+## Error Handling
+
 - Throw `Error` objects with descriptive messages
+- Use early returns for error cases
+- Don't catch errors just to rethrow them
+- Validate at system boundaries (user input, external APIs)
+
+---
+
+## Security
+
 - Add `rel="noopener"` with `target="_blank"`
+- Avoid `dangerouslySetInnerHTML` unless absolutely necessary
+- Don't expose internal functions as public (`query`, `mutation`, `action`)
+- Validate and sanitize all user input
+- Never commit secrets or credentials
+
+---
+
+## Performance
+
+- Use indexes for all Convex queries
+- Avoid spread in loop accumulators
+- Use specific imports, not namespace imports
+- Use Next.js `<Image>` for automatic optimization
+- Prefer Server Components for data fetching
+
+---
+
+## What NOT To Do
+
+- ❌ Create custom UI when shadcn/ui component exists
+- ❌ Use `.filter()` in Convex queries
+- ❌ Use `any` type
+- ❌ Skip lint/format step
+- ❌ Leave `console.log` in production code
+- ❌ Use `var` or skip `await`
+- ❌ Create Convex functions without `args`/`returns`/`handler`
+- ❌ Assume dev tools are globally available (use devenv)
