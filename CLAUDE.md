@@ -309,6 +309,82 @@ bunx ultracite check
 
 ---
 
+## Git Commits (Conventional Commits)
+
+**MANDATORY**: All commits must follow the [Conventional Commits](https://www.conventionalcommits.org/) specification.
+
+### Format
+
+```
+<type>(<scope>): <description>
+
+[optional body]
+
+[optional footer]
+```
+
+### Types
+
+| Type | Use Case |
+|------|----------|
+| `feat` | New feature |
+| `fix` | Bug fix |
+| `docs` | Documentation only |
+| `style` | Formatting, no code change |
+| `refactor` | Code change that neither fixes a bug nor adds a feature |
+| `perf` | Performance improvement |
+| `test` | Adding or updating tests |
+| `chore` | Build process, dependencies, tooling |
+| `ci` | CI/CD configuration |
+| `revert` | Reverting a previous commit |
+
+### Rules
+
+- **Type is required** — always start with a type
+- **Lowercase** — type and description in lowercase
+- **No period** — don't end the description with a period
+- **Imperative mood** — "add feature" not "added feature"
+- **Short description** — 50 characters or less for the first line
+- **Scope is optional** — use to specify the area (e.g., `feat(auth):`, `fix(convex):`)
+
+### Examples
+
+```bash
+# Feature
+feat: add user profile page
+feat(auth): implement password reset flow
+
+# Bug fix
+fix: resolve race condition in message loading
+fix(ui): correct button alignment on mobile
+
+# Documentation
+docs: update API documentation
+docs(readme): add deployment instructions
+
+# Refactor
+refactor: extract validation logic into helper
+refactor(convex): simplify query structure
+
+# Chore
+chore: update dependencies
+chore(deps): bump convex to 1.17.0
+```
+
+### Breaking Changes
+
+For breaking changes, add `!` after the type or use `BREAKING CHANGE:` in the footer:
+
+```bash
+feat!: remove deprecated API endpoints
+
+feat(api): change response format
+
+BREAKING CHANGE: response now returns array instead of object
+```
+
+---
+
 ## Auth Flow
 
 1. WorkOS AuthKit handles sign-in/sign-up (`src/app/[locale]/sign-in/` and `/sign-up/`)
