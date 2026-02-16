@@ -1,6 +1,7 @@
 import { withAuth } from "@workos-inc/authkit-nextjs";
 import { api } from "convex/_generated/api";
 import { preloadQuery } from "convex/nextjs";
+import { Effect } from "effect";
 import { TasksClient } from "./tasks-client";
 
 /**
@@ -12,15 +13,19 @@ import { TasksClient } from "./tasks-client";
  * Preloads tasks on the server for faster initial render.
  */
 export default async function TasksPage() {
-  const { accessToken } = await withAuth({ ensureSignedIn: true });
+  const program = Effect.gen(function* () {
+    const { accessToken } = yield* Effect.tryPromise(() =>
+      withAuth({ ensureSignedIn: true })
+    );
 
-  // Preload all tasks (without status filter) on the server
-  // Client will handle filtering for real-time updates
-  const preloadedTasks = await preloadQuery(
-    api.tasks.getTasks,
-    {},
-    { token: accessToken }
-  );
+    const preloadedTasks = yield* Effect.tryPromise(() =>
+      preloadQuery(api.tasks.getTasks, {}, { token: accessToken })
+    );
+
+    return preloadedTasks;
+  }).pipe(Effect.withSpan("tasks.page.load"));
+
+  const preloadedTasks = await Effect.runPromise(program);
 
   return <TasksClient preloadedTasks={preloadedTasks} />;
 }
