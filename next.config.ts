@@ -6,6 +6,16 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 const nextConfig: NextConfig = {
   reactCompiler: true,
 
+  serverExternalPackages: [
+    "@opentelemetry/sdk-node",
+    "@opentelemetry/sdk-trace-node",
+    "@opentelemetry/sdk-metrics",
+    "@opentelemetry/exporter-trace-otlp-proto",
+    "@opentelemetry/exporter-metrics-otlp-proto",
+    "@opentelemetry/exporter-logs-otlp-http",
+    "@opentelemetry/resources",
+  ],
+
   /**
    * Security Headers
    *
