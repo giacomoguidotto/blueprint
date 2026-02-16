@@ -59,8 +59,10 @@ export function ErrorDisplay({
   showDigest = true,
 }: ErrorDisplayProps) {
   useEffect(() => {
-    reportClientError(error.message, error.digest);
-  }, [error]);
+    reportClientError(error.message, error.digest).catch(() => {
+      // Silently ignore reporting failures to avoid cascading errors
+    });
+  }, [error.message, error.digest]);
 
   return (
     <div
