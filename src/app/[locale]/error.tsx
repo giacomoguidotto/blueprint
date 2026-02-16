@@ -8,5 +8,5 @@ interface ErrorComponentProps {
 }
 
 export default function ErrorComponent({ error, reset }: ErrorComponentProps) {
-  return <ErrorDisplay error={error} logPrefix="Route error" reset={reset} />;
+  return <ErrorDisplay error={error} reset={reset} />;
 }

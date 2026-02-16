@@ -15,7 +15,6 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
           <ErrorDisplay
             description="A critical error occurred. Please refresh the page or contact support if the problem persists."
             error={error}
-            logPrefix="Global error"
             minHeight="100vh"
             reset={reset}
             title="Application Error"

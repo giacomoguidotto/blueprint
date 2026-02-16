@@ -2,6 +2,7 @@
 
 import { AlertTriangle, RefreshCcw } from "lucide-react";
 import { useEffect } from "react";
+import { reportClientError } from "@/app/actions/report-error";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -13,8 +14,6 @@ interface ErrorDisplayProps {
   title?: string;
   /** Description to display. Defaults to a generic error message */
   description?: string;
-  /** Prefix for console error logging. Defaults to "Error" */
-  logPrefix?: string;
   /** Button text. Defaults to "Try again" */
   resetLabel?: string;
   /** Additional CSS classes for the container */
@@ -31,7 +30,7 @@ interface ErrorDisplayProps {
  * Design rationale:
  * - Leverages shadcn/ui Alert component for consistent error presentation
  * - Flexible props allow customization for different error boundary contexts
- * - Automatic error logging with configurable prefix for observability
+ * - Automatic error reporting to Axiom via server action
  * - Accessible with proper ARIA roles and semantic structure
  * - Displays error digest when available for debugging/support
  *
@@ -46,7 +45,6 @@ interface ErrorDisplayProps {
  *   reset={reset}
  *   title="Application Error"
  *   description="A critical error occurred..."
- *   logPrefix="Global error"
  *   minHeight="100vh"
  * />
  */
@@ -55,16 +53,14 @@ export function ErrorDisplay({
   reset,
   title = "Something went wrong",
   description = "An unexpected error occurred while loading this page. Please try again.",
-  logPrefix = "Error",
   resetLabel = "Try again",
   className,
   minHeight = "400px",
   showDigest = true,
 }: ErrorDisplayProps) {
   useEffect(() => {
-    // TODO: integrate with monitoring service (e.g., Sentry)
-    console.error(`${logPrefix}:`, error);
-  }, [error, logPrefix]);
+    reportClientError(error.message, error.digest);
+  }, [error]);
 
   return (
     <div
