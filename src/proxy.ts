@@ -1,4 +1,5 @@
 import { authkitMiddleware } from "@workos-inc/authkit-nextjs";
+import { Effect } from "effect";
 import {
   type NextFetchEvent,
   NextRequest,
@@ -39,7 +40,7 @@ function generateCSPHeader(_nonce: string): string {
     `style-src 'self' 'unsafe-inline'`,
     `img-src 'self' data: blob: https:`,
     `font-src 'self' data:`,
-    `connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://api.workos.com https://authkit.workos.com https://*.authkit.app https://vercel.live`,
+    `connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://api.workos.com https://authkit.workos.com https://*.authkit.app https://vercel.live https://api.axiom.co`,
     `form-action 'self' https://api.workos.com https://authkit.workos.com`,
     `frame-src 'self' https://authkit.workos.com https://vercel.live`,
     `frame-ancestors 'none'`,
@@ -50,54 +51,67 @@ function generateCSPHeader(_nonce: string): string {
   return cspDirectives.join("; ");
 }
 
-export async function proxy(
-  initialRequest: NextRequest,
-  event: NextFetchEvent
-) {
-  const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
-  const cspHeader = generateCSPHeader(nonce);
+export function proxy(initialRequest: NextRequest, event: NextFetchEvent) {
+  const program = Effect.gen(function* () {
+    const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
+    const cspHeader = generateCSPHeader(nonce);
 
-  // Add nonce to request headers so Next.js can apply it during SSR
-  const requestHeaders = new Headers(initialRequest.headers);
-  requestHeaders.set("x-nonce", nonce);
+    const requestHeaders = new Headers(initialRequest.headers);
+    requestHeaders.set("x-nonce", nonce);
 
-  const request = new NextRequest(initialRequest, {
-    headers: requestHeaders,
-  });
+    const request = new NextRequest(initialRequest, {
+      headers: requestHeaders,
+    });
 
-  const intlResponse = intlMiddleware(request);
+    const intlResponse = yield* Effect.try(() => intlMiddleware(request));
 
-  if (
-    intlResponse.headers.get("x-middleware-rewrite") === null &&
-    intlResponse.status !== 200
-  ) {
-    return intlResponse; // intl middleware redirecting
-  }
-
-  const authResponse = await authMiddleware(request, event);
-
-  let response: NextResponse | Response = intlResponse;
-
-  if (authResponse) {
-    // merging auth and intl responses
-    response = authResponse;
-
-    const intlLocale = intlResponse.headers.get("x-next-intl-locale");
-    if (intlLocale) {
-      response.headers.set("x-next-intl-locale", intlLocale);
+    if (
+      intlResponse.headers.get("x-middleware-rewrite") === null &&
+      intlResponse.status !== 200
+    ) {
+      return intlResponse;
     }
 
-    const linkHeader = intlResponse.headers.get("link");
-    if (linkHeader) {
-      response.headers.set("link", linkHeader);
+    const authResponse = yield* Effect.tryPromise(
+      () =>
+        Promise.resolve(authMiddleware(request, event)) as Promise<
+          NextResponse | Response | undefined
+        >
+    );
+
+    let response: NextResponse | Response = intlResponse;
+
+    if (authResponse) {
+      response = authResponse;
+
+      const intlLocale = intlResponse.headers.get("x-next-intl-locale");
+      if (intlLocale) {
+        response.headers.set("x-next-intl-locale", intlLocale);
+      }
+
+      const linkHeader = intlResponse.headers.get("link");
+      if (linkHeader) {
+        response.headers.set("link", linkHeader);
+      }
     }
-  }
 
-  // Set CSP header and nonce in response
-  response.headers.set("Content-Security-Policy", cspHeader);
-  response.headers.set("x-nonce", nonce);
+    response.headers.set("Content-Security-Policy", cspHeader);
+    response.headers.set("x-nonce", nonce);
 
-  return response;
+    return response;
+  }).pipe(
+    Effect.withSpan("middleware.proxy", {
+      attributes: {
+        "http.url": initialRequest.url,
+        "http.method": initialRequest.method,
+      },
+    }),
+    Effect.catchAll(() =>
+      Effect.succeed(new Response("Internal Server Error", { status: 500 }))
+    )
+  );
+
+  return Effect.runPromise(program);
 }
 
 export const config = {
