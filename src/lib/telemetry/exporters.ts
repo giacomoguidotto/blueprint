@@ -1,0 +1,29 @@
+import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-proto";
+import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-proto";
+import { PeriodicExportingMetricReader } from "@opentelemetry/sdk-metrics";
+import type { AxiomConfig } from "./config";
+
+export function createTraceExporter(config: AxiomConfig): OTLPTraceExporter {
+  return new OTLPTraceExporter({
+    url: "https://api.axiom.co/v1/traces",
+    headers: {
+      Authorization: `Bearer ${config.apiToken}`,
+      "X-Axiom-Dataset": config.dataset,
+    },
+  });
+}
+
+export function createMetricReader(
+  config: AxiomConfig
+): PeriodicExportingMetricReader {
+  return new PeriodicExportingMetricReader({
+    exporter: new OTLPMetricExporter({
+      url: "https://api.axiom.co/v1/metrics",
+      headers: {
+        Authorization: `Bearer ${config.apiToken}`,
+        "X-Axiom-Dataset": config.metricsDataset,
+      },
+    }),
+    exportIntervalMillis: 60_000,
+  });
+}
