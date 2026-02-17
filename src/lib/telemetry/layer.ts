@@ -8,7 +8,7 @@ const OtelSdkLayer = Layer.unwrapEffect(
   Effect.gen(function* () {
     const config = yield* AxiomConfigTag;
 
-    if (!config.apiToken) {
+    if (!(config.apiToken && config.domain)) {
       return Layer.empty;
     }
 

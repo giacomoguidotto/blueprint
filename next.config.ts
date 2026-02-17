@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
     "@opentelemetry/sdk-node",
     "@opentelemetry/sdk-trace-node",
     "@opentelemetry/sdk-metrics",
+    "@opentelemetry/exporter-trace-otlp-http",
     "@opentelemetry/exporter-trace-otlp-proto",
     "@opentelemetry/exporter-metrics-otlp-proto",
     "@opentelemetry/exporter-logs-otlp-http",
