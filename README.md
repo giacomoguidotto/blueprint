@@ -16,6 +16,8 @@ A production-ready Next.js starter template with modern tooling and best practic
 
 🌓 Dark mode & accessible, responsive design
 
+📡 Full-stack observability ([Effect](https://effect.website/) + [OpenTelemetry](https://opentelemetry.io/) + [Axiom](https://axiom.co/))
+
 🛡️ Security best practices (CSP, headers, env validation)
 
 🧑‍💻 Fast linting/formatting ([Biome](https://biomejs.dev/)), reproducible dev env ([devenv](https://devenv.sh/))
@@ -171,6 +173,9 @@ At the end you should have the following environment variables:
 - `WORKOS_WEBHOOK_SECRET`
 - `NEXT_PUBLIC_WORKOS_REDIRECT_URI`
 - `CONVEX_DEPLOY_KEY`
+- `AXIOM_API_TOKEN`
+- `AXIOM_DATASET`
+- `AXIOM_METRICS_DATASET`
 
 This values should be only for production.
 
@@ -270,6 +275,47 @@ Then, create the translation file in `messages/[locale].json` using the same str
 
 Learn more: [next-intl Documentation](https://next-intl-docs.vercel.app/)
 
+## 📡 Observability
+
+Blueprint includes a full-stack observability pipeline built on [Effect](https://effect.website/), [OpenTelemetry](https://opentelemetry.io/), and [Axiom](https://axiom.co/).
+
+### How it works
+
+- **Telemetry module** (`src/lib/telemetry/`) — Effect-based OpenTelemetry setup that exports traces and metrics to Axiom via protobuf
+- **Managed runtime** (`src/lib/telemetry/runtime.ts`) — A `ManagedRuntime` that keeps the OTel SDK alive and bridges `Effect.withSpan` to the OTel TracerProvider
+- **Next.js instrumentation** (`src/instrumentation.ts`) — Eagerly initializes the managed runtime on server startup
+- **Request tracing** — Server components use `Effect.withSpan` + `telemetryRuntime.runPromise` for automatic trace spans
+- **Client error reporting** — `ErrorDisplay` component reports errors to Axiom via a server action
+
+### Setup
+
+1. Create an [Axiom](https://app.axiom.co/) account and two datasets:
+   - `blueprint` — for events (logs + trace spans)
+   - `blueprint-metrics` — for OpenTelemetry metrics
+
+2. Add the following to your `.env.local`:
+   ```env
+   AXIOM_API_TOKEN=xaat-... # from https://app.axiom.co
+   AXIOM_DATASET=blueprint
+   AXIOM_METRICS_DATASET=blueprint-metrics
+   ```
+
+3. Start the dev server — the OTel SDK initializes automatically when `AXIOM_API_TOKEN` is set. When the token is missing, telemetry gracefully degrades to a no-op.
+
+### Adding traces to new code
+
+Use `Effect.withSpan` and run through the managed runtime:
+
+```typescript
+import { Effect } from "effect";
+import { telemetryRuntime } from "@/lib/telemetry/runtime";
+
+const program = Effect.tryPromise(() => fetchSomething())
+  .pipe(Effect.withSpan("myFeature.load"));
+
+const result = await telemetryRuntime.runPromise(program);
+```
+
 ## 🎯 Best Practices Followed
 
 This project embeds production-grade patterns and architectural decisions:
@@ -279,6 +325,7 @@ This project embeds production-grade patterns and architectural decisions:
 - **shadcn/ui first**: composable, accessible components that you own and customize, not a rigid library dependency
 - **Separation of concerns**: clear frontend/backend boundaries (Next.js/Convex), avoiding tangled logic and improving testability
 - **Zero code duplication**: shared UI components (`src/components/ui/`), reusable layouts, and centralized utilities
+- **Observable by default**: Effect-based telemetry with OpenTelemetry traces and metrics exported to Axiom, graceful no-op when unconfigured
 
 **Why these choices?** They reduce cognitive load, prevent common bugs, make onboarding faster, and ensure the codebase scales cleanly from prototype to production.
 
@@ -290,13 +337,11 @@ This project embeds production-grade patterns and architectural decisions:
 - [x] **Auth**: WorkOS AuthKit
 - [x] **Styling**: Tailwind CSS 4, shadcn/ui, next-themes
 - [x] **i18n**: next-intl
+- [x] **Observability**: Effect + OpenTelemetry + Axiom (traces, metrics, error reporting)
 - [x] **Code Quality**: Biome, Ultracite, Husky
 - [x] **Dev Env**: devenv, direnv
 
 ### 🚧 Planned / To Do
 - [ ] Vitest + Playwright for testing
-- [ ] Axiom for observability
-- [ ] Sentry for error tracking
 - [ ] Database migrations tooling
 - [ ] Email service integration
-- [ ] Effect integration

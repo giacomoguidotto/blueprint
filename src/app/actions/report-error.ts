@@ -1,7 +1,7 @@
 "use server";
 
-import { Effect } from "effect";
 import { reportError } from "@/lib/telemetry/helpers";
+import { telemetryRuntime } from "@/lib/telemetry/runtime";
 
 const MAX_MESSAGE_LENGTH = 1024;
 
@@ -13,7 +13,7 @@ export async function reportClientError(
   const truncatedDigest = digest?.slice(0, 64);
   const error = new Error(truncatedMessage);
 
-  await Effect.runPromise(
+  await telemetryRuntime.runPromise(
     reportError(error, {
       "error.source": "client",
       ...(truncatedDigest ? { "error.digest": truncatedDigest } : {}),
