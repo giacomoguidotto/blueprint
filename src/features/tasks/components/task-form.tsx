@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "convex/_generated/api";
-import { useMutation } from "convex/react";
 import { Loader2, Plus, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useCallback, useState } from "react";
@@ -26,6 +25,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { useTracedMutation } from "@/hooks/use-traced-mutation";
 import { TASK_PRIORITIES, type TaskPriority } from "../types";
 
 /**
@@ -60,7 +60,10 @@ interface TaskFormProps {
  */
 export function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
   const t = useTranslations("tasks.form");
-  const createTask = useMutation(api.tasks.createTask);
+  const createTask = useTracedMutation(
+    api.tasks.createTask,
+    "user.action.createTask"
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
@@ -108,9 +111,8 @@ export function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
 
         reset();
         onSuccess?.();
-      } catch (error) {
-        // Error will be displayed via Convex error handling
-        console.error("Failed to create task:", error);
+      } catch {
+        // Error is reported via useTracedMutation telemetry
       } finally {
         setIsSubmitting(false);
       }

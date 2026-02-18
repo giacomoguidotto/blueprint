@@ -1,7 +1,6 @@
 "use client";
 
 import { api } from "convex/_generated/api";
-import { useMutation } from "convex/react";
 import {
   ArrowRight,
   Calendar,
@@ -25,6 +24,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useTracedMutation } from "@/hooks/use-traced-mutation";
 import { cn } from "@/lib/utils";
 import type { Task, TaskStatus } from "../types";
 
@@ -86,8 +86,16 @@ function isTaskCompleted(status: TaskStatus): boolean {
  */
 export function TaskCard({ task }: TaskCardProps) {
   const t = useTranslations("tasks");
-  const updateStatus = useMutation(api.tasks.updateTaskStatus);
-  const deleteTask = useMutation(api.tasks.deleteTask);
+  const updateStatus = useTracedMutation(
+    api.tasks.updateTaskStatus,
+    "user.action.updateTaskStatus",
+    { "task.id": task._id }
+  );
+  const deleteTask = useTracedMutation(
+    api.tasks.deleteTask,
+    "user.action.deleteTask",
+    { "task.id": task._id }
+  );
   const [isUpdating, setIsUpdating] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 

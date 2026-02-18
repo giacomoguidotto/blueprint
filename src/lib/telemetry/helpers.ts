@@ -22,3 +22,26 @@ export function reportError(
     }
   );
 }
+
+/**
+ * Report a completed client-side span to the telemetry system.
+ * Used to trace user actions (e.g. mutations) that originate in the browser.
+ */
+export function reportSpan(
+  name: string,
+  attributes: Record<string, string>,
+  durationMs: number,
+  error?: string
+): Effect.Effect<void> {
+  const program = error
+    ? Effect.logError("User action failed", new Error(error))
+    : Effect.logInfo("User action completed");
+
+  return Effect.withSpan(program, name, {
+    attributes: {
+      ...attributes,
+      "span.duration_ms": String(durationMs),
+      ...(error ? { "error.message": error } : {}),
+    },
+  });
+}
