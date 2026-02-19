@@ -2,7 +2,7 @@
 
 import { MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,6 +11,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+function switchTheme(setTheme: (theme: string) => void, newTheme: string) {
+  document.documentElement.classList.add("theme-transitioning");
+  setTheme(newTheme);
+  setTimeout(() => {
+    document.documentElement.classList.remove("theme-transitioning");
+  }, 300);
+}
+
 export function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
@@ -18,6 +26,13 @@ export function ThemeToggle() {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const handleSetTheme = useCallback(
+    (newTheme: string) => {
+      switchTheme(setTheme, newTheme);
+    },
+    [setTheme]
+  );
 
   if (!mounted) {
     return (
@@ -45,21 +60,21 @@ export function ThemeToggle() {
       <DropdownMenuContent align="end">
         <DropdownMenuItem
           data-active={theme === "light"}
-          onClick={() => setTheme("light")}
+          onClick={() => handleSetTheme("light")}
         >
           <SunIcon className="size-4" />
           Light
         </DropdownMenuItem>
         <DropdownMenuItem
           data-active={theme === "dark"}
-          onClick={() => setTheme("dark")}
+          onClick={() => handleSetTheme("dark")}
         >
           <MoonIcon className="size-4" />
           Dark
         </DropdownMenuItem>
         <DropdownMenuItem
           data-active={theme === "system"}
-          onClick={() => setTheme("system")}
+          onClick={() => handleSetTheme("system")}
         >
           <MonitorIcon className="size-4" />
           System

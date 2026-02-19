@@ -167,6 +167,18 @@
   body {
     @apply bg-background text-foreground;
   }
+  /* Temporary class applied during theme switch for smooth transition */
+  html.theme-transitioning,
+  html.theme-transitioning *,
+  html.theme-transitioning *::before,
+  html.theme-transitioning *::after {
+    transition:
+      color 300ms ease,
+      background-color 300ms ease,
+      border-color 300ms ease,
+      box-shadow 300ms ease,
+      opacity 300ms ease !important;
+  }
 }
 
 /* Glassmorphism utility classes */
