@@ -113,9 +113,9 @@
   --primary: oklch(0.65 0.2 260);
   --primary-foreground: oklch(0.08 0.015 270);
 
-  /* Brighter violet */
-  --accent: oklch(0.68 0.18 290);
-  --accent-foreground: oklch(0.08 0.015 270);
+  /* Subtle hover surface with light text */
+  --accent: oklch(0.25 0.015 270);
+  --accent-foreground: oklch(0.93 0.005 270);
 
   /* Translucent borders */
   --border: oklch(0.93 0.005 270 / 12%);

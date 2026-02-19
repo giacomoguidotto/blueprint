@@ -8,13 +8,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { useMemo } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  fadeUp,
-  listItemExit,
-  spring,
-  staggerContainer,
-  staggerItem,
-} from "@/lib/motion";
+import { fadeUp, listItemExit, spring } from "@/lib/motion";
 import { statusFilterAtom } from "../store/atoms";
 import type { Task, TaskStatus } from "../types";
 import { TaskCard } from "./task-card";
@@ -95,26 +89,22 @@ export function TaskList({ preloadedTasks }: TaskListProps) {
   }
 
   return (
-    <motion.div
-      animate="show"
-      className="space-y-3"
-      initial="hidden"
-      variants={staggerContainer}
-    >
+    <div className="space-y-3">
       <AnimatePresence mode="popLayout">
         {sortedTasks.map((task: Task) => (
           <motion.div
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             exit={listItemExit}
+            initial={{ opacity: 0, y: 20, filter: "blur(4px)" }}
             key={task._id}
             layout="position"
             transition={spring.gentle}
-            variants={staggerItem}
           >
             <TaskCard task={task} />
           </motion.div>
         ))}
       </AnimatePresence>
-    </motion.div>
+    </div>
   );
 }
 
