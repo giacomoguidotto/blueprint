@@ -30,9 +30,9 @@
         "title": "UI Moderna",
         "description": "Componenti shadcn/ui con tema scuro"
       },
-      "security": {
-        "title": "Sicurezza Prima",
-        "description": "Header CSP, error boundary e best practice"
+      "observability": {
+        "title": "Osservabilità",
+        "description": "Tracing e metriche OpenTelemetry con Axiom"
       },
       "dx": {
         "title": "Developer Experience",

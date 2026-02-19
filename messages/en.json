@@ -30,9 +30,9 @@
         "title": "Modern UI",
         "description": "shadcn/ui components with dark mode"
       },
-      "security": {
-        "title": "Security First",
-        "description": "CSP headers, error boundaries, and best practices"
+      "observability": {
+        "title": "Observability",
+        "description": "OpenTelemetry tracing and metrics with Axiom"
       },
       "dx": {
         "title": "Developer Experience",

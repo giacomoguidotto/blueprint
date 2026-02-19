@@ -3,6 +3,7 @@
 import { useAuth } from "@workos-inc/authkit-nextjs/components";
 import { Authenticated, Unauthenticated } from "convex/react";
 import {
+  Activity,
   Database,
   GitBranch,
   Globe,
@@ -62,9 +63,9 @@ function UnauthenticatedView() {
       description: t("features.ui.description"),
     },
     {
-      icon: Lock,
-      title: t("features.security.title"),
-      description: t("features.security.description"),
+      icon: Activity,
+      title: t("features.observability.title"),
+      description: t("features.observability.description"),
     },
     {
       icon: Zap,
