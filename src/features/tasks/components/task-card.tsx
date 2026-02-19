@@ -25,6 +25,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useTracedMutation } from "@/hooks/use-traced-mutation";
+import { cardHover } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import type { Task, TaskStatus } from "../types";
 
@@ -82,7 +83,7 @@ function isTaskCompleted(status: TaskStatus): boolean {
  * Task Card Component
  *
  * Displays a single task with status, priority, and actions.
- * Features Neo-Brutalist styling with Motion animations.
+ * Features glassmorphism styling with spring-based Motion animations.
  */
 export function TaskCard({ task }: TaskCardProps) {
   const t = useTranslations("tasks");
@@ -127,13 +128,14 @@ export function TaskCard({ task }: TaskCardProps) {
 
   return (
     <motion.div
-      transition={{ duration: 0.1 }}
-      whileHover={{ x: -2, y: -2 }}
-      whileTap={{ scale: 0.98 }}
+      initial="rest"
+      variants={cardHover}
+      whileHover="hover"
+      whileTap="tap"
     >
       <Card
         className={cn(
-          "border-brutal shadow-brutal transition-all",
+          "shadow-brutal transition-all hover:shadow-elevated",
           task.priority === "high" && "priority-high",
           task.priority === "medium" && "priority-medium",
           task.priority === "low" && "priority-low",
@@ -143,25 +145,27 @@ export function TaskCard({ task }: TaskCardProps) {
       >
         <CardHeader className="flex flex-row items-start justify-between gap-2 space-y-0 pb-2">
           <div className="flex items-start gap-3">
-            <Button
-              aria-label={t(`status.${task.status}`)}
-              className="mt-0.5"
-              disabled={isUpdating || isCompleted}
-              onClick={() => nextStatus && handleStatusChange(nextStatus)}
-              size="icon-xs"
-              variant="ghost"
-            >
-              {isUpdating ? (
-                <Loader2 className="size-4 animate-spin" />
-              ) : (
-                <StatusIcon
-                  className={cn(
-                    "size-4",
-                    task.status === "done" && "text-green-500"
-                  )}
-                />
-              )}
-            </Button>
+            <motion.div whileTap={{ scale: 0.85, rotate: -15 }}>
+              <Button
+                aria-label={t(`status.${task.status}`)}
+                className="mt-0.5"
+                disabled={isUpdating || isCompleted}
+                onClick={() => nextStatus && handleStatusChange(nextStatus)}
+                size="icon-xs"
+                variant="ghost"
+              >
+                {isUpdating ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <StatusIcon
+                    className={cn(
+                      "size-4",
+                      task.status === "done" && "text-green-500"
+                    )}
+                  />
+                )}
+              </Button>
+            </motion.div>
             <div className="space-y-1">
               <CardTitle
                 className={cn(
@@ -190,12 +194,18 @@ export function TaskCard({ task }: TaskCardProps) {
 
         <CardContent className="pt-0">
           <div className="flex flex-wrap items-center gap-2">
-            <Badge
-              className={PRIORITY_COLORS[task.priority]}
-              variant="secondary"
+            <motion.div
+              animate={{ scale: 1, opacity: 1 }}
+              initial={{ scale: 0.8, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
             >
-              {t(`priority.${task.priority}`)}
-            </Badge>
+              <Badge
+                className={PRIORITY_COLORS[task.priority]}
+                variant="secondary"
+              >
+                {t(`priority.${task.priority}`)}
+              </Badge>
+            </motion.div>
 
             <Badge variant="outline">{t(`status.${task.status}`)}</Badge>
 

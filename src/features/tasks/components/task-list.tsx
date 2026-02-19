@@ -8,6 +8,13 @@ import { AnimatePresence, motion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { useMemo } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  fadeUp,
+  listItemExit,
+  spring,
+  staggerContainer,
+  staggerItem,
+} from "@/lib/motion";
 import { statusFilterAtom } from "../store/atoms";
 import type { Task, TaskStatus } from "../types";
 import { TaskCard } from "./task-card";
@@ -22,7 +29,7 @@ interface TaskListProps {
  * Displays tasks from Convex with real-time updates.
  * Uses preloaded tasks for instant initial render, then subscribes
  * for real-time updates. Filters are applied client-side for instant UX.
- * Features Neo-Brutalist styling with Motion animations.
+ * Features glassmorphism styling with spring-based Motion animations.
  */
 export function TaskList({ preloadedTasks }: TaskListProps) {
   const t = useTranslations("tasks");
@@ -69,10 +76,10 @@ export function TaskList({ preloadedTasks }: TaskListProps) {
   if (sortedTasks.length === 0) {
     return (
       <motion.div
-        animate={{ opacity: 1, scale: 1 }}
-        className="flex flex-col items-center justify-center border border-brutal border-dashed py-12"
-        initial={{ opacity: 0, scale: 0.95 }}
-        transition={{ duration: 0.15 }}
+        animate="show"
+        className="flex flex-col items-center justify-center rounded-lg border border-dashed py-12"
+        initial="hidden"
+        variants={fadeUp}
       >
         <ClipboardList className="mb-4 size-12 text-muted-foreground/50" />
         <h3 className="mb-1 font-medium font-mono text-lg">
@@ -88,22 +95,26 @@ export function TaskList({ preloadedTasks }: TaskListProps) {
   }
 
   return (
-    <div className="space-y-3">
+    <motion.div
+      animate="show"
+      className="space-y-3"
+      initial="hidden"
+      variants={staggerContainer}
+    >
       <AnimatePresence mode="popLayout">
         {sortedTasks.map((task: Task) => (
           <motion.div
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, x: -20, scale: 0.95 }}
-            initial={{ opacity: 0, scale: 0.9 }}
+            exit={listItemExit}
             key={task._id}
-            layout
-            transition={{ duration: 0.15, ease: "easeOut" }}
+            layout="position"
+            transition={spring.gentle}
+            variants={staggerItem}
           >
             <TaskCard task={task} />
           </motion.div>
         ))}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 }
 
@@ -116,7 +127,7 @@ function TaskListSkeleton() {
   return (
     <div className="space-y-3">
       {SKELETON_KEYS.map((key) => (
-        <div className="rounded-lg border border-brutal p-4" key={key}>
+        <div className="rounded-lg border p-4" key={key}>
           <div className="flex items-start gap-3">
             <Skeleton className="size-5 rounded-full" />
             <div className="flex-1 space-y-2">

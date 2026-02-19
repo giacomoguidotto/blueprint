@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "convex/_generated/api";
 import { Loader2, Plus, X } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -26,6 +27,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useTracedMutation } from "@/hooks/use-traced-mutation";
+import { spring, staggerContainer, staggerItem } from "@/lib/motion";
 import { TASK_PRIORITIES, type TaskPriority } from "../types";
 
 /**
@@ -56,7 +58,7 @@ interface TaskFormProps {
  * Task Creation Form
  *
  * Uses react-hook-form with zod validation for type-safe form handling.
- * Features Neo-Brutalist styling with Motion animations.
+ * Features glassmorphism styling with spring-based Motion animations.
  */
 export function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
   const t = useTranslations("tasks.form");
@@ -121,7 +123,7 @@ export function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
   );
 
   return (
-    <Card className="border-brutal shadow-brutal">
+    <Card className="shadow-brutal">
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <div>
@@ -145,29 +147,44 @@ export function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
         </div>
       </CardHeader>
       <CardContent>
-        <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+        <motion.form
+          animate="show"
+          className="space-y-4"
+          initial="hidden"
+          onSubmit={handleSubmit(onSubmit)}
+          variants={staggerContainer}
+        >
           {/* Title */}
-          <div className="space-y-2">
+          <motion.div className="space-y-2" variants={staggerItem}>
             <Label className="font-mono" htmlFor="title">
               {t("titleLabel")}
             </Label>
             <Input
               aria-describedby={errors.title ? "title-error" : undefined}
               aria-invalid={!!errors.title}
-              className="border-brutal"
               id="title"
               placeholder={t("titlePlaceholder")}
               {...register("title")}
             />
-            {errors.title && (
-              <p className="text-destructive text-sm" id="title-error">
-                {errors.title.message}
-              </p>
-            )}
-          </div>
+            <AnimatePresence>
+              {errors.title && (
+                <motion.p
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="text-destructive text-sm"
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  id="title-error"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  key="title-error"
+                  transition={spring.snappy}
+                >
+                  {errors.title.message}
+                </motion.p>
+              )}
+            </AnimatePresence>
+          </motion.div>
 
           {/* Description */}
-          <div className="space-y-2">
+          <motion.div className="space-y-2" variants={staggerItem}>
             <Label className="font-mono" htmlFor="description">
               {t("descriptionLabel")}
             </Label>
@@ -176,20 +193,33 @@ export function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
                 errors.description ? "description-error" : undefined
               }
               aria-invalid={!!errors.description}
-              className="min-h-20 resize-none border-brutal"
+              className="min-h-20 resize-none"
               id="description"
               placeholder={t("descriptionPlaceholder")}
               {...register("description")}
             />
-            {errors.description && (
-              <p className="text-destructive text-sm" id="description-error">
-                {errors.description.message}
-              </p>
-            )}
-          </div>
+            <AnimatePresence>
+              {errors.description && (
+                <motion.p
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="text-destructive text-sm"
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  id="description-error"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  key="description-error"
+                  transition={spring.snappy}
+                >
+                  {errors.description.message}
+                </motion.p>
+              )}
+            </AnimatePresence>
+          </motion.div>
 
           {/* Priority & Due Date row */}
-          <div className="grid gap-4 sm:grid-cols-2">
+          <motion.div
+            className="grid gap-4 sm:grid-cols-2"
+            variants={staggerItem}
+          >
             {/* Priority */}
             <div className="space-y-2">
               <Label className="font-mono" htmlFor="priority">
@@ -201,7 +231,7 @@ export function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
                 }
                 value={priority}
               >
-                <SelectTrigger className="border-brutal" id="priority">
+                <SelectTrigger id="priority">
                   <SelectValue placeholder={t("priorityPlaceholder")} />
                 </SelectTrigger>
                 <SelectContent>
@@ -219,51 +249,42 @@ export function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
               <Label className="font-mono" htmlFor="dueDate">
                 {t("dueDateLabel")}
               </Label>
-              <Input
-                className="border-brutal"
-                id="dueDate"
-                type="date"
-                {...register("dueDate")}
-              />
+              <Input id="dueDate" type="date" {...register("dueDate")} />
             </div>
-          </div>
+          </motion.div>
 
           {/* Tags */}
-          <div className="space-y-2">
+          <motion.div className="space-y-2" variants={staggerItem}>
             <Label className="font-mono" htmlFor="tags">
               {t("tagsLabel")}
             </Label>
             <Input
-              className="border-brutal"
               id="tags"
               placeholder={t("tagsPlaceholder")}
               {...register("tags")}
             />
             <p className="text-muted-foreground text-xs">{t("tagsHint")}</p>
-          </div>
+          </motion.div>
 
           {/* Actions */}
-          <div className="flex gap-2 pt-2">
-            <Button
-              className="border-brutal shadow-brutal-sm"
-              disabled={isSubmitting}
-              type="submit"
-            >
-              {isSubmitting && <Loader2 className="animate-spin" />}
-              {t("submit")}
-            </Button>
-            {onCancel && (
+          <motion.div className="flex gap-2 pt-2" variants={staggerItem}>
+            <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
               <Button
-                className="border-brutal"
-                onClick={onCancel}
-                type="button"
-                variant="outline"
+                className="shadow-brutal-sm"
+                disabled={isSubmitting}
+                type="submit"
               >
+                {isSubmitting && <Loader2 className="animate-spin" />}
+                {t("submit")}
+              </Button>
+            </motion.div>
+            {onCancel && (
+              <Button onClick={onCancel} type="button" variant="outline">
                 {t("cancel")}
               </Button>
             )}
-          </div>
-        </form>
+          </motion.div>
+        </motion.form>
       </CardContent>
     </Card>
   );

@@ -24,6 +24,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
+import {
+  fadeUp,
+  scaleIn,
+  spring,
+  staggerContainer,
+  staggerItem,
+} from "@/lib/motion";
 
 export default function Home() {
   return (
@@ -78,21 +85,15 @@ function UnauthenticatedView() {
     <div className="space-y-16">
       {/* Hero Section */}
       <motion.div
-        animate={{ opacity: 1, y: 0 }}
         className="mx-auto max-w-3xl space-y-8 text-center"
-        initial={{ opacity: 0, y: -20 }}
-        transition={{ duration: 0.2 }}
+        initial="hidden"
+        variants={fadeUp}
+        viewport={{ once: true }}
+        whileInView="show"
       >
         <div className="space-y-4">
-          <motion.div
-            animate={{ opacity: 1, scale: 1 }}
-            initial={{ opacity: 0, scale: 0.9 }}
-            transition={{ delay: 0.1, duration: 0.15 }}
-          >
-            <Badge
-              className="border-brutal px-3 py-1 shadow-brutal-sm"
-              variant="secondary"
-            >
+          <motion.div animate="show" initial="hidden" variants={scaleIn}>
+            <Badge className="px-3 py-1 shadow-soft" variant="secondary">
               <Sparkles className="mr-1.5 size-3" />
               {t("subtitle")}
             </Badge>
@@ -108,55 +109,76 @@ function UnauthenticatedView() {
         </div>
 
         <motion.div
-          animate={{ opacity: 1, y: 0 }}
+          animate="show"
           className="flex flex-col items-center justify-center gap-3 sm:flex-row"
-          initial={{ opacity: 0, y: 10 }}
-          transition={{ delay: 0.2, duration: 0.15 }}
+          initial="hidden"
+          variants={staggerContainer}
         >
-          <Button asChild className="border-brutal shadow-brutal" size="lg">
-            <Link href="/sign-up">{t("getStarted")}</Link>
-          </Button>
-          <Button asChild className="border-brutal" size="lg" variant="outline">
-            <a
-              href="https://github.com/giacomoguidotto/blueprint"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              {t("learnMore")}
-            </a>
-          </Button>
+          <motion.div
+            variants={staggerItem}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+          >
+            <Button asChild className="glow-primary shadow-brutal" size="lg">
+              <Link href="/sign-up">{t("getStarted")}</Link>
+            </Button>
+          </motion.div>
+          <motion.div
+            variants={staggerItem}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+          >
+            <Button asChild size="lg" variant="outline">
+              <a
+                href="https://github.com/giacomoguidotto/blueprint"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                {t("learnMore")}
+              </a>
+            </Button>
+          </motion.div>
         </motion.div>
       </motion.div>
 
       {/* Features Grid */}
       <div className="space-y-8">
         <motion.div
-          animate={{ opacity: 1 }}
           className="text-center"
-          initial={{ opacity: 0 }}
-          transition={{ delay: 0.3, duration: 0.15 }}
+          initial="hidden"
+          variants={fadeUp}
+          viewport={{ once: true }}
+          whileInView="show"
         >
           <h2 className="font-mono font-semibold text-3xl tracking-tight">
             {t("features.title")}
           </h2>
         </motion.div>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {features.map((feature, i) => {
+        <motion.div
+          className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
+          initial="hidden"
+          variants={staggerContainer}
+          viewport={{ once: true, margin: "-50px" }}
+          whileInView="show"
+        >
+          {features.map((feature) => {
             const Icon = feature.icon;
             return (
               <motion.div
-                animate={{ opacity: 1, y: 0 }}
-                initial={{ opacity: 0, y: 20 }}
                 key={feature.title}
-                transition={{ delay: 0.3 + i * 0.1, duration: 0.2 }}
-                whileHover={{ x: -2, y: -2 }}
+                variants={staggerItem}
+                whileHover={{ scale: 1.02, y: -6, transition: spring.snappy }}
+                whileTap={{ scale: 0.98 }}
               >
-                <Card className="border-brutal shadow-brutal transition-all hover:shadow-brutal-sm">
+                <Card className="shadow-brutal transition-all hover:shadow-elevated">
                   <CardHeader>
-                    <div className="mb-2 flex size-10 items-center justify-center bg-primary">
+                    <motion.div
+                      className="mb-2 flex size-10 items-center justify-center rounded-lg bg-primary"
+                      whileHover={{ rotate: 6 }}
+                    >
                       <Icon className="size-5 text-primary-foreground" />
-                    </div>
+                    </motion.div>
                     <CardTitle className="font-mono text-xl">
                       {feature.title}
                     </CardTitle>
@@ -166,7 +188,7 @@ function UnauthenticatedView() {
               </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       </div>
     </div>
   );
@@ -183,10 +205,10 @@ function AuthenticatedView() {
     <div className="mx-auto max-w-4xl space-y-8">
       {/* Welcome Header */}
       <motion.div
-        animate={{ opacity: 1, y: 0 }}
+        animate="show"
         className="space-y-4 text-center"
-        initial={{ opacity: 0, y: -10 }}
-        transition={{ duration: 0.15 }}
+        initial="hidden"
+        variants={fadeUp}
       >
         <h1 className="font-bold font-mono text-4xl tracking-tight">
           {t("welcome", { name })}
@@ -195,14 +217,18 @@ function AuthenticatedView() {
       </motion.div>
 
       {/* Quick Actions */}
-      <div className="grid gap-6 md:grid-cols-2">
+      <motion.div
+        animate="show"
+        className="grid gap-6 md:grid-cols-2"
+        initial="hidden"
+        variants={staggerContainer}
+      >
         <motion.div
-          animate={{ opacity: 1, y: 0 }}
-          initial={{ opacity: 0, y: 20 }}
-          transition={{ delay: 0.1, duration: 0.2 }}
-          whileHover={{ x: -2, y: -2 }}
+          variants={staggerItem}
+          whileHover={{ scale: 1.02, y: -6, transition: spring.snappy }}
+          whileTap={{ scale: 0.98 }}
         >
-          <Card className="border-brutal shadow-brutal transition-all">
+          <Card className="shadow-brutal transition-all hover:shadow-elevated">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 font-mono">
                 <Database className="size-5" />
@@ -211,7 +237,7 @@ function AuthenticatedView() {
               <CardDescription>{t("tasksDescription")}</CardDescription>
             </CardHeader>
             <CardContent>
-              <Button asChild className="border-brutal shadow-brutal-sm">
+              <Button asChild className="shadow-soft">
                 <Link href="/tasks">{t("openTasks")}</Link>
               </Button>
             </CardContent>
@@ -219,12 +245,11 @@ function AuthenticatedView() {
         </motion.div>
 
         <motion.div
-          animate={{ opacity: 1, y: 0 }}
-          initial={{ opacity: 0, y: 20 }}
-          transition={{ delay: 0.2, duration: 0.2 }}
-          whileHover={{ x: -2, y: -2 }}
+          variants={staggerItem}
+          whileHover={{ scale: 1.02, y: -6, transition: spring.snappy }}
+          whileTap={{ scale: 0.98 }}
         >
-          <Card className="border-brutal shadow-brutal transition-all">
+          <Card className="shadow-brutal transition-all hover:shadow-elevated">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 font-mono">
                 <GitBranch className="size-5" />
@@ -236,7 +261,7 @@ function AuthenticatedView() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button asChild className="border-brutal" variant="outline">
+              <Button asChild variant="outline">
                 <a
                   href="https://github.com/giacomoguidotto/blueprint"
                   rel="noopener noreferrer"
@@ -248,15 +273,16 @@ function AuthenticatedView() {
             </CardContent>
           </Card>
         </motion.div>
-      </div>
+      </motion.div>
 
       {/* User Info */}
       <motion.div
-        animate={{ opacity: 1, y: 0 }}
-        initial={{ opacity: 0, y: 20 }}
-        transition={{ delay: 0.3, duration: 0.2 }}
+        animate="show"
+        initial="hidden"
+        transition={{ delay: 0.2 }}
+        variants={fadeUp}
       >
-        <Card className="border-brutal shadow-brutal">
+        <Card className="shadow-brutal">
           <CardHeader>
             <CardTitle className="font-mono">Your Profile</CardTitle>
             <CardDescription>Authenticated via WorkOS AuthKit</CardDescription>
@@ -282,11 +308,7 @@ function AuthenticatedView() {
             </div>
 
             <div className="pt-4">
-              <Button
-                className="border-brutal"
-                onClick={() => signOut()}
-                variant="outline"
-              >
+              <Button onClick={() => signOut()} variant="outline">
                 {tCommon("signOut")}
               </Button>
             </div>

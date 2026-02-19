@@ -11,6 +11,7 @@ import { TaskFilters } from "@/features/tasks/components/task-filters";
 import { TaskForm } from "@/features/tasks/components/task-form";
 import { TaskList } from "@/features/tasks/components/task-list";
 import { isCreateFormOpenAtom } from "@/features/tasks/store/atoms";
+import { fadeUp, scaleIn, spring } from "@/lib/motion";
 
 interface TasksClientProps {
   preloadedTasks: Preloaded<typeof api.tasks.getTasks>;
@@ -22,7 +23,7 @@ interface TasksClientProps {
  * Receives preloaded tasks from server for instant render,
  * then handles real-time updates via Convex subscriptions.
  *
- * Features Neo-Brutalist styling with Motion animations.
+ * Features glassmorphism styling with spring-based Motion animations.
  */
 export function TasksClient({ preloadedTasks }: TasksClientProps) {
   const t = useTranslations("tasks");
@@ -33,10 +34,10 @@ export function TasksClient({ preloadedTasks }: TasksClientProps) {
       <div className="mx-auto max-w-3xl space-y-6">
         {/* Page Header */}
         <motion.div
-          animate={{ opacity: 1, y: 0 }}
+          animate="show"
           className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
-          initial={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.15 }}
+          initial="hidden"
+          variants={fadeUp}
         >
           <div>
             <h1 className="flex items-center gap-2 font-bold font-mono text-3xl tracking-tight">
@@ -47,12 +48,14 @@ export function TasksClient({ preloadedTasks }: TasksClientProps) {
           </div>
           {!isFormOpen && (
             <motion.div
-              animate={{ opacity: 1, scale: 1 }}
-              initial={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.1 }}
+              animate="show"
+              initial="hidden"
+              variants={scaleIn}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
               <Button
-                className="border-brutal shadow-brutal-sm"
+                className="shadow-brutal-sm"
                 onClick={() => setIsFormOpen(true)}
               >
                 <Plus />
@@ -66,11 +69,11 @@ export function TasksClient({ preloadedTasks }: TasksClientProps) {
         <AnimatePresence>
           {isFormOpen && (
             <motion.div
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto", filter: "blur(0px)" }}
+              exit={{ opacity: 0, height: 0, filter: "blur(4px)" }}
+              initial={{ opacity: 0, height: 0, filter: "blur(4px)" }}
               style={{ overflow: "hidden" }}
-              transition={{ duration: 0.2 }}
+              transition={spring.gentle}
             >
               <TaskForm
                 onCancel={() => setIsFormOpen(false)}
@@ -88,10 +91,11 @@ export function TasksClient({ preloadedTasks }: TasksClientProps) {
 
         {/* Convex Features Info */}
         <motion.div
-          animate={{ opacity: 1, y: 0 }}
-          className="rounded-lg border border-brutal bg-muted/30 p-4 shadow-brutal-sm"
-          initial={{ opacity: 0, y: 10 }}
-          transition={{ delay: 0.2, duration: 0.15 }}
+          className="rounded-lg border bg-muted/30 p-4 shadow-soft"
+          initial="hidden"
+          variants={fadeUp}
+          viewport={{ once: true }}
+          whileInView="show"
         >
           <h2 className="mb-2 font-mono font-semibold text-sm">
             {t("convexFeatures.title")}

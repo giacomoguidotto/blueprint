@@ -28,7 +28,7 @@ export function Header() {
   const t = useTranslations();
 
   return (
-    <header className="sticky top-0 z-50 border-brutal border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
+    <header className="glass sticky top-0 z-50 border-b bg-background/80">
       <div className="container mx-auto flex h-16 items-center justify-between gap-4 px-4">
         {/* Left: Back button + Logo */}
         <div className="flex items-center gap-3">
