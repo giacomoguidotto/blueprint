@@ -24,6 +24,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Spotlight } from "@/components/ui/spotlight";
 import { useTracedMutation } from "@/hooks/use-traced-mutation";
 import { cardHover } from "@/lib/motion";
 import { cn } from "@/lib/utils";
@@ -133,121 +134,123 @@ export function TaskCard({ task }: TaskCardProps) {
       whileHover="hover"
       whileTap="tap"
     >
-      <Card
-        className={cn(
-          "shadow-brutal transition-all hover:shadow-elevated",
-          task.priority === "high" && "priority-high",
-          task.priority === "medium" && "priority-medium",
-          task.priority === "low" && "priority-low",
-          isCompleted && "opacity-60",
-          isOverdue && "border-destructive/50"
-        )}
-      >
-        <CardHeader className="flex flex-row items-start justify-between gap-2 space-y-0 pb-2">
-          <div className="flex items-start gap-3">
-            <motion.div whileTap={{ scale: 0.85, rotate: -15 }}>
-              <Button
-                aria-label={t(`status.${task.status}`)}
-                className="mt-0.5"
-                disabled={isUpdating || isCompleted}
-                onClick={() => nextStatus && handleStatusChange(nextStatus)}
-                size="icon-xs"
-                variant="ghost"
-              >
-                {isUpdating ? (
-                  <Loader2 className="size-4 animate-spin" />
-                ) : (
-                  <StatusIcon
-                    className={cn(
-                      "size-4",
-                      task.status === "done" && "text-green-500"
-                    )}
-                  />
+      <Spotlight className="rounded-xl">
+        <Card
+          className={cn(
+            "shadow-brutal transition-all hover:shadow-elevated",
+            task.priority === "high" && "priority-high",
+            task.priority === "medium" && "priority-medium",
+            task.priority === "low" && "priority-low",
+            isCompleted && "opacity-60",
+            isOverdue && "border-destructive/50"
+          )}
+        >
+          <CardHeader className="flex flex-row items-start justify-between gap-2 space-y-0 pb-2">
+            <div className="flex items-start gap-3">
+              <motion.div whileTap={{ scale: 0.85, rotate: -15 }}>
+                <Button
+                  aria-label={t(`status.${task.status}`)}
+                  className="mt-0.5"
+                  disabled={isUpdating || isCompleted}
+                  onClick={() => nextStatus && handleStatusChange(nextStatus)}
+                  size="icon-xs"
+                  variant="ghost"
+                >
+                  {isUpdating ? (
+                    <Loader2 className="size-4 animate-spin" />
+                  ) : (
+                    <StatusIcon
+                      className={cn(
+                        "size-4",
+                        task.status === "done" && "text-green-500"
+                      )}
+                    />
+                  )}
+                </Button>
+              </motion.div>
+              <div className="space-y-1">
+                <CardTitle
+                  className={cn(
+                    "font-mono text-base",
+                    task.status === "done" && "line-through"
+                  )}
+                >
+                  {task.title}
+                </CardTitle>
+                {task.description && (
+                  <p className="line-clamp-2 text-muted-foreground text-sm">
+                    {task.description}
+                  </p>
                 )}
-              </Button>
-            </motion.div>
-            <div className="space-y-1">
-              <CardTitle
-                className={cn(
-                  "font-mono text-base",
-                  task.status === "done" && "line-through"
-                )}
+              </div>
+            </div>
+
+            <TaskCardMenu
+              isDeleting={isDeleting}
+              onDelete={handleDelete}
+              onStatusChange={handleStatusChange}
+              status={task.status}
+              t={t}
+            />
+          </CardHeader>
+
+          <CardContent className="pt-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <motion.div
+                animate={{ scale: 1, opacity: 1 }}
+                initial={{ scale: 0.8, opacity: 0 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
               >
-                {task.title}
-              </CardTitle>
-              {task.description && (
-                <p className="line-clamp-2 text-muted-foreground text-sm">
-                  {task.description}
-                </p>
+                <Badge
+                  className={PRIORITY_COLORS[task.priority]}
+                  variant="secondary"
+                >
+                  {t(`priority.${task.priority}`)}
+                </Badge>
+              </motion.div>
+
+              <Badge variant="outline">{t(`status.${task.status}`)}</Badge>
+
+              {task.dueDate && (
+                <Badge
+                  className={
+                    isOverdue ? "bg-destructive/10 text-destructive" : ""
+                  }
+                  variant="outline"
+                >
+                  <Calendar className="mr-1 size-3" />
+                  {formatDate(task.dueDate)}
+                </Badge>
+              )}
+
+              {task.tags?.map((tag) => (
+                <Badge className="bg-primary/10" key={tag} variant="secondary">
+                  {tag}
+                </Badge>
+              ))}
+
+              {nextStatus && (
+                <Button
+                  className="ml-auto"
+                  disabled={isUpdating}
+                  onClick={() => handleStatusChange(nextStatus)}
+                  size="xs"
+                  variant="ghost"
+                >
+                  {isUpdating ? (
+                    <Loader2 className="animate-spin" />
+                  ) : (
+                    <>
+                      {t(`actions.moveTo.${nextStatus}`)}
+                      <ArrowRight />
+                    </>
+                  )}
+                </Button>
               )}
             </div>
-          </div>
-
-          <TaskCardMenu
-            isDeleting={isDeleting}
-            onDelete={handleDelete}
-            onStatusChange={handleStatusChange}
-            status={task.status}
-            t={t}
-          />
-        </CardHeader>
-
-        <CardContent className="pt-0">
-          <div className="flex flex-wrap items-center gap-2">
-            <motion.div
-              animate={{ scale: 1, opacity: 1 }}
-              initial={{ scale: 0.8, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
-            >
-              <Badge
-                className={PRIORITY_COLORS[task.priority]}
-                variant="secondary"
-              >
-                {t(`priority.${task.priority}`)}
-              </Badge>
-            </motion.div>
-
-            <Badge variant="outline">{t(`status.${task.status}`)}</Badge>
-
-            {task.dueDate && (
-              <Badge
-                className={
-                  isOverdue ? "bg-destructive/10 text-destructive" : ""
-                }
-                variant="outline"
-              >
-                <Calendar className="mr-1 size-3" />
-                {formatDate(task.dueDate)}
-              </Badge>
-            )}
-
-            {task.tags?.map((tag) => (
-              <Badge className="bg-primary/10" key={tag} variant="secondary">
-                {tag}
-              </Badge>
-            ))}
-
-            {nextStatus && (
-              <Button
-                className="ml-auto"
-                disabled={isUpdating}
-                onClick={() => handleStatusChange(nextStatus)}
-                size="xs"
-                variant="ghost"
-              >
-                {isUpdating ? (
-                  <Loader2 className="animate-spin" />
-                ) : (
-                  <>
-                    {t(`actions.moveTo.${nextStatus}`)}
-                    <ArrowRight />
-                  </>
-                )}
-              </Button>
-            )}
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </Spotlight>
     </motion.div>
   );
 }

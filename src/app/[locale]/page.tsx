@@ -23,6 +23,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Spotlight } from "@/components/ui/spotlight";
 import { Link } from "@/i18n/routing";
 import {
   fadeUp,
@@ -171,20 +172,22 @@ function UnauthenticatedView() {
                 whileHover={{ scale: 1.02, y: -6, transition: spring.snappy }}
                 whileTap={{ scale: 0.98 }}
               >
-                <Card className="shadow-brutal transition-all hover:shadow-elevated">
-                  <CardHeader>
-                    <motion.div
-                      className="mb-2 flex size-10 items-center justify-center rounded-lg bg-primary"
-                      whileHover={{ rotate: 6 }}
-                    >
-                      <Icon className="size-5 text-primary-foreground" />
-                    </motion.div>
-                    <CardTitle className="font-mono text-xl">
-                      {feature.title}
-                    </CardTitle>
-                    <CardDescription>{feature.description}</CardDescription>
-                  </CardHeader>
-                </Card>
+                <Spotlight className="rounded-xl">
+                  <Card className="shadow-brutal transition-all hover:shadow-elevated">
+                    <CardHeader>
+                      <motion.div
+                        className="mb-2 flex size-10 items-center justify-center rounded-lg bg-primary"
+                        whileHover={{ rotate: 6 }}
+                      >
+                        <Icon className="size-5 text-primary-foreground" />
+                      </motion.div>
+                      <CardTitle className="font-mono text-xl">
+                        {feature.title}
+                      </CardTitle>
+                      <CardDescription>{feature.description}</CardDescription>
+                    </CardHeader>
+                  </Card>
+                </Spotlight>
               </motion.div>
             );
           })}
@@ -228,20 +231,22 @@ function AuthenticatedView() {
           whileHover={{ scale: 1.02, y: -6, transition: spring.snappy }}
           whileTap={{ scale: 0.98 }}
         >
-          <Card className="shadow-brutal transition-all hover:shadow-elevated">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 font-mono">
-                <Database className="size-5" />
-                {t("tasks")}
-              </CardTitle>
-              <CardDescription>{t("tasksDescription")}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button asChild className="shadow-soft">
-                <Link href="/tasks">{t("openTasks")}</Link>
-              </Button>
-            </CardContent>
-          </Card>
+          <Spotlight className="rounded-xl">
+            <Card className="shadow-brutal transition-all hover:shadow-elevated">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 font-mono">
+                  <Database className="size-5" />
+                  {t("tasks")}
+                </CardTitle>
+                <CardDescription>{t("tasksDescription")}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button asChild className="shadow-soft">
+                  <Link href="/tasks">{t("openTasks")}</Link>
+                </Button>
+              </CardContent>
+            </Card>
+          </Spotlight>
         </motion.div>
 
         <motion.div
@@ -249,29 +254,31 @@ function AuthenticatedView() {
           whileHover={{ scale: 1.02, y: -6, transition: spring.snappy }}
           whileTap={{ scale: 0.98 }}
         >
-          <Card className="shadow-brutal transition-all hover:shadow-elevated">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 font-mono">
-                <GitBranch className="size-5" />
-                {t("github")}
-              </CardTitle>
-              <CardDescription>
-                Explore the GitHub repository for the template and contribute to
-                it.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button asChild variant="outline">
-                <a
-                  href="https://github.com/giacomoguidotto/blueprint"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  View Repo
-                </a>
-              </Button>
-            </CardContent>
-          </Card>
+          <Spotlight className="rounded-xl">
+            <Card className="shadow-brutal transition-all hover:shadow-elevated">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 font-mono">
+                  <GitBranch className="size-5" />
+                  {t("github")}
+                </CardTitle>
+                <CardDescription>
+                  Explore the GitHub repository for the template and contribute
+                  to it.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button asChild variant="outline">
+                  <a
+                    href="https://github.com/giacomoguidotto/blueprint"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    View Repo
+                  </a>
+                </Button>
+              </CardContent>
+            </Card>
+          </Spotlight>
         </motion.div>
       </motion.div>
 
