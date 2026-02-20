@@ -23,6 +23,10 @@ devenv.local.yaml
 
 # testing
 /coverage
+/playwright-report
+/test-results
+/e2e/.auth
+/.bun-test
 
 # next.js
 /.next/

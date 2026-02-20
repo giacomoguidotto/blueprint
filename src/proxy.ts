@@ -31,7 +31,7 @@ const authMiddleware = authkitMiddleware({
  *
  * @see https://nextjs.org/docs/app/guides/content-security-policy
  */
-function generateCSPHeader(_nonce: string): string {
+export function generateCSPHeader(_nonce: string): string {
   // const isDev = process.env.NODE_ENV === "development";
 
   const cspDirectives = [

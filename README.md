@@ -327,8 +327,8 @@ This project embeds production-grade patterns and architectural decisions:
 - [x] **Observability**: Effect + OpenTelemetry + Axiom (traces, metrics, error reporting)
 - [x] **Code Quality**: Biome, Ultracite, Husky
 - [x] **Dev Env**: devenv, direnv
+- [x] **Testing**: Vitest (unit/integration) + Playwright (E2E)
 
 ### 🚧 Planned / To Do
-- [ ] Vitest + Playwright for testing
 - [ ] Database migrations tooling
 - [ ] Email service integration

@@ -1,0 +1,3 @@
+[test]
+# Disable Bun's built-in test runner — use Vitest via `bun run test` instead
+root = "./.bun-test"

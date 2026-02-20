@@ -7,7 +7,6 @@ import { AnimatePresence, motion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod/v4";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -28,26 +27,8 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useTracedMutation } from "@/hooks/use-traced-mutation";
 import { spring, staggerContainer, staggerItem } from "@/lib/motion";
+import { type CreateTaskFormData, createTaskSchema } from "../schemas";
 import { TASK_PRIORITIES, type TaskPriority } from "../types";
-
-/**
- * Zod schema for task creation form validation
- */
-const createTaskSchema = z.object({
-  title: z
-    .string()
-    .min(1, "Title is required")
-    .max(100, "Title must be 100 characters or less"),
-  description: z
-    .string()
-    .max(500, "Description must be 500 characters or less")
-    .optional(),
-  priority: z.enum(TASK_PRIORITIES),
-  dueDate: z.string().optional(),
-  tags: z.string().optional(),
-});
-
-type CreateTaskFormData = z.infer<typeof createTaskSchema>;
 
 interface TaskFormProps {
   onSuccess?: () => void;
