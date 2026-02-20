@@ -1,10 +1,13 @@
 import { defineConfig, devices } from "@playwright/test";
+import dotenv from "dotenv";
+
+dotenv.config({ path: ".env.local" });
 
 export default defineConfig({
   testDir: "./e2e",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
+  retries: 2,
   workers: process.env.CI ? 1 : undefined,
   reporter: "html",
   use: {
@@ -13,8 +16,23 @@ export default defineConfig({
   },
   projects: [
     {
-      name: "chromium",
+      name: "setup",
+      testMatch: /auth\.setup\.ts/,
+    },
+    {
+      name: "public",
+      testMatch: /.*\.spec\.ts/,
+      testIgnore: /tasks\.spec\.ts/,
       use: { ...devices["Desktop Chrome"] },
+    },
+    {
+      name: "authenticated",
+      testMatch: /tasks\.spec\.ts/,
+      dependencies: ["setup"],
+      use: {
+        ...devices["Desktop Chrome"],
+        storageState: "e2e/.auth/user.json",
+      },
     },
   ],
   webServer: {

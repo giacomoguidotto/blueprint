@@ -2,27 +2,34 @@ import { expect, test } from "@playwright/test";
 
 const darkClassPattern = /dark/;
 
+async function openThemeMenu(page: import("@playwright/test").Page) {
+  const toggle = page.locator('button[aria-label="Toggle theme"]').first();
+  // Ensure any previously open menu is fully closed before opening again.
+  // Radix DropdownMenu fires a document click on close; without this wait the
+  // close event from the previous selection can dismiss the newly opened menu.
+  await expect(page.getByRole("menu"))
+    .toBeHidden({ timeout: 3000 })
+    .catch(() => undefined);
+  await toggle.click();
+  // Confirm the menu opened before callers try to interact with items
+  await expect(page.getByRole("menu")).toBeVisible({ timeout: 5000 });
+}
+
 test.describe("Theme toggle", () => {
   test("switches to dark mode via dropdown", async ({ page }) => {
     await page.goto("/");
 
-    // Open the theme dropdown menu
     const themeToggle = page
       .locator('button[aria-label="Toggle theme"]')
       .first();
 
-    // Skip if no theme toggle found on the page
     if (!(await themeToggle.isVisible().catch(() => false))) {
       test.skip();
       return;
     }
 
-    await themeToggle.click();
-
-    // Select "Dark" from the dropdown
+    await openThemeMenu(page);
     await page.getByRole("menuitem", { name: "Dark" }).click();
-
-    // Verify the html element now has the "dark" class
     await expect(page.locator("html")).toHaveClass(darkClassPattern);
   });
 
@@ -39,12 +46,12 @@ test.describe("Theme toggle", () => {
     }
 
     // Switch to dark first
-    await themeToggle.click();
+    await openThemeMenu(page);
     await page.getByRole("menuitem", { name: "Dark" }).click();
     await expect(page.locator("html")).toHaveClass(darkClassPattern);
 
-    // Switch back to light
-    await themeToggle.click();
+    // Switch back to light — wait for menu to fully close before reopening
+    await openThemeMenu(page);
     await page.getByRole("menuitem", { name: "Light" }).click();
     await expect(page.locator("html")).not.toHaveClass(darkClassPattern);
   });
