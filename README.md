@@ -35,6 +35,8 @@ You'll then need to setup a WorkOS account. You can [start here](https://dashboa
 - `WORKOS_API_KEY`
 - `WORKOS_CLIENT_ID`
 
+Optionally, you can also setup an Axiom account in their [platform](https://app.axiom.co/register) to provide observability to your project.
+
 ### 1. Installation
 
 Create a new GitHub repository from this template and clone it. 
@@ -101,9 +103,19 @@ bunx convex env list
 
 to get all the environment variables for your deployment. Add them to your `.env.local` file.
 
-**Your `.env.local` file should look like the one in `.env.example`.**
+### 7. Setup Axiom connection (optional)
 
-### 7. Running the development server
+If no token is provided, then this functionality will not be enabled.
+
+Create two dataset on the [Axiom dashboard](https://app.axiom.co), one for traces, one for metrics. Put the chosen names on the `AXIOM_DATASET` and `AXIOM_METRICS_DATASET` environment variables in `.env.example`.
+
+Depending on which edge server these datasets are deployed, write the right domain in `AXIOM_DOMAIN`. You can find the list in the [Axiom docs](https://axiom.co/docs/reference/edge-deployments#available-edge-deployments).
+
+Copy all Axiom-related variables from `.env.example` to `.env.local`. Finally, generate a token for your account in the [Axiom dashboard](https://app.axiom.co) and put it in the `AXIOM_TOKEN` environment variable in `.env.local`.
+
+**Your `.env.local` file now should look exactly like the one in `.env.example`.**
+
+### 8. Running the development server
 
 Run both the Next.js frontend and the Convex backend:
 ```bash
@@ -273,34 +285,7 @@ Then, create the translation file in `messages/[locale].json` using the same str
 }
 ```
 
-Learn more: [next-intl Documentation](https://next-intl-docs.vercel.app/)
-
-## 📡 Observability
-
-Blueprint includes a full-stack observability pipeline built on [Effect](https://effect.website/), [OpenTelemetry](https://opentelemetry.io/), and [Axiom](https://axiom.co/).
-
-### How it works
-
-- **Telemetry module** (`src/lib/telemetry/`) — Effect-based OpenTelemetry setup that exports traces and metrics to Axiom via protobuf
-- **Managed runtime** (`src/lib/telemetry/runtime.ts`) — A `ManagedRuntime` that keeps the OTel SDK alive and bridges `Effect.withSpan` to the OTel TracerProvider
-- **Next.js instrumentation** (`src/instrumentation.ts`) — Eagerly initializes the managed runtime on server startup
-- **Request tracing** — Server components use `Effect.withSpan` + `telemetryRuntime.runPromise` for automatic trace spans
-- **Client error reporting** — `ErrorDisplay` component reports errors to Axiom via a server action
-
-### Setup
-
-1. Create an [Axiom](https://app.axiom.co/) account and two datasets:
-   - `blueprint` — for events (logs + trace spans)
-   - `blueprint-metrics` — for OpenTelemetry metrics
-
-2. Add the following to your `.env.local`:
-   ```env
-   AXIOM_API_TOKEN=xaat-... # from https://app.axiom.co
-   AXIOM_DATASET=blueprint
-   AXIOM_METRICS_DATASET=blueprint-metrics
-   ```
-
-3. Start the dev server — the OTel SDK initializes automatically when `AXIOM_API_TOKEN` is set. When the token is missing, telemetry gracefully degrades to a no-op.
+Learn more: [next-intl docs](https://next-intl-docs.vercel.app/)
 
 ### Adding traces to new code
 
@@ -315,6 +300,8 @@ const program = Effect.tryPromise(() => fetchSomething())
 
 const result = await telemetryRuntime.runPromise(program);
 ```
+
+Learn more: [Effect docs](https://effect.website/docs/observability/tracing/)
 
 ## 🎯 Best Practices Followed
 
