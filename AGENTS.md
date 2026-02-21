@@ -42,7 +42,7 @@ bun format       # Format code (Biome)
 
 ### Devenv Environment
 
-This project uses **devenv** for reproducible development. **NEVER assume `bun`, `node`, or any dev tool is globally available.** Always test for availability and activate devenv in case:
+This project uses **devenv** for reproducible development. **NEVER assume `bun`, `node`, or any dev tool is globally available.** Always test for availability and, if not any tool was not found, activate devenv:
 
 ```bash
 export PATH=".devenv/profile/bin:$PATH"
