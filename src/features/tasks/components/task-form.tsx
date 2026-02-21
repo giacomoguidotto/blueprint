@@ -25,8 +25,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { useTracedMutation } from "@/hooks/use-traced-mutation";
 import { spring, staggerContainer, staggerItem } from "@/lib/motion";
+import { useTracedMutation } from "@/lib/telemetry/use-traced-mutation";
 import { type CreateTaskFormData, createTaskSchema } from "../schemas";
 import { TASK_PRIORITIES, type TaskPriority } from "../types";
 

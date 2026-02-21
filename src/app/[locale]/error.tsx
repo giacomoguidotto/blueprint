@@ -1,6 +1,6 @@
 "use client";
 
-import { ErrorDisplay } from "@/components/error-display";
+import { ErrorDisplay } from "@/components/errors/error-display";
 
 interface ErrorComponentProps {
   error: Error & { digest?: string };

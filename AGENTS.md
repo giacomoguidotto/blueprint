@@ -7,6 +7,7 @@ This file provides **strict** guidance when working with this repository. Follow
 1. **Read first, code second** — Never propose changes to code you haven't read. Use `Read` to understand existing patterns.
 2. **Check existing components** — Before creating any UI, check `src/components/ui/` for existing shadcn/ui components.
 3. **Understand the feature structure** — Review `src/features/` to understand how features are organized.
+4. **Research before coding** — Search for relevant official docs, GitHub issues, changelogs, or known bugs for any library or API you are about to use. Use `WebSearch` or `WebFetch` to verify current best practices, especially for Convex, Next.js, WorkOS, and shadcn/ui.
 
 ### After Every Code Change
 
@@ -41,13 +42,11 @@ bun format       # Format code (Biome)
 
 ### Devenv Environment
 
-This project uses **devenv** for reproducible development. Only `git` and `docker` are globally available — all other tools require devenv activation:
+This project uses **devenv** for reproducible development. **NEVER assume `bun`, `node`, or any dev tool is globally available.** Always test for availability and activate devenv in case:
 
 ```bash
 export PATH=".devenv/profile/bin:$PATH"
 ```
-
-**NEVER assume `bun`, `node`, or any dev tool is globally available.** Always activate devenv first.
 
 ---
 
@@ -65,18 +64,41 @@ export PATH=".devenv/profile/bin:$PATH"
 ### Directory Structure
 
 ```
-convex/              # Backend: schema, queries, mutations, actions
-  schema.ts          # Database schema (single source of truth for types)
-  http.ts            # HTTP routes including auth webhook
+convex/                  # Backend: schema, queries, mutations, actions
+  schema.ts              # Database schema (single source of truth for types)
+  http.ts                # HTTP routes including auth webhook
 src/
-  app/[locale]/      # Next.js App Router pages with i18n
-  features/[name]/   # Feature modules (components, types, store)
-  components/ui/     # shadcn/ui components — USE THESE
+  app/[locale]/          # Next.js App Router pages with i18n
+  features/[name]/       # Feature modules (components, types, store, hooks)
+  lib/[domain]/          # Domain libraries (telemetry, utils, motion…)
+  components/ui/         # shadcn/ui components
   components/providers/  # Context providers (Convex, Theme, i18n)
-  i18n/routing.ts    # Locale configuration (single source of truth)
-  proxy.ts           # Middleware: auth + i18n + CSP
-messages/            # Translation JSON files per locale
+  i18n/routing.ts        # Locale configuration (single source of truth)
+  instrumentation.ts     # Next.js instrumentation hook (boots telemetry runtime)
+  proxy.ts               # Middleware: auth + i18n + CSP
+messages/                # Translation JSON files per locale
 ```
+
+### Co-location over type-based folders
+
+**Do not create generic folders named by file type** (`hooks/`, `utils/`, `helpers/`). Place every file next to the domain it belongs to:
+
+- A hook that wraps telemetry → `src/lib/telemetry/use-traced-mutation.ts`
+- A hook specific to a feature → `src/features/[name]/use-[name].ts`
+- Only `src/components/ui/` is an exception because shadcn/ui mandates it
+
+The rule of thumb: if moving a file would break nothing conceptually except the folder name, the folder is wrong.
+
+### Shared scaffolding components (`src/components/[domain]/`)
+
+Components that have **no single feature owner** and are mounted at the app-shell level (header, nav, global controls) live in `src/components/[domain]/`. These subdirectories are **domain-named** (not type-named) and are expected to stay small and stable — they are not a dumping ground.
+
+- `src/components/auth/` — auth UI mounted in the shell (user menu, sign-in/out buttons)
+- `src/components/controls/` — global controls (theme toggle, language selector)
+- `src/components/errors/` — shared error boundary UI (used across multiple routes)
+- `src/components/layout/` — structural chrome (header, nav)
+
+**Do not** put feature-specific components here. If a component is only rendered within a feature route, it belongs in `src/features/[name]/`.
 
 ---
 

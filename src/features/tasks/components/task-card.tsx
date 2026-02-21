@@ -25,8 +25,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Spotlight } from "@/components/ui/spotlight";
-import { useTracedMutation } from "@/hooks/use-traced-mutation";
 import { cardHover } from "@/lib/motion";
+import { useTracedMutation } from "@/lib/telemetry/use-traced-mutation";
 import { cn } from "@/lib/utils";
 import type { Task, TaskStatus } from "../types";
 
