@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "types": ["bun-types"],
+    "types": ["bun-types", "vite/client"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -32,5 +32,5 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "e2e"]
 }
