@@ -8,9 +8,10 @@
   },
   "home": {
     "title": "Blueprint",
-    "subtitle": "Modern web app starter",
-    "description": "Production-ready Next.js template with authentication, real-time database, i18n, and modern tooling.",
-    "getStarted": "Get Started",
+    "subtitle": "Modern web app template",
+    "description": "Not just a template, but a live, working app. Sign up to explore a real task manager with CRUD operations, real-time sync, auth, and i18n, all wired together on production-grade infrastructure.",
+    "getStarted": "Explore the Demo",
+    "getStartedHint": "Free · task manager CRUD demo included",
     "learnMore": "View Repository",
     "features": {
       "title": "What's Included",

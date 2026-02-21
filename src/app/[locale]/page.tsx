@@ -111,34 +111,42 @@ function UnauthenticatedView() {
 
         <motion.div
           animate="show"
-          className="flex flex-col items-center justify-center gap-3 sm:flex-row"
+          className="flex flex-col items-center justify-center gap-4"
           initial="hidden"
           variants={staggerContainer}
         >
-          <motion.div
+          <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <motion.div
+              variants={staggerItem}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+            >
+              <Button asChild className="glow-primary shadow-brutal" size="lg">
+                <Link href="/sign-up">{t("getStarted")}</Link>
+              </Button>
+            </motion.div>
+            <motion.div
+              variants={staggerItem}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+            >
+              <Button asChild size="lg" variant="outline">
+                <a
+                  href="https://github.com/giacomoguidotto/blueprint"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  {t("learnMore")}
+                </a>
+              </Button>
+            </motion.div>
+          </div>
+          <motion.p
+            className="text-muted-foreground/70 text-xs tracking-wide"
             variants={staggerItem}
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
           >
-            <Button asChild className="glow-primary shadow-brutal" size="lg">
-              <Link href="/sign-up">{t("getStarted")}</Link>
-            </Button>
-          </motion.div>
-          <motion.div
-            variants={staggerItem}
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-          >
-            <Button asChild size="lg" variant="outline">
-              <a
-                href="https://github.com/giacomoguidotto/blueprint"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                {t("learnMore")}
-              </a>
-            </Button>
-          </motion.div>
+            {t("getStartedHint")}
+          </motion.p>
         </motion.div>
       </motion.div>
 
