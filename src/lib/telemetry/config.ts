@@ -2,8 +2,8 @@ import { Context, Effect, Layer } from "effect";
 
 export interface AxiomConfig {
   readonly apiToken: string;
-  readonly domain: string;
   readonly dataset: string;
+  readonly domain: string;
   readonly metricsDataset: string;
 }
 

@@ -214,12 +214,12 @@
 
   /* Glassmorphism */
   .glass {
-    backdrop-filter: blur(12px) saturate(1.5);
     -webkit-backdrop-filter: blur(12px) saturate(1.5);
+    backdrop-filter: blur(12px) saturate(1.5);
   }
   .glass-strong {
-    backdrop-filter: blur(24px) saturate(1.8);
     -webkit-backdrop-filter: blur(24px) saturate(1.8);
+    backdrop-filter: blur(24px) saturate(1.8);
   }
 
   /* Glow effects — use CSS variables for theme adaptation */

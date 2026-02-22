@@ -8,20 +8,20 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface ErrorDisplayProps {
-  error: Error & { digest?: string };
-  reset: () => void;
-  /** Title to display. Defaults to "Something went wrong" */
-  title?: string;
-  /** Description to display. Defaults to a generic error message */
-  description?: string;
-  /** Button text. Defaults to "Try again" */
-  resetLabel?: string;
   /** Additional CSS classes for the container */
   className?: string;
+  /** Description to display. Defaults to a generic error message */
+  description?: string;
+  error: Error & { digest?: string };
   /** Minimum height for the error container. Defaults to "400px" for regular errors */
   minHeight?: string;
+  reset: () => void;
+  /** Button text. Defaults to "Try again" */
+  resetLabel?: string;
   /** Whether to show the error digest/ID */
   showDigest?: boolean;
+  /** Title to display. Defaults to "Something went wrong" */
+  title?: string;
 }
 
 /**

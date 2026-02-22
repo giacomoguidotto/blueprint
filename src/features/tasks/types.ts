@@ -36,11 +36,11 @@ export type TaskPriority = Task["priority"];
  * Form input for creating a new task
  */
 export interface CreateTaskInput {
-  title: string;
   description?: string;
-  priority: TaskPriority;
   dueDate?: Date;
+  priority: TaskPriority;
   tags?: string[];
+  title: string;
 }
 
 /**

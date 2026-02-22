@@ -31,8 +31,8 @@ import { type CreateTaskFormData, createTaskSchema } from "../schemas";
 import { TASK_PRIORITIES, type TaskPriority } from "../types";
 
 interface TaskFormProps {
-  onSuccess?: () => void;
   onCancel?: () => void;
+  onSuccess?: () => void;
 }
 
 /**

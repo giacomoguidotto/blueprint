@@ -4,12 +4,12 @@ import { useCallback, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 interface SpotlightProps {
+  /** Blur radius in px. Defaults to 80. */
+  blur?: number;
   children: React.ReactNode;
   className?: string;
   /** Color of the spotlight glow. Defaults to primary via CSS variable. */
   color?: string;
-  /** Blur radius in px. Defaults to 80. */
-  blur?: number;
   /** Size of the spotlight in px. Defaults to 200. */
   size?: number;
 }

@@ -24,6 +24,7 @@ test.describe("Theme toggle", () => {
       .first();
 
     if (!(await themeToggle.isVisible().catch(() => false))) {
+      // biome-ignore lint/suspicious/noSkippedTests: intentional runtime skip when theme toggle is not rendered
       test.skip();
       return;
     }
@@ -41,6 +42,7 @@ test.describe("Theme toggle", () => {
       .first();
 
     if (!(await themeToggle.isVisible().catch(() => false))) {
+      // biome-ignore lint/suspicious/noSkippedTests: intentional runtime skip when theme toggle is not rendered
       test.skip();
       return;
     }
