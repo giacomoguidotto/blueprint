@@ -8,9 +8,7 @@
     "group:recommended",
     "schedule:weekends"
   ],
-  "labels": [
-    "dependencies"
-  ],
+  "labels": ["dependencies"],
   "rangeStrategy": "bump",
   "lockFileMaintenance": {
     "enabled": true,
@@ -19,34 +17,23 @@
   "packageRules": [
     {
       "description": "Automerge non-major updates",
-      "matchUpdateTypes": [
-        "minor",
-        "patch",
-        "digest"
-      ],
+      "matchUpdateTypes": ["minor", "patch", "digest"],
       "automerge": true
     },
     {
       "description": "Group Radix UI packages",
       "groupName": "radix-ui",
-      "matchPackageNames": [
-        "/^@radix-ui//"
-      ]
+      "matchPackageNames": ["/^@radix-ui//"]
     },
     {
       "description": "Group Convex packages",
       "groupName": "convex",
-      "matchPackageNames": [
-        "/^convex/",
-        "/^@convex-dev//"
-      ]
+      "matchPackageNames": ["/^convex/", "/^@convex-dev//"]
     },
     {
       "description": "Group WorkOS packages",
       "groupName": "workos",
-      "matchPackageNames": [
-        "/^@workos-inc//"
-      ]
+      "matchPackageNames": ["/^@workos-inc//"]
     },
     {
       "description": "Group React packages",
@@ -61,37 +48,23 @@
     {
       "description": "Group Tailwind packages",
       "groupName": "tailwind",
-      "matchPackageNames": [
-        "/^tailwindcss/",
-        "/^@tailwindcss//"
-      ]
+      "matchPackageNames": ["/^tailwindcss/", "/^@tailwindcss//"]
     },
     {
       "description": "Group linting/formatting tools",
-      "matchPackageNames": [
-        "@biomejs/biome",
-        "ultracite"
-      ],
+      "matchPackageNames": ["@biomejs/biome", "ultracite"],
       "groupName": "linting"
     },
     {
       "description": "Group all non-major updates together",
-      "matchUpdateTypes": [
-        "minor",
-        "patch"
-      ],
+      "matchUpdateTypes": ["minor", "patch"],
       "groupName": "non-major dependencies"
     },
     {
       "description": "Major updates require manual approval",
-      "matchUpdateTypes": [
-        "major"
-      ],
+      "matchUpdateTypes": ["major"],
       "automerge": false,
-      "labels": [
-        "dependencies",
-        "major"
-      ]
+      "labels": ["dependencies", "major"]
     }
   ]
 }
