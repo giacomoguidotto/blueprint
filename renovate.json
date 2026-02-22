@@ -8,7 +8,9 @@
     "group:recommended",
     "schedule:weekends"
   ],
-  "labels": ["dependencies"],
+  "labels": [
+    "dependencies"
+  ],
   "rangeStrategy": "bump",
   "lockFileMaintenance": {
     "enabled": true,
@@ -17,23 +19,34 @@
   "packageRules": [
     {
       "description": "Automerge non-major updates",
-      "matchUpdateTypes": ["minor", "patch", "digest"],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "digest"
+      ],
       "automerge": true
     },
     {
       "description": "Group Radix UI packages",
-      "matchPackagePatterns": ["^@radix-ui/"],
-      "groupName": "radix-ui"
+      "groupName": "radix-ui",
+      "matchPackageNames": [
+        "/^@radix-ui//"
+      ]
     },
     {
       "description": "Group Convex packages",
-      "matchPackagePatterns": ["^convex", "^@convex-dev/"],
-      "groupName": "convex"
+      "groupName": "convex",
+      "matchPackageNames": [
+        "/^convex/",
+        "/^@convex-dev//"
+      ]
     },
     {
       "description": "Group WorkOS packages",
-      "matchPackagePatterns": ["^@workos-inc/"],
-      "groupName": "workos"
+      "groupName": "workos",
+      "matchPackageNames": [
+        "/^@workos-inc//"
+      ]
     },
     {
       "description": "Group React packages",
@@ -47,24 +60,38 @@
     },
     {
       "description": "Group Tailwind packages",
-      "matchPackagePatterns": ["^tailwindcss", "^@tailwindcss/"],
-      "groupName": "tailwind"
+      "groupName": "tailwind",
+      "matchPackageNames": [
+        "/^tailwindcss/",
+        "/^@tailwindcss//"
+      ]
     },
     {
       "description": "Group linting/formatting tools",
-      "matchPackageNames": ["@biomejs/biome", "ultracite"],
+      "matchPackageNames": [
+        "@biomejs/biome",
+        "ultracite"
+      ],
       "groupName": "linting"
     },
     {
       "description": "Group all non-major updates together",
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "groupName": "non-major dependencies"
     },
     {
       "description": "Major updates require manual approval",
-      "matchUpdateTypes": ["major"],
+      "matchUpdateTypes": [
+        "major"
+      ],
       "automerge": false,
-      "labels": ["dependencies", "major"]
+      "labels": [
+        "dependencies",
+        "major"
+      ]
     }
   ]
 }
