@@ -10,6 +10,7 @@
   ],
   "labels": ["dependencies"],
   "rangeStrategy": "bump",
+  "automergeStrategy": "squash",
   "lockFileMaintenance": {
     "enabled": true,
     "automerge": true
