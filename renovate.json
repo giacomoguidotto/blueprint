@@ -6,8 +6,11 @@
     "group:all",
     "schedule:weekends"
   ],
-  "labels": ["dependencies"],
+  "labels": ["deps"],
   "rangeStrategy": "bump",
+  "automerge": true,
+  "automergeStrategy": "squash",
+  "platformAutomerge": true,
   "lockFileMaintenance": {
     "enabled": true
   }
