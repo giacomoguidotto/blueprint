@@ -1,4 +1,5 @@
 import { Context, Effect, Layer } from "effect";
+import { env } from "@/lib/env";
 
 export interface AxiomConfig {
   readonly apiToken: string;
@@ -14,18 +15,10 @@ export class AxiomConfigTag extends Context.Tag("AxiomConfig")<
 
 export const AxiomConfigLive = Layer.effect(
   AxiomConfigTag,
-  Effect.sync(() => {
-    const apiToken = process.env.AXIOM_API_TOKEN ?? "";
-    const domain = process.env.AXIOM_DOMAIN ?? "";
-    const dataset = process.env.AXIOM_DATASET ?? "blueprint";
-    const metricsDataset =
-      process.env.AXIOM_METRICS_DATASET ?? "blueprint-metrics";
-
-    return {
-      apiToken,
-      domain,
-      dataset,
-      metricsDataset,
-    };
-  })
+  Effect.sync(() => ({
+    apiToken: env.server.AXIOM_API_TOKEN,
+    domain: env.server.AXIOM_DOMAIN,
+    dataset: env.server.AXIOM_DATASET,
+    metricsDataset: env.server.AXIOM_METRICS_DATASET,
+  }))
 );

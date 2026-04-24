@@ -8,11 +8,9 @@ import {
 import { ConvexProviderWithAuth, ConvexReactClient } from "convex/react";
 import { type ReactNode, useCallback, useRef } from "react";
 
-const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL;
-if (!convexUrl) {
-  throw new Error("NEXT_PUBLIC_CONVEX_URL environment variable is not set");
-}
-const convex = new ConvexReactClient(convexUrl);
+const convex = new ConvexReactClient(
+  process.env.NEXT_PUBLIC_CONVEX_URL as string
+);
 
 export function ConvexClientProvider({ children }: { children: ReactNode }) {
   return (
