@@ -1,4 +1,4 @@
-import { FileQuestion } from "lucide-react";
+import { FileQuestion, Sparkles } from "lucide-react";
 import Link from "next/link";
 
 export default function RootNotFound() {
@@ -13,6 +13,60 @@ export default function RootNotFound() {
           color: "#e8e8f0",
         }}
       >
+        <header
+          style={{
+            position: "sticky",
+            top: 0,
+            borderBottom: "1px solid rgba(255,255,255,0.1)",
+            backgroundColor: "rgba(10,10,18,0.85)",
+            backdropFilter: "blur(12px)",
+          }}
+        >
+          <div
+            style={{
+              maxWidth: "1200px",
+              margin: "0 auto",
+              display: "flex",
+              alignItems: "center",
+              height: "64px",
+              padding: "0 1rem",
+            }}
+          >
+            <Link
+              href="/en"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                textDecoration: "none",
+                color: "inherit",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "32px",
+                  height: "32px",
+                  borderRadius: "8px",
+                  backgroundColor: "#5b4de0",
+                }}
+              >
+                <Sparkles size={16} color="white" />
+              </div>
+              <span
+                style={{
+                  fontFamily: "monospace",
+                  fontWeight: 600,
+                  fontSize: "1.125rem",
+                }}
+              >
+                Blueprint
+              </span>
+            </Link>
+          </div>
+        </header>
         <div
           style={{
             display: "flex",
