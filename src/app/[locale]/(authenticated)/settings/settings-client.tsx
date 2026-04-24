@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuth } from "@workos-inc/authkit-nextjs/components";
 import { api } from "convex/_generated/api";
 import type { Id } from "convex/_generated/dataModel";
 import { useMutation, useQuery } from "convex/react";
@@ -26,6 +27,7 @@ import { fadeUp, spring, staggerContainer, staggerItem } from "@/lib/motion";
 
 export function SettingsClient() {
   const t = useTranslations("settings");
+  const { user: authUser } = useAuth({ ensureSignedIn: true });
   const user = useQuery(api.users.getUser);
   const avatarUrl = useQuery(
     api.tasks.getStorageUrl,
@@ -98,7 +100,9 @@ export function SettingsClient() {
                 <Avatar className="size-20">
                   <AvatarImage alt="Avatar" src={avatarUrl ?? undefined} />
                   <AvatarFallback className="text-xl">
-                    {user.authId.slice(0, 2).toUpperCase()}
+                    {authUser?.firstName && authUser?.lastName
+                      ? `${authUser.firstName[0]}${authUser.lastName[0]}`.toUpperCase()
+                      : (authUser?.email?.slice(0, 2).toUpperCase() ?? "?")}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1">
