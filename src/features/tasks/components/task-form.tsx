@@ -2,12 +2,14 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "convex/_generated/api";
+import type { Id } from "convex/_generated/dataModel";
 import { Loader2, Plus, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import { ImageUpload } from "@/components/ui/image-upload";
 import {
   Card,
   CardContent,
@@ -48,6 +50,7 @@ export function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
     "user.action.createTask"
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [imageId, setImageId] = useState<Id<"_storage"> | null>(null);
 
   const {
     register,
@@ -90,9 +93,11 @@ export function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
           priority: data.priority,
           dueDate,
           tags: tags?.length ? tags : undefined,
+          imageId: imageId ?? undefined,
         });
 
         reset();
+        setImageId(null);
         onSuccess?.();
       } catch {
         // Error is reported via useTracedMutation telemetry
@@ -245,6 +250,16 @@ export function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
               {...register("tags")}
             />
             <p className="text-muted-foreground text-xs">{t("tagsHint")}</p>
+          </motion.div>
+
+          {/* Image */}
+          <motion.div className="space-y-2" variants={staggerItem}>
+            <Label className="font-mono">{t("imageLabel")}</Label>
+            <ImageUpload
+              onRemove={() => setImageId(null)}
+              onUpload={setImageId}
+              value={null}
+            />
           </motion.div>
 
           {/* Actions */}
