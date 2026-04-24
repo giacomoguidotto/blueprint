@@ -1,8 +1,11 @@
 "use client";
 
 import { useAuth } from "@workos-inc/authkit-nextjs/components";
-import { LogOut, User as UserIcon } from "lucide-react";
+import { api } from "convex/_generated/api";
+import { useQuery } from "convex/react";
+import { LogOut, Settings, User as UserIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/routing";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -16,20 +19,23 @@ import {
 /**
  * User menu dropdown for authenticated users.
  *
- * Shows:
- * - User avatar with initials
- * - Dropdown with user info and sign out action
- *
- * Best practices:
- * - Avatar positioned far right of header (industry standard)
- * - Accessible keyboard navigation
- * - Clear visual feedback on hover/focus
+ * Shows user avatar (preferring Convex-stored avatar over WorkOS profile picture)
+ * with dropdown for profile, settings, and sign out.
  */
 export function UserMenu() {
   const { user, signOut } = useAuth({ ensureSignedIn: true });
   const t = useTranslations("common");
 
-  // Generate user initials for avatar fallback
+  const convexUser = useQuery(api.users.getUser);
+  const storedAvatarUrl = useQuery(
+    api.tasks.getStorageUrl,
+    convexUser?.avatarId ? { storageId: convexUser.avatarId } : "skip"
+  );
+
+  // Prefer stored avatar > WorkOS profile picture > initials
+  const avatarSrc =
+    storedAvatarUrl ?? user?.profilePictureUrl ?? undefined;
+
   const getInitials = () => {
     if (user?.firstName && user?.lastName) {
       return `${user.firstName[0]}${user.lastName[0]}`.toUpperCase();
@@ -43,7 +49,6 @@ export function UserMenu() {
     return "U";
   };
 
-  // Get display name
   const getDisplayName = () => {
     if (user?.firstName && user?.lastName) {
       return `${user.firstName} ${user.lastName}`;
@@ -58,10 +63,7 @@ export function UserMenu() {
     <DropdownMenu>
       <DropdownMenuTrigger className="flex items-center gap-2 rounded-full focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
         <Avatar className="size-9 cursor-pointer transition-opacity hover:opacity-80">
-          <AvatarImage
-            alt={getDisplayName()}
-            src={user?.profilePictureUrl ?? undefined}
-          />
+          <AvatarImage alt={getDisplayName()} src={avatarSrc} />
           <AvatarFallback className="bg-primary text-primary-foreground text-xs">
             {getInitials()}
           </AvatarFallback>
@@ -87,6 +89,13 @@ export function UserMenu() {
         <DropdownMenuItem className="cursor-pointer">
           <UserIcon />
           {t("profile")}
+        </DropdownMenuItem>
+
+        <DropdownMenuItem asChild className="cursor-pointer">
+          <Link href="/settings">
+            <Settings />
+            {t("settings")}
+          </Link>
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />
