@@ -5,8 +5,9 @@ import { describe, expect, it, vi } from "vitest";
 import type { Task } from "../types";
 import { TaskCard } from "./task-card";
 
-const mockUpdateStatus = vi.fn().mockResolvedValue(undefined);
-mockUpdateStatus.withOptimisticUpdate = () => mockUpdateStatus;
+const mockUpdateStatus = Object.assign(vi.fn().mockResolvedValue(undefined), {
+  withOptimisticUpdate: () => mockUpdateStatus,
+});
 
 const mockDeleteTask = vi.fn().mockResolvedValue(undefined);
 

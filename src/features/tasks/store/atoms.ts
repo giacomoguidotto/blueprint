@@ -5,7 +5,7 @@
  * Convex handles server state; these atoms handle UI-only concerns.
  */
 import { atom } from "jotai";
-import type { TaskFilter, TaskId, TaskStatus } from "../types";
+import type { TaskFilter, TaskStatus } from "../types";
 
 /**
  * Filter state for task list
@@ -24,11 +24,6 @@ export const statusFilterAtom = atom(
     set(taskFilterAtom, { ...get(taskFilterAtom), status });
   }
 );
-
-/**
- * Currently selected task for detail view or editing
- */
-export const selectedTaskIdAtom = atom<TaskId | null>(null);
 
 /**
  * Controls visibility of the create task form

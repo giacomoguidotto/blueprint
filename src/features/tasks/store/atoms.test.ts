@@ -3,7 +3,6 @@ import { describe, expect, it } from "vitest";
 import {
   isCreateFormOpenAtom,
   searchQueryAtom,
-  selectedTaskIdAtom,
   statusFilterAtom,
   taskFilterAtom,
 } from "./atoms";
@@ -38,11 +37,6 @@ describe("task atoms", () => {
       store.set(statusFilterAtom, status);
       expect(store.get(statusFilterAtom)).toBe(status);
     }
-  });
-
-  it("selectedTaskIdAtom defaults to null", () => {
-    const store = createStore();
-    expect(store.get(selectedTaskIdAtom)).toBeNull();
   });
 
   it("isCreateFormOpenAtom defaults to false", () => {
