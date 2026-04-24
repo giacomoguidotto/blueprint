@@ -7,6 +7,7 @@ import { use } from "react";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -41,6 +42,9 @@ export default function TaskModalPage({ params }: Props) {
           <DialogTitle className="font-mono">
             {task?.title ?? "..."}
           </DialogTitle>
+          <DialogDescription className="sr-only">
+            Task details
+          </DialogDescription>
         </DialogHeader>
         {task === undefined ? (
           <TaskDetailSkeleton />
