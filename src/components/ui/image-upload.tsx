@@ -103,6 +103,10 @@ export function ImageUpload({
             className="absolute top-2 right-2 opacity-0 transition-opacity group-hover:opacity-100"
             onClick={(e) => {
               e.stopPropagation();
+              if (preview) {
+                URL.revokeObjectURL(preview);
+                setPreview(null);
+              }
               onRemove();
             }}
             size="icon-xs"
