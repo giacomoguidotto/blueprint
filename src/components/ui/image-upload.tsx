@@ -5,7 +5,7 @@ import type { Id } from "convex/_generated/dataModel";
 import { useMutation } from "convex/react";
 import { ImagePlus, Loader2, X } from "lucide-react";
 import Image from "next/image";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { cn } from "@/lib/utils";
 import { Button } from "./button";
@@ -35,6 +35,14 @@ export function ImageUpload({
   const generateUploadUrl = useMutation(api.tasks.generateUploadUrl);
   const [isUploading, setIsUploading] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
+
+  // Clear preview when external value is removed
+  useEffect(() => {
+    if (!value && preview) {
+      URL.revokeObjectURL(preview);
+      setPreview(null);
+    }
+  }, [value, preview]);
 
   const handleUpload = useCallback(
     async (file: File) => {
