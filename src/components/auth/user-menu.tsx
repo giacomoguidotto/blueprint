@@ -3,7 +3,7 @@
 import { useAuth } from "@workos-inc/authkit-nextjs/components";
 import { api } from "convex/_generated/api";
 import { useQuery } from "convex/react";
-import { LogOut, Settings, User as UserIcon } from "lucide-react";
+import { LogOut, Settings } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -85,11 +85,6 @@ export function UserMenu() {
         </DropdownMenuLabel>
 
         <DropdownMenuSeparator />
-
-        <DropdownMenuItem className="cursor-pointer">
-          <UserIcon />
-          {t("profile")}
-        </DropdownMenuItem>
 
         <DropdownMenuItem asChild className="cursor-pointer">
           <Link href="/settings">
