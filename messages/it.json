@@ -112,6 +112,11 @@
         "high": "Alta"
       }
     },
+    "detail": {
+      "backToTasks": "Torna alle Attività",
+      "notFound": "Attività non trovata",
+      "created": "Creata il {date}"
+    },
     "empty": {
       "title": "Nessuna attività",
       "description": "Crea la tua prima attività per iniziare",

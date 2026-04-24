@@ -27,6 +27,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Spotlight } from "@/components/ui/spotlight";
+import { Link } from "@/i18n/routing";
 import { cardHover } from "@/lib/motion";
 import { useTracedMutation } from "@/lib/telemetry/use-traced-mutation";
 import { cn } from "@/lib/utils";
@@ -216,7 +217,12 @@ export function TaskCard({ task }: TaskCardProps) {
                     task.status === "done" && "line-through"
                   )}
                 >
-                  {task.title}
+                  <Link
+                    className="hover:underline"
+                    href={`/tasks/${task._id}`}
+                  >
+                    {task.title}
+                  </Link>
                 </CardTitle>
                 {task.description && (
                   <p className="line-clamp-2 text-muted-foreground text-sm">
