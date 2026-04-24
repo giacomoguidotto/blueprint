@@ -6,6 +6,15 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 const nextConfig: NextConfig = {
   reactCompiler: true,
 
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "*.convex.cloud",
+      },
+    ],
+  },
+
   serverExternalPackages: [
     "@opentelemetry/sdk-node",
     "@opentelemetry/sdk-trace-node",
