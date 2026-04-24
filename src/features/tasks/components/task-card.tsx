@@ -1,6 +1,7 @@
 "use client";
 
 import { api } from "convex/_generated/api";
+import { useMutation, useQuery } from "convex/react";
 import {
   ArrowRight,
   Calendar,
@@ -11,6 +12,7 @@ import {
   MoreVertical,
   Trash2,
 } from "lucide-react";
+import Image from "next/image";
 import { motion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { useCallback, useState } from "react";
@@ -84,15 +86,38 @@ function isTaskCompleted(status: TaskStatus): boolean {
  * Task Card Component
  *
  * Displays a single task with status, priority, and actions.
+ * Uses Convex optimistic updates for instant status changes.
  * Features glassmorphism styling with spring-based Motion animations.
  */
 export function TaskCard({ task }: TaskCardProps) {
   const t = useTranslations("tasks");
-  const updateStatus = useTracedMutation(
-    api.tasks.updateTaskStatus,
-    "user.action.updateTaskStatus",
-    { "task.id": task._id }
-  );
+  const updateStatus = useMutation(
+    api.tasks.updateTaskStatus
+  ).withOptimisticUpdate((localStore, { taskId, status }) => {
+    // Optimistically update the task in all cached queries
+    const queries = localStore.getAllQueries(api.tasks.getTasks);
+    for (const { args, value } of queries) {
+      if (value !== undefined) {
+        localStore.setQuery(
+          api.tasks.getTasks,
+          args,
+          value.map((t) => (t._id === taskId ? { ...t, status } : t))
+        );
+      }
+    }
+    // Also update paginated queries
+    const paginatedQueries = localStore.getAllQueries(api.tasks.listTasks);
+    for (const { args, value } of paginatedQueries) {
+      if (value !== undefined) {
+        localStore.setQuery(api.tasks.listTasks, args, {
+          ...value,
+          page: value.page.map((t) =>
+            t._id === taskId ? { ...t, status } : t
+          ),
+        });
+      }
+    }
+  });
   const deleteTask = useTracedMutation(
     api.tasks.deleteTask,
     "user.action.deleteTask",
@@ -100,6 +125,11 @@ export function TaskCard({ task }: TaskCardProps) {
   );
   const [isUpdating, setIsUpdating] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  const imageUrl = useQuery(
+    api.tasks.getStorageUrl,
+    task.imageId ? { storageId: task.imageId } : "skip"
+  );
 
   const StatusIcon = STATUS_ICONS[task.status];
   const nextStatus = getNextStatus(task.status);
@@ -145,6 +175,17 @@ export function TaskCard({ task }: TaskCardProps) {
             isOverdue && "border-destructive/50"
           )}
         >
+          {imageUrl && (
+            <div className="relative aspect-video overflow-hidden rounded-t-xl">
+              <Image
+                alt={task.title}
+                className="object-cover"
+                fill
+                sizes="(max-width: 768px) 100vw, 672px"
+                src={imageUrl}
+              />
+            </div>
+          )}
           <CardHeader className="flex flex-row items-start justify-between gap-2 space-y-0 pb-2">
             <div className="flex items-start gap-3">
               <motion.div whileTap={{ scale: 0.85, rotate: -15 }}>
