@@ -131,6 +131,23 @@
       "signUp": "Create Account"
     }
   },
+  "settings": {
+    "title": "Settings",
+    "heading": "Settings",
+    "subheading": "Manage your profile and preferences",
+    "avatar": {
+      "title": "Avatar",
+      "description": "Upload a profile picture",
+      "remove": "Remove Avatar"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "description": "Control how you receive notifications",
+      "toggle": "Email Notifications",
+      "enabled": "You will receive email notifications",
+      "disabled": "Email notifications are turned off"
+    }
+  },
   "auth": {
     "signInTitle": "Sign in to your account",
     "signUpTitle": "Create an account",

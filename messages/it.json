@@ -131,6 +131,23 @@
       "signUp": "Crea Account"
     }
   },
+  "settings": {
+    "title": "Impostazioni",
+    "heading": "Impostazioni",
+    "subheading": "Gestisci il tuo profilo e le preferenze",
+    "avatar": {
+      "title": "Avatar",
+      "description": "Carica un'immagine del profilo",
+      "remove": "Rimuovi Avatar"
+    },
+    "notifications": {
+      "title": "Notifiche",
+      "description": "Controlla come ricevi le notifiche",
+      "toggle": "Notifiche Email",
+      "enabled": "Riceverai notifiche via email",
+      "disabled": "Le notifiche email sono disattivate"
+    }
+  },
   "auth": {
     "signInTitle": "Accedi al tuo account",
     "signUpTitle": "Crea un account",
