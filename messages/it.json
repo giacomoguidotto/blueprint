@@ -163,6 +163,11 @@
     "noAccount": "Non hai un account?",
     "hasAccount": "Hai già un account?"
   },
+  "notFound": {
+    "title": "Pagina non trovata",
+    "description": "La pagina che cerchi non esiste o è stata spostata.",
+    "goHome": "Torna alla Home"
+  },
   "intl": {
     "en": "Inglese",
     "it": "Italiano"
