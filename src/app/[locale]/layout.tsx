@@ -7,6 +7,7 @@ import { Header } from "@/components/layout/header";
 import { ConvexClientProvider } from "@/components/providers/convex-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { WebVitals } from "@/components/providers/web-vitals";
+import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Locale } from "@/i18n/routing";
 import { routing } from "@/i18n/routing";
@@ -126,6 +127,7 @@ export default async function LocaleLayout({ children, params }: Props) {
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider>
             <ConvexClientProvider>
+              <Analytics />
               <SpeedInsights />
               <WebVitals />
               <div className="flex min-h-screen flex-col">
