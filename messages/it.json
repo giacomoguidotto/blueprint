@@ -54,6 +54,10 @@
     "heading": "Le Mie Attività",
     "subheading": "Gestisci le tue attività con aggiornamenti in tempo reale powered by Convex",
     "addTask": "Nuova Attività",
+    "loadMore": "Carica Altre",
+    "search": {
+      "placeholder": "Cerca attività..."
+    },
     "signOut": "Esci",
     "filter": {
       "all": "Tutte",
@@ -110,7 +114,8 @@
     "empty": {
       "title": "Nessuna attività",
       "description": "Crea la tua prima attività per iniziare",
-      "filtered": "Nessuna attività corrisponde al filtro attuale"
+      "filtered": "Nessuna attività corrisponde al filtro attuale",
+      "noResults": "Nessuna attività corrisponde alla ricerca"
     },
     "convexFeatures": {
       "title": "Funzionalità Convex Dimostrate",

@@ -1,46 +1,47 @@
 "use client";
 
-import type { api } from "convex/_generated/api";
-import { type Preloaded, usePreloadedQuery } from "convex/react";
+import { api } from "convex/_generated/api";
+import { usePaginatedQuery } from "convex/react";
 import { useAtomValue } from "jotai";
-import { ClipboardList } from "lucide-react";
+import { ClipboardList, Loader2 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { useMemo } from "react";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useDebounce } from "@/lib/hooks/use-debounce";
 import { fadeUp, listItemExit, spring } from "@/lib/motion";
-import { statusFilterAtom } from "../store/atoms";
+import { searchQueryAtom, statusFilterAtom } from "../store/atoms";
 import type { Task, TaskStatus } from "../types";
 import { TaskCard } from "./task-card";
 
-interface TaskListProps {
-  preloadedTasks: Preloaded<typeof api.tasks.getTasks>;
-}
+const PAGE_SIZE = 10;
 
 /**
  * Task List Component
  *
- * Displays tasks from Convex with real-time updates.
- * Uses preloaded tasks for instant initial render, then subscribes
- * for real-time updates. Filters are applied client-side for instant UX.
- * Features glassmorphism styling with spring-based Motion animations.
+ * Displays tasks from Convex with pagination and real-time updates.
+ * Uses server-side search via Convex search index and
+ * status filtering via compound index.
  */
-export function TaskList({ preloadedTasks }: TaskListProps) {
+export function TaskList() {
   const t = useTranslations("tasks");
   const statusFilter = useAtomValue(statusFilterAtom);
+  const rawSearch = useAtomValue(searchQueryAtom);
+  const debouncedSearch = useDebounce(rawSearch, 300);
 
-  // Use preloaded tasks - automatically upgrades to live subscription
-  const allTasks = usePreloadedQuery(preloadedTasks);
-
-  // Filter tasks client-side for instant filter changes
-  const tasks =
-    statusFilter === "all"
-      ? allTasks
-      : allTasks.filter((task) => task.status === statusFilter);
+  const { results, status, loadMore } = usePaginatedQuery(
+    api.tasks.listTasks,
+    {
+      status: statusFilter === "all" ? undefined : statusFilter,
+      search: debouncedSearch || undefined,
+    },
+    { initialNumItems: PAGE_SIZE }
+  );
 
   // Sort tasks: by status priority, then by creation time
   const sortedTasks = useMemo(() => {
-    if (!tasks) {
+    if (!results) {
       return null;
     }
 
@@ -51,23 +52,22 @@ export function TaskList({ preloadedTasks }: TaskListProps) {
       archived: 3,
     };
 
-    return [...tasks].sort((a, b) => {
+    return [...results].sort((a, b) => {
       const statusDiff = statusOrder[a.status] - statusOrder[b.status];
       if (statusDiff !== 0) {
         return statusDiff;
       }
-      // More recent tasks first within same status
       return b._creationTime - a._creationTime;
     });
-  }, [tasks]);
+  }, [results]);
 
   // Loading state
-  if (sortedTasks === null) {
+  if (status === "LoadingFirstPage") {
     return <TaskListSkeleton />;
   }
 
   // Empty state
-  if (sortedTasks.length === 0) {
+  if (!sortedTasks || sortedTasks.length === 0) {
     return (
       <motion.div
         animate="show"
@@ -80,9 +80,11 @@ export function TaskList({ preloadedTasks }: TaskListProps) {
           {t("empty.title")}
         </h3>
         <p className="text-muted-foreground text-sm">
-          {statusFilter === "all"
-            ? t("empty.description")
-            : t("empty.filtered")}
+          {debouncedSearch
+            ? t("empty.noResults")
+            : statusFilter === "all"
+              ? t("empty.description")
+              : t("empty.filtered")}
         </p>
       </motion.div>
     );
@@ -104,6 +106,28 @@ export function TaskList({ preloadedTasks }: TaskListProps) {
           </motion.div>
         ))}
       </AnimatePresence>
+
+      {status === "CanLoadMore" && (
+        <motion.div
+          animate={{ opacity: 1 }}
+          className="flex justify-center pt-2"
+          initial={{ opacity: 0 }}
+        >
+          <Button
+            onClick={() => loadMore(PAGE_SIZE)}
+            size="sm"
+            variant="outline"
+          >
+            {t("loadMore")}
+          </Button>
+        </motion.div>
+      )}
+
+      {status === "LoadingMore" && (
+        <div className="flex justify-center pt-2">
+          <Loader2 className="size-5 animate-spin text-muted-foreground" />
+        </div>
+      )}
     </div>
   );
 }

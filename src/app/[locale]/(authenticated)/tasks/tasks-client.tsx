@@ -1,7 +1,5 @@
 "use client";
 
-import type { api } from "convex/_generated/api";
-import type { Preloaded } from "convex/react";
 import { useAtom } from "jotai";
 import { ListTodo, Plus } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
@@ -13,19 +11,13 @@ import { TaskList } from "@/features/tasks/components/task-list";
 import { isCreateFormOpenAtom } from "@/features/tasks/store/atoms";
 import { fadeUp, scaleIn, spring } from "@/lib/motion";
 
-interface TasksClientProps {
-  preloadedTasks: Preloaded<typeof api.tasks.getTasks>;
-}
-
 /**
  * Tasks Page Client Component
  *
- * Receives preloaded tasks from server for instant render,
- * then handles real-time updates via Convex subscriptions.
- *
+ * Handles real-time task list with pagination, search, and filtering.
  * Features glassmorphism styling with spring-based Motion animations.
  */
-export function TasksClient({ preloadedTasks }: TasksClientProps) {
+export function TasksClient() {
   const t = useTranslations("tasks");
   const [isFormOpen, setIsFormOpen] = useAtom(isCreateFormOpenAtom);
 
@@ -83,11 +75,11 @@ export function TasksClient({ preloadedTasks }: TasksClientProps) {
           )}
         </AnimatePresence>
 
-        {/* Filters */}
+        {/* Filters + Search */}
         <TaskFilters />
 
-        {/* Task List with preloaded data */}
-        <TaskList preloadedTasks={preloadedTasks} />
+        {/* Task List with pagination */}
+        <TaskList />
 
         {/* Convex Features Info */}
         <motion.div
