@@ -18,6 +18,8 @@ export default defineSchema({
   users: defineTable({
     // WorkOS user ID (matches identity.subject from JWT)
     authId: v.string(),
+    // Optional avatar image (Convex file storage)
+    avatarId: v.optional(v.id("_storage")),
     // User preferences
     preferences: v.optional(
       v.object({
@@ -54,13 +56,17 @@ export default defineSchema({
     dueDate: v.optional(v.number()),
     // Optional tags for categorization
     tags: v.optional(v.array(v.string())),
+    // Optional cover image (Convex file storage)
+    imageId: v.optional(v.id("_storage")),
   })
     // Index to get all tasks for a specific user
     .index("by_user", ["userId"])
     // Compound index for filtering by user and status
     .index("by_user_and_status", ["userId", "status"])
     // Index for tasks by due date
-    .index("by_due_date", ["dueDate"]),
+    .index("by_due_date", ["dueDate"])
+    // Search index for full-text search on task titles
+    .searchIndex("search_title", { searchField: "title", filterFields: ["userId"] }),
 });
 
 /**
