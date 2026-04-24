@@ -1,8 +1,9 @@
 "use client";
 
 import { Authenticated, Unauthenticated } from "convex/react";
-import { Sparkles } from "lucide-react";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
+import logo from "@/app/icon.png";
 import { AuthButtons } from "@/components/auth/auth-buttons";
 import { UserMenu } from "@/components/auth/user-menu";
 import { LanguageSelector } from "@/components/controls/language-selector";
@@ -36,9 +37,13 @@ export function Header() {
             className="flex items-center gap-2 transition-opacity hover:opacity-80"
             href="/"
           >
-            <div className="flex size-8 items-center justify-center rounded-lg bg-primary">
-              <Sparkles className="size-4 text-primary-foreground" />
-            </div>
+            <Image
+              alt="Blueprint"
+              className="size-8 rounded-lg"
+              height={32}
+              src={logo}
+              width={32}
+            />
             <span className="hidden font-mono font-semibold text-lg sm:inline-block">
               {t("home.title")}
             </span>
