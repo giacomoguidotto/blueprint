@@ -4,6 +4,8 @@ import { Provider } from "jotai";
 import { describe, expect, it, vi } from "vitest";
 import { TaskForm } from "./task-form";
 
+const TITLE_REQUIRED_REGEX = /title is required/i;
+
 const mockMutate = vi.fn().mockResolvedValue("task-id-123");
 
 vi.mock("next-intl", () => ({
@@ -70,7 +72,7 @@ describe("TaskForm", () => {
     await user.click(screen.getByRole("button", { name: "Create Task" }));
 
     await waitFor(() => {
-      expect(screen.getByText(/title is required/i)).toBeInTheDocument();
+      expect(screen.getByText(TITLE_REQUIRED_REGEX)).toBeInTheDocument();
     });
 
     expect(mockMutate).not.toHaveBeenCalled();
@@ -102,7 +104,7 @@ describe("TaskForm", () => {
 
     const cancelButtons = screen.getAllByRole("button", { name: "Cancel" });
     // Click the text Cancel button (not the icon X button)
-    await user.click(cancelButtons[cancelButtons.length - 1]);
+    await user.click(cancelButtons.at(-1) as HTMLElement);
 
     expect(onCancel).toHaveBeenCalledOnce();
   });

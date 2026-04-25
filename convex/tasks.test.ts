@@ -26,9 +26,9 @@ describe("tasks backend", () => {
       const t = convexTest(schema, modules);
 
       // Seed a user
-      const userId = await t.run(async (ctx) => {
-        return await ctx.db.insert("users", { authId: "user-1" });
-      });
+      const userId = await t.run(
+        async (ctx) => await ctx.db.insert("users", { authId: "user-1" })
+      );
 
       // Seed a task
       await t.run(async (ctx) => {
@@ -49,9 +49,9 @@ describe("tasks backend", () => {
     it("filters tasks by status", async () => {
       const t = convexTest(schema, modules);
 
-      const userId = await t.run(async (ctx) => {
-        return await ctx.db.insert("users", { authId: "user-2" });
-      });
+      const userId = await t.run(
+        async (ctx) => await ctx.db.insert("users", { authId: "user-2" })
+      );
 
       await t.run(async (ctx) => {
         await ctx.db.insert("tasks", {

@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { Provider, createStore } from "jotai";
+import { createStore, Provider } from "jotai";
 import { describe, expect, it, vi } from "vitest";
 import { searchQueryAtom, statusFilterAtom } from "../store/atoms";
 import { TaskFilters } from "./task-filters";
@@ -32,18 +32,14 @@ describe("TaskFilters", () => {
   it("renders search input and all filter tabs", () => {
     renderWithStore();
 
-    expect(
-      screen.getByPlaceholderText("Search tasks...")
-    ).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Search tasks...")).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "All" })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "To Do" })).toBeInTheDocument();
     expect(
       screen.getByRole("tab", { name: "In Progress" })
     ).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "Done" })).toBeInTheDocument();
-    expect(
-      screen.getByRole("tab", { name: "Archived" })
-    ).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Archived" })).toBeInTheDocument();
   });
 
   it("updates search query atom on input", async () => {

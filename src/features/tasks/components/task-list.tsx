@@ -80,11 +80,9 @@ export function TaskList() {
           {t("empty.title")}
         </h3>
         <p className="text-muted-foreground text-sm">
-          {debouncedSearch
-            ? t("empty.noResults")
-            : statusFilter === "all"
-              ? t("empty.description")
-              : t("empty.filtered")}
+          {debouncedSearch && t("empty.noResults")}
+          {!debouncedSearch && statusFilter === "all" && t("empty.description")}
+          {!debouncedSearch && statusFilter !== "all" && t("empty.filtered")}
         </p>
       </motion.div>
     );

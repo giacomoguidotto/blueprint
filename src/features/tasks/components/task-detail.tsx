@@ -2,12 +2,7 @@
 
 import { api } from "convex/_generated/api";
 import { useQuery } from "convex/react";
-import {
-  Calendar,
-  CheckCircle2,
-  Circle,
-  Clock,
-} from "lucide-react";
+import { Calendar, CheckCircle2, Circle, Clock } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
@@ -87,10 +82,7 @@ export function TaskDetail({ task }: TaskDetailProps) {
         )}
 
         <div className="flex flex-wrap gap-2">
-          <Badge
-            className={PRIORITY_COLORS[task.priority]}
-            variant="secondary"
-          >
+          <Badge className={PRIORITY_COLORS[task.priority]} variant="secondary">
             {t(`priority.${task.priority}`)}
           </Badge>
           <Badge variant="outline">{t(`status.${task.status}`)}</Badge>

@@ -12,8 +12,8 @@ import {
   MoreVertical,
   Trash2,
 } from "lucide-react";
-import Image from "next/image";
 import { motion } from "motion/react";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useCallback, useState } from "react";
 import { Badge } from "@/components/ui/badge";
@@ -217,10 +217,7 @@ export function TaskCard({ task }: TaskCardProps) {
                     task.status === "done" && "line-through"
                   )}
                 >
-                  <Link
-                    className="hover:underline"
-                    href={`/tasks/${task._id}`}
-                  >
+                  <Link className="hover:underline" href={`/tasks/${task._id}`}>
                     {task.title}
                   </Link>
                 </CardTitle>

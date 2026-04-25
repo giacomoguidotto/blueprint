@@ -5,7 +5,7 @@ export default function TaskDetailLoading() {
     <div className="container mx-auto px-4 py-8">
       <div className="mx-auto max-w-2xl space-y-4">
         <Skeleton className="h-9 w-32" />
-        <div className="rounded-lg border p-6 space-y-6">
+        <div className="space-y-6 rounded-lg border p-6">
           <Skeleton className="aspect-video w-full rounded-lg" />
           <div className="space-y-4">
             <Skeleton className="h-8 w-3/4" />

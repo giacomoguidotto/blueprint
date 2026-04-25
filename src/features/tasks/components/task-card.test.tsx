@@ -44,13 +44,9 @@ vi.mock("next-intl", () => ({
 }));
 
 vi.mock("@/i18n/routing", () => ({
-  Link: ({
-    children,
-    href,
-  }: {
-    children: React.ReactNode;
-    href: string;
-  }) => <a href={href}>{children}</a>,
+  Link: ({ children, href }: { children: React.ReactNode; href: string }) => (
+    <a href={href}>{children}</a>
+  ),
 }));
 
 vi.mock("motion/react", () => ({
@@ -104,9 +100,7 @@ describe("TaskCard", () => {
 
   it("shows 'Start' button for todo tasks", () => {
     render(<TaskCard task={baseTask} />);
-    expect(
-      screen.getByRole("button", { name: "Start" })
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Start" })).toBeInTheDocument();
   });
 
   it("shows 'Complete' button for in-progress tasks", () => {
@@ -136,9 +130,7 @@ describe("TaskCard", () => {
     const user = userEvent.setup();
     render(<TaskCard task={baseTask} />);
 
-    await user.click(
-      screen.getByRole("button", { name: "Task actions" })
-    );
+    await user.click(screen.getByRole("button", { name: "Task actions" }));
 
     expect(screen.getByText("Mark as In Progress")).toBeInTheDocument();
     expect(screen.getByText("Mark as Done")).toBeInTheDocument();
