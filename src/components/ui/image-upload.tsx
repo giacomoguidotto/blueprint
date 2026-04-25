@@ -18,11 +18,11 @@ const ACCEPTED_TYPES = {
 };
 
 interface ImageUploadProps {
-  value?: string | null;
-  onUpload: (storageId: Id<"_storage">) => void;
-  onRemove?: () => void;
-  className?: string;
   aspectRatio?: "square" | "video";
+  className?: string;
+  onRemove?: () => void;
+  onUpload: (storageId: Id<"_storage">) => void;
+  value?: string | null;
 }
 
 export function ImageUpload({
@@ -145,9 +145,7 @@ export function ImageUpload({
         <ImagePlus className="size-8" />
       )}
       <p className="text-center text-sm">
-        {isDragActive
-          ? "Drop image here"
-          : "Drag & drop or click to upload"}
+        {isDragActive ? "Drop image here" : "Drag & drop or click to upload"}
       </p>
       <p className="text-xs">PNG, JPG, WebP up to 2MB</p>
     </div>

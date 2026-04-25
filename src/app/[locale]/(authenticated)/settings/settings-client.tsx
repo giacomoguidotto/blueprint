@@ -8,11 +8,7 @@ import { Bell, BellOff, Settings, Trash2 } from "lucide-react";
 import { motion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { useCallback } from "react";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -193,14 +189,14 @@ function SettingsSkeleton() {
           <Skeleton className="h-9 w-48" />
           <Skeleton className="mt-2 h-5 w-72" />
         </div>
-        <div className="rounded-lg border p-6 space-y-4">
+        <div className="space-y-4 rounded-lg border p-6">
           <Skeleton className="h-6 w-32" />
           <div className="flex items-center gap-6">
             <Skeleton className="size-20 rounded-full" />
             <Skeleton className="h-32 flex-1 rounded-lg" />
           </div>
         </div>
-        <div className="rounded-lg border p-6 space-y-4">
+        <div className="space-y-4 rounded-lg border p-6">
           <Skeleton className="h-6 w-40" />
           <Skeleton className="h-16 w-full rounded-lg" />
         </div>

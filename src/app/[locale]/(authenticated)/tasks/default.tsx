@@ -1,1 +1,5 @@
-export { default } from "./page";
+import { TasksClient } from "./tasks-client";
+
+export default function TasksDefault() {
+  return <TasksClient />;
+}

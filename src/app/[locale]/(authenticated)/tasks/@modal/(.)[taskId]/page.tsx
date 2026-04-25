@@ -46,13 +46,11 @@ export default function TaskModalPage({ params }: Props) {
             Task details
           </DialogDescription>
         </DialogHeader>
-        {task === undefined ? (
-          <TaskDetailSkeleton />
-        ) : task === null ? (
+        {task === undefined && <TaskDetailSkeleton />}
+        {task === null && (
           <p className="text-muted-foreground">Task not found</p>
-        ) : (
-          <TaskDetail task={task} />
         )}
+        {task != null && <TaskDetail task={task} />}
       </DialogContent>
     </Dialog>
   );

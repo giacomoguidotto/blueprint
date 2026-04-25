@@ -9,7 +9,6 @@ import { useTranslations } from "next-intl";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { ImageUpload } from "@/components/ui/image-upload";
 import {
   Card,
   CardContent,
@@ -17,6 +16,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { ImageUpload } from "@/components/ui/image-upload";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -105,7 +105,7 @@ export function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
         setIsSubmitting(false);
       }
     },
-    [createTask, reset, onSuccess]
+    [createTask, reset, onSuccess, imageId]
   );
 
   return (

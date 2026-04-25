@@ -5,7 +5,6 @@ import { api } from "convex/_generated/api";
 import { useQuery } from "convex/react";
 import { LogOut, Settings } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/routing";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -15,6 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Link } from "@/i18n/routing";
 
 /**
  * User menu dropdown for authenticated users.
@@ -33,8 +33,7 @@ export function UserMenu() {
   );
 
   // Prefer stored avatar > WorkOS profile picture > initials
-  const avatarSrc =
-    storedAvatarUrl ?? user?.profilePictureUrl ?? undefined;
+  const avatarSrc = storedAvatarUrl ?? user?.profilePictureUrl ?? undefined;
 
   const getInitials = () => {
     if (user?.firstName && user?.lastName) {

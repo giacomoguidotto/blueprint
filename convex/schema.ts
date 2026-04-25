@@ -66,7 +66,10 @@ export default defineSchema({
     // Index for tasks by due date
     .index("by_due_date", ["dueDate"])
     // Search index for full-text search on task titles
-    .searchIndex("search_title", { searchField: "title", filterFields: ["userId"] }),
+    .searchIndex("search_title", {
+      searchField: "title",
+      filterFields: ["userId"],
+    }),
 });
 
 /**

@@ -80,7 +80,6 @@
   --chart-3: oklch(0.85 0.16 85);
   --chart-4: oklch(0.55 0.22 25);
   --chart-5: oklch(0.58 0.18 160);
-
 }
 
 /* Dark Mode - Deep Blue-Violet Glassmorphism */
@@ -118,7 +117,6 @@
   --chart-3: oklch(0.85 0.16 85);
   --chart-4: oklch(0.65 0.22 25);
   --chart-5: oklch(0.65 0.18 160);
-
 }
 
 @layer base {

@@ -38,13 +38,11 @@ export function TaskDetailClient({ taskId }: Props) {
 
       <Card className="shadow-brutal">
         <CardContent className="pt-6">
-          {task === undefined ? (
-            <TaskDetailSkeleton />
-          ) : task === null ? (
+          {task === undefined && <TaskDetailSkeleton />}
+          {task === null && (
             <p className="text-muted-foreground">{t("detail.notFound")}</p>
-          ) : (
-            <TaskDetail task={task} />
           )}
+          {task != null && <TaskDetail task={task} />}
         </CardContent>
       </Card>
     </div>
