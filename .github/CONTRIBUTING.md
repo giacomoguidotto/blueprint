@@ -10,6 +10,9 @@ Thanks for wanting to contribute to Blueprint! Please read our [Code of Conduct]
     bun install
     ```
 
+    > **Optional:** If you use [mise](https://mise.jdx.dev), run `mise install` first to
+    > provision the pinned `node` and `bun` versions from `mise.toml`.
+
 2. Start the dev server (Next.js + Convex):
 
     ```sh
