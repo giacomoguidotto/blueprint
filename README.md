@@ -16,6 +16,14 @@
 
 <br>
 
+Not just a template, but a live, working app. Clone it, plug in your keys, and you have a real task manager with CRUD operations, real-time sync, auth, and i18n, all wired together on production-grade infrastructure.
+
+<p align="center">
+  <img src="assets/home-page.png" alt="Home page" width="400" />
+  &nbsp;&nbsp;
+  <img src="assets/tasks.png" alt="Tasks view" width="400" />
+</p>
+
 ## ✨ Features
 
 - **Performance**: React Compiler, Next.js 16, Tailwind CSS 4
@@ -54,12 +62,14 @@ bun install
 ### 2. Deploy in Convex
 
 Setup a convex dev deployment by running:
+
 ```bash
 bun run dev:be
 ```
-Read more [here](https://docs.convex.dev/cli#configure) to understand how to navigate through the `convex dev` prompts.
 
-TL;DR: Login; select 'create a new project'.  
+Read more [here](https://docs.convex.dev/cli#configure) to understand how to navigate through the `convex dev` prompts.  
+TL;DR: Login; select 'create a new project'.
+
 **Important**: when prompted: 'Create a WorkOS team and enable automatic AuthKit environment provisioning for team "\<your-team>"?', answer **'no'** and let it exit.
 
 This will setup a new project in the [Convex dashboard](https://dashboard.convex.dev/), and generate a `.env.local` file with the following variables:
