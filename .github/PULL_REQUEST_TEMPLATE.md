@@ -8,10 +8,17 @@
 
 -
 
+## Type of Change
+
+- [ ] Bug fix
+- [ ] New feature
+- [ ] Breaking change
+- [ ] Documentation update
+- [ ] Refactoring
+
 ## Checklist
 
-- [ ] `bunx ultracite fix` passed
-- [ ] TypeScript compiles without errors
+- [ ] `bun run ci` passed (lint, typecheck, test, build)
 - [ ] No `any` types introduced
 - [ ] No `console.log` or `debugger` statements
 - [ ] All UI uses shadcn/ui components
