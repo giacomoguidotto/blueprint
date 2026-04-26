@@ -1,28 +1,33 @@
-# Blueprint
+<p align="center">
+  <img src="https://raw.githubusercontent.com/giacomoguidotto/blueprint/main/src/app/icon.png" alt="Blueprint" width="160" />
+</p>
 
-A production-ready Next.js starter template with modern tooling and best practices built-in.
+<h1 align="center">Blueprint</h1>
 
-## ✨ Features
+<p align="center">
+  <strong>Production-ready Next.js starter with real-time backend and auth built-in.</strong><br>
+  <sub>Next.js 16 &middot; Convex &middot; WorkOS AuthKit &middot; OpenTelemetry</sub>
+</p>
 
-🚀 Optimized for performance ([React Compiler](https://reactjs.org/), [Next.js](https://nextjs.org/))
+<p align="center">
+  <a href="https://github.com/giacomoguidotto/blueprint/actions"><img src="https://github.com/giacomoguidotto/blueprint/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/giacomoguidotto/blueprint/blob/main/LICENSE"><img src="https://img.shields.io/github/license/giacomoguidotto/blueprint" alt="License"></a>
+</p>
 
-🔒 Modern authentication ([WorkOS AuthKit](https://workos.com/authkit)) with protected routes
+<br>
 
-⚡ Real-time database ([Convex](https://www.convex.dev/)) with type-safe React hooks
+## Features
 
-🌍 Multi-language, type-safe i18n ([next-intl](https://next-intl-docs.vercel.app/))
+- **Performance**: React Compiler, Next.js 16, Tailwind CSS 4
+- **Auth**: WorkOS AuthKit with protected routes
+- **Backend**: Convex real-time database with type-safe React hooks
+- **i18n**: Multi-language support via next-intl
+- **UI**: shadcn/ui components, dark mode, responsive design
+- **Observability**: Effect + OpenTelemetry + Axiom (traces, metrics)
+- **Security**: CSP, headers, env validation
+- **DX**: Biome linting/formatting, Vitest, Playwright
 
-🎨 [shadcn/ui](https://ui.shadcn.com/) component library & [Tailwind CSS 4](https://tailwindcss.com/)
-
-🌓 Dark mode & accessible, responsive design
-
-📡 Full-stack observability ([Effect](https://effect.website/) + [OpenTelemetry](https://opentelemetry.io/) + [Axiom](https://axiom.co/))
-
-🛡️ Security best practices (CSP, headers, env validation)
-
-🧑‍💻 Fast linting/formatting ([Biome](https://biomejs.dev/)), reproducible dev env ([devenv](https://devenv.sh/))
-
-## 🚀 Quickstart
+## Quickstart
 
 ### 0. Prerequisites
 
@@ -122,7 +127,7 @@ Run both the Next.js frontend and the Convex backend:
 bun dev
 ```
 
-## 📦 Deploy
+## Deploy
 
 The following deployment guide uses Vercel as the deployment platform, and should cost nothing under the current Convex/WorkOS/Vercel pricing plans, at the time of writing.
 
@@ -201,7 +206,7 @@ A WorkOS account works only with a single platform, meaning that if you want to 
 
 On subsequent, already logged in sessions, the user will be redirected to the correct project.
 
-## 🔍 Preview
+## Preview
 
 When working on a git branch different from `main`, Vercel will automatically generate a preview deployment. You need to configure both Convex and Vercel to be able to automatically deploy correctly.
 
@@ -229,7 +234,7 @@ Add them **only for Preview**.
 
 Not you can work on your branch with no worries.
 
-## 🛠️ Build your project on top of Blueprint
+## Build your project on top of Blueprint
 
 ### Configure the app metadata
 
@@ -303,7 +308,7 @@ const result = await telemetryRuntime.runPromise(program);
 
 Learn more: [Effect docs](https://effect.website/docs/observability/tracing/)
 
-## 🎯 Best Practices Followed
+## Best Practices
 
 This project embeds production-grade patterns and architectural decisions:
 
@@ -316,19 +321,19 @@ This project embeds production-grade patterns and architectural decisions:
 
 **Why these choices?** They reduce cognitive load, prevent common bugs, make onboarding faster, and ensure the codebase scales cleanly from prototype to production.
 
-## 🚧 Roadmap
+## Tooling
 
-### ✅ Completed
-- [x] **Framework**: Next.js 16, React 19, TypeScript
-- [x] **Backend**: Convex (database, auth, real-time)
-- [x] **Auth**: WorkOS AuthKit
-- [x] **Styling**: Tailwind CSS 4, shadcn/ui, next-themes
-- [x] **i18n**: next-intl
-- [x] **Observability**: Effect + OpenTelemetry + Axiom (traces, metrics, error reporting)
-- [x] **Code Quality**: Biome, Ultracite, Husky
-- [x] **Dev Env**: devenv, direnv
-- [x] **Testing**: Vitest (unit/integration) + Playwright (E2E)
+| Tool | Purpose |
+|------|---------|
+| [Bun](https://bun.sh) | Runtime and package manager |
+| [mise](https://mise.jdx.dev) (optional) | Toolchain provisioning |
+| [Convex](https://convex.dev) | Real-time backend |
+| [Biome](https://biomejs.dev) | Linting and formatting |
+| [Vitest](https://vitest.dev) | Unit testing |
+| [Playwright](https://playwright.dev) | E2E testing |
 
-### 🚧 Planned / To Do
-- [ ] Database migrations tooling
-- [ ] Email service integration
+All checks (lint, typecheck, test, build) are available via `bun run ci`.
+
+## Contributing
+
+See [CONTRIBUTING.md](.github/CONTRIBUTING.md) for setup instructions and project conventions.
