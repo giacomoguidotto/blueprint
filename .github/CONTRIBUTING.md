@@ -1,115 +1,42 @@
 # Contributing
 
-Welcome to Blueprint! We're thrilled that you'd like to contribute. Your help is essential for making it better.
+Thanks for wanting to contribute to Blueprint! Please read our [Code of Conduct](CODE_OF_CONDUCT.md) before getting started.
 
-## Prerequisites
+## Setup
 
-- [Bun](https://bun.sh) (package manager and runtime)
-- [Node.js](https://nodejs.org) v20+
-- A [Convex](https://convex.dev) account (for backend development)
-
-## Getting Started
-
-Before you start contributing, please make sure you have read and understood our [Code of Conduct](CODE_OF_CONDUCT.md).
-
-1. Fork the [repository](https://github.com/giacomoguidotto/blueprint) to your own GitHub account.
-
-2. Clone your fork:
-
-    ```sh
-    git clone https://github.com/<your-username>/blueprint.git
-    ```
-
-3. Navigate to the project directory:
-
-    ```sh
-    cd blueprint
-    ```
-
-4. Install dependencies:
+1. Fork and clone the repo, then install dependencies:
 
     ```sh
     bun install
     ```
 
-5. Create a new branch for your feature or bug fix:
-
-    ```sh
-    git checkout -b feat/feature-branch
-    ```
-
-6. Start the development server (Next.js + Convex):
+2. Start the dev server (Next.js + Convex):
 
     ```sh
     bun run dev
     ```
 
-7. Make your changes, then verify everything works:
+3. Before pushing, run the full CI check locally:
 
     ```sh
     bun run ci
     ```
 
-    This runs the same checks as CI: lint, typecheck, test, and build. You can also run them individually:
+    This runs lint, typecheck, test, and build — the same pipeline as CI.
 
-    ```sh
-    bun run lint        # Biome linter
-    bun run typecheck   # TypeScript strict mode
-    bun run test        # Vitest unit tests
-    bun run build       # Next.js production build
-    ```
+## Tooling
 
-8. Commit your changes following the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification:
+- **Runtime / package manager**: [Bun](https://bun.sh)
+- **Backend**: [Convex](https://convex.dev) — never edit `convex/_generated/`
+- **Linting & formatting**: [Biome](https://biomejs.dev) via ultracite — not ESLint or Prettier
+- **Tests**: [Vitest](https://vitest.dev) (unit, co-located `*.test.ts`) / [Playwright](https://playwright.dev) (E2E, `e2e/*.spec.ts`)
+- **i18n**: `messages/` directory (en, it)
 
-    ```sh
-    git add .
-    git commit -m "feat: description of your changes"
-    ```
+## Conventions
 
-9. Push your changes to your fork:
-
-    ```sh
-    git push origin feat/feature-branch
-    ```
-
-10. Open a Pull Request against the `main` branch.
-
-## Project Structure
-
-- `src/features/[feature]/` — domain modules (components, store, schemas, types)
-- `src/components/` — shared UI (shadcn/ui in `ui/`)
-- `convex/` — backend functions and schema (`_generated/` is auto-generated, never edit)
-- `messages/` — i18n translation files (en, it)
-- `e2e/` — Playwright E2E tests
-
-## Code Style
-
-- **Linting & formatting**: [Biome](https://biomejs.dev) via [ultracite](https://github.com/haydenbleasel/ultracite) — not ESLint or Prettier
-- **Check**: `bun run lint`
-- **Auto-fix**: `bun run format`
-- **CI runs**: `bunx ultracite check`
-
-## Naming Conventions
-
-- Components: PascalCase (`TaskList.tsx`)
-- Utilities/hooks: camelCase (`useTranslations`, `taskFilterAtom`)
-- Test files: co-located as `*.test.ts` (unit) or `*.spec.ts` (E2E in `e2e/`)
-- Constants: SCREAMING_SNAKE_CASE (`TASK_STATUSES`)
-
-## Testing
-
-- **Unit tests**: `bun run test` (Vitest with Testing Library)
-- **E2E tests**: `bun run test:e2e` (Playwright)
-- Place unit tests next to the code they test (`*.test.ts`)
-- Place E2E tests in the `e2e/` directory (`*.spec.ts`)
-
-## Commit Messages
-
-We follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/):
-
-- `feat:` — new feature
-- `fix:` — bug fix
-- `docs:` — documentation only
-- `refactor:` — code change that neither fixes a bug nor adds a feature
-- `test:` — adding or updating tests
-- `chore:` — maintenance tasks
+- Branch names: `feat/`, `fix/`, `docs/`, etc.
+- Commits: [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) (`feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `chore:`)
+- Components: PascalCase — Utilities/hooks: camelCase — Constants: SCREAMING_SNAKE_CASE
+- All UI must use shadcn/ui components (`src/components/ui/`)
+- Convex functions must have `args`, `returns`, and `handler`
+- Use Zod v4 (`zod/v4`) for validation
