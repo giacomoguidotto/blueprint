@@ -16,7 +16,7 @@
 
 <br>
 
-## Features
+## ✨ Features
 
 - **Performance**: React Compiler, Next.js 16, Tailwind CSS 4
 - **Auth**: WorkOS AuthKit with protected routes
@@ -27,7 +27,7 @@
 - **Security**: CSP, headers, env validation
 - **DX**: Biome linting/formatting, Vitest, Playwright
 
-## Quickstart
+## 🚀 Quickstart
 
 ### 0. Prerequisites
 
@@ -127,7 +127,7 @@ Run both the Next.js frontend and the Convex backend:
 bun dev
 ```
 
-## Deploy
+## 📦 Deploy
 
 The following deployment guide uses Vercel as the deployment platform, and should cost nothing under the current Convex/WorkOS/Vercel pricing plans, at the time of writing.
 
@@ -206,7 +206,7 @@ A WorkOS account works only with a single platform, meaning that if you want to 
 
 On subsequent, already logged in sessions, the user will be redirected to the correct project.
 
-## Preview
+## 🔍 Preview
 
 When working on a git branch different from `main`, Vercel will automatically generate a preview deployment. You need to configure both Convex and Vercel to be able to automatically deploy correctly.
 
@@ -234,7 +234,7 @@ Add them **only for Preview**.
 
 Not you can work on your branch with no worries.
 
-## Build your project on top of Blueprint
+## 🛠️ Build your project on top of Blueprint
 
 ### Configure the app metadata
 
@@ -308,7 +308,7 @@ const result = await telemetryRuntime.runPromise(program);
 
 Learn more: [Effect docs](https://effect.website/docs/observability/tracing/)
 
-## Best Practices
+## 🎯 Best Practices
 
 This project embeds production-grade patterns and architectural decisions:
 
@@ -321,7 +321,7 @@ This project embeds production-grade patterns and architectural decisions:
 
 **Why these choices?** They reduce cognitive load, prevent common bugs, make onboarding faster, and ensure the codebase scales cleanly from prototype to production.
 
-## Tooling
+## 🧰 Tooling
 
 | Tool | Purpose |
 |------|---------|
@@ -334,6 +334,6 @@ This project embeds production-grade patterns and architectural decisions:
 
 All checks (lint, typecheck, test, build) are available via `bun run ci`.
 
-## Contributing
+## 🤝 Contributing
 
 See [CONTRIBUTING.md](.github/CONTRIBUTING.md) for setup instructions and project conventions.
