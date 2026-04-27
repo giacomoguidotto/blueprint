@@ -121,7 +121,6 @@ describe("tasks backend", () => {
     it("throws when not authenticated", async () => {
       const t = convexTest(schema, modules);
 
-      // Create a task to get a valid ID
       const taskId = await t.run(async (ctx) => {
         const userId = await ctx.db.insert("users", { authId: "owner" });
         return await ctx.db.insert("tasks", {
@@ -135,7 +134,7 @@ describe("tasks backend", () => {
       await expect(
         t.mutation(api.tasks.updateTaskStatus, {
           taskId,
-          status: "done",
+          status: "in_progress",
         })
       ).rejects.toThrow("Not authenticated");
     });
@@ -158,12 +157,12 @@ describe("tasks backend", () => {
       await expect(
         asOther.mutation(api.tasks.updateTaskStatus, {
           taskId,
-          status: "done",
+          status: "in_progress",
         })
       ).rejects.toThrow("Unauthorized");
     });
 
-    it("updates status for own task", async () => {
+    it("allows valid status transitions", async () => {
       const t = convexTest(schema, modules);
 
       const taskId = await t.run(async (ctx) => {
@@ -177,13 +176,62 @@ describe("tasks backend", () => {
       });
 
       const asUser = t.withIdentity({ subject: "user-4" });
+
+      // todo → in_progress
       await asUser.mutation(api.tasks.updateTaskStatus, {
         taskId,
         status: "in_progress",
       });
-
-      const tasks = await asUser.query(api.tasks.getTasks, {});
+      let tasks = await asUser.query(api.tasks.getTasks, {});
       expect(tasks[0].status).toBe("in_progress");
+
+      // in_progress → done
+      await asUser.mutation(api.tasks.updateTaskStatus, {
+        taskId,
+        status: "done",
+      });
+      tasks = await asUser.query(api.tasks.getTasks, {});
+      expect(tasks[0].status).toBe("done");
+
+      // done → todo (reopen)
+      await asUser.mutation(api.tasks.updateTaskStatus, {
+        taskId,
+        status: "todo",
+      });
+      tasks = await asUser.query(api.tasks.getTasks, {});
+      expect(tasks[0].status).toBe("todo");
+    });
+
+    it("rejects invalid status transitions", async () => {
+      const t = convexTest(schema, modules);
+
+      const taskId = await t.run(async (ctx) => {
+        const userId = await ctx.db.insert("users", { authId: "user-5" });
+        return await ctx.db.insert("tasks", {
+          title: "My task",
+          status: "todo",
+          priority: "low",
+          userId,
+        });
+      });
+
+      const asUser = t.withIdentity({ subject: "user-5" });
+
+      // todo → done (skipping in_progress)
+      await expect(
+        asUser.mutation(api.tasks.updateTaskStatus, {
+          taskId,
+          status: "done",
+        })
+      ).rejects.toThrow("Invalid status transition");
+
+      // todo → archived
+      await expect(
+        asUser.mutation(api.tasks.updateTaskStatus, {
+          taskId,
+          status: "archived",
+        })
+      ).rejects.toThrow("Invalid status transition");
     });
   });
 

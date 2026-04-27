@@ -1,6 +1,25 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
+export type TaskStatus = "todo" | "in_progress" | "done" | "archived";
+
+/**
+ * Valid status transitions for the task lifecycle.
+ *
+ * todo → in_progress → done → archived
+ * with reopening: in_progress → todo, done → todo
+ */
+export const VALID_TRANSITIONS: Record<TaskStatus, TaskStatus[]> = {
+  todo: ["in_progress"],
+  in_progress: ["done", "todo"],
+  done: ["archived", "todo"],
+  archived: [],
+};
+
+export function canTransition(from: TaskStatus, to: TaskStatus): boolean {
+  return VALID_TRANSITIONS[from].includes(to);
+}
+
 /**
  * Convex Schema Definition
  *
@@ -56,6 +75,16 @@ export default defineSchema({
     dueDate: v.optional(v.number()),
     // Optional tags for categorization
     tags: v.optional(v.array(v.string())),
+    // Checklist items (embedded value objects)
+    checklistItems: v.optional(
+      v.array(
+        v.object({
+          key: v.string(),
+          title: v.string(),
+          checked: v.boolean(),
+        })
+      )
+    ),
     // Optional cover image (Convex file storage)
     imageId: v.optional(v.id("_storage")),
   })

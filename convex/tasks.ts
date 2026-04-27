@@ -1,6 +1,7 @@
 import { paginationOptsValidator } from "convex/server";
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { canTransition } from "./schema";
 
 /**
  * Get a single task by ID
@@ -217,6 +218,12 @@ export const updateTaskStatus = mutation({
       throw new Error("Unauthorized");
     }
 
+    if (!canTransition(task.status, status)) {
+      throw new Error(
+        `Invalid status transition: ${task.status} → ${status}`
+      );
+    }
+
     await ctx.db.patch(taskId, { status });
   },
 });
@@ -257,6 +264,125 @@ export const deleteTask = mutation({
     }
 
     await ctx.db.delete(taskId);
+  },
+});
+
+/**
+ * Add a checklist item to a task
+ */
+export const addChecklistItem = mutation({
+  args: {
+    taskId: v.id("tasks"),
+    key: v.string(),
+    title: v.string(),
+  },
+  handler: async (ctx, { taskId, key, title }) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Not authenticated");
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_auth_id", (q) => q.eq("authId", identity.subject))
+      .unique();
+    if (!user) throw new Error("User not found");
+
+    const task = await ctx.db.get(taskId);
+    if (!task || task.userId !== user._id) throw new Error("Unauthorized");
+
+    const items = task.checklistItems ?? [];
+    await ctx.db.patch(taskId, {
+      checklistItems: [...items, { key, title, checked: false }],
+    });
+  },
+});
+
+/**
+ * Toggle a checklist item's checked state
+ */
+export const toggleChecklistItem = mutation({
+  args: {
+    taskId: v.id("tasks"),
+    key: v.string(),
+  },
+  handler: async (ctx, { taskId, key }) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Not authenticated");
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_auth_id", (q) => q.eq("authId", identity.subject))
+      .unique();
+    if (!user) throw new Error("User not found");
+
+    const task = await ctx.db.get(taskId);
+    if (!task || task.userId !== user._id) throw new Error("Unauthorized");
+
+    const items = task.checklistItems ?? [];
+    await ctx.db.patch(taskId, {
+      checklistItems: items.map((item) =>
+        item.key === key ? { ...item, checked: !item.checked } : item
+      ),
+    });
+  },
+});
+
+/**
+ * Remove a checklist item from a task
+ */
+export const removeChecklistItem = mutation({
+  args: {
+    taskId: v.id("tasks"),
+    key: v.string(),
+  },
+  handler: async (ctx, { taskId, key }) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Not authenticated");
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_auth_id", (q) => q.eq("authId", identity.subject))
+      .unique();
+    if (!user) throw new Error("User not found");
+
+    const task = await ctx.db.get(taskId);
+    if (!task || task.userId !== user._id) throw new Error("Unauthorized");
+
+    const items = task.checklistItems ?? [];
+    await ctx.db.patch(taskId, {
+      checklistItems: items.filter((item) => item.key !== key),
+    });
+  },
+});
+
+/**
+ * Reorder checklist items by providing the new ordered list of keys
+ */
+export const reorderChecklistItems = mutation({
+  args: {
+    taskId: v.id("tasks"),
+    keys: v.array(v.string()),
+  },
+  handler: async (ctx, { taskId, keys }) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Not authenticated");
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_auth_id", (q) => q.eq("authId", identity.subject))
+      .unique();
+    if (!user) throw new Error("User not found");
+
+    const task = await ctx.db.get(taskId);
+    if (!task || task.userId !== user._id) throw new Error("Unauthorized");
+
+    const items = task.checklistItems ?? [];
+    const byKey = new Map(items.map((item) => [item.key, item]));
+    const reordered = keys.flatMap((key) => {
+      const item = byKey.get(key);
+      return item ? [item] : [];
+    });
+
+    await ctx.db.patch(taskId, { checklistItems: reordered });
   },
 });
 
