@@ -21,6 +21,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@convex-dev/resend": "^0.2.3",
     "@convex-dev/workos": "^0.0.1",
     "@convex-dev/workos-authkit": "^0.2.2",
     "@effect/opentelemetry": "^0.63.0",

@@ -1,5 +1,6 @@
 import { paginationOptsValidator } from "convex/server";
 import { v } from "convex/values";
+import { internal } from "./_generated/api";
 import { mutation, query } from "./_generated/server";
 import { recordActivity } from "./model/activity";
 import { getAuthUser, getTaskWithAccess } from "./model/tasks";
@@ -365,6 +366,17 @@ export const shareTask = mutation({
       type: "collaborator_added",
       metadata: { collaboratorId: targetUser._id, email },
     });
+
+    // Get task title for notification
+    const task = await ctx.db.get(taskId);
+    if (task) {
+      await ctx.scheduler.runAfter(0, internal.notifications.notifyTaskShared, {
+        taskId,
+        recipientId: targetUser._id,
+        sharedByEmail: user.email ?? "Someone",
+        taskTitle: task.title,
+      });
+    }
   },
 });
 
@@ -423,6 +435,21 @@ export const addComment = mutation({
       type: "comment",
       body,
     });
+
+    const task = await ctx.db.get(taskId);
+    if (task) {
+      await ctx.scheduler.runAfter(
+        0,
+        internal.notifications.notifyCommentAdded,
+        {
+          taskId,
+          commenterId: user._id,
+          commenterEmail: user.email ?? "Someone",
+          taskTitle: task.title,
+          commentBody: body,
+        }
+      );
+    }
   },
 });
 

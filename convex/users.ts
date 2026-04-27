@@ -80,11 +80,15 @@ export const removeAvatar = mutation({
 });
 
 /**
- * Update notification preferences
+ * Update notification preferences (per event type)
  */
-export const updateNotificationPreference = mutation({
-  args: { enabled: v.boolean() },
-  handler: async (ctx, { enabled }) => {
+export const updateNotificationPreferences = mutation({
+  args: {
+    notifyOnShare: v.boolean(),
+    notifyOnComment: v.boolean(),
+    notifyOnDueDate: v.boolean(),
+  },
+  handler: async (ctx, preferences) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       throw new Error("Not authenticated");
@@ -99,8 +103,6 @@ export const updateNotificationPreference = mutation({
       throw new Error("User not found");
     }
 
-    await ctx.db.patch(user._id, {
-      preferences: { notifications: enabled },
-    });
+    await ctx.db.patch(user._id, { preferences });
   },
 });

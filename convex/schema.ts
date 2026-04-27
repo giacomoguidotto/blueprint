@@ -41,10 +41,12 @@ export default defineSchema({
     email: v.optional(v.string()),
     // Optional avatar image (Convex file storage)
     avatarId: v.optional(v.id("_storage")),
-    // User preferences
+    // User notification preferences (per event type)
     preferences: v.optional(
       v.object({
-        notifications: v.boolean(),
+        notifyOnShare: v.boolean(),
+        notifyOnComment: v.boolean(),
+        notifyOnDueDate: v.boolean(),
       })
     ),
   })
@@ -141,6 +143,25 @@ export default defineSchema({
     body: v.optional(v.string()),
     metadata: v.optional(v.any()),
   }).index("by_task", ["taskId"]),
+
+  /**
+   * Notifications table
+   *
+   * Records of sent notification emails for delivery tracking
+   * and deduplication (e.g., due date reminders).
+   */
+  notifications: defineTable({
+    taskId: v.id("tasks"),
+    recipientId: v.id("users"),
+    type: v.union(
+      v.literal("task_shared"),
+      v.literal("comment_added"),
+      v.literal("due_date_approaching")
+    ),
+    sentAt: v.number(),
+  })
+    .index("by_task_and_type", ["taskId", "type"])
+    .index("by_recipient", ["recipientId"]),
 });
 
 /**

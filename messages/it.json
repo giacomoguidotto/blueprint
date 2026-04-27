@@ -180,10 +180,13 @@
     },
     "notifications": {
       "title": "Notifiche",
-      "description": "Controlla come ricevi le notifiche",
-      "toggle": "Notifiche Email",
-      "enabled": "Riceverai notifiche via email",
-      "disabled": "Le notifiche email sono disattivate"
+      "description": "Controlla quali notifiche email ricevi",
+      "onShare": "Attività condivisa con me",
+      "onShareDescription": "Quando qualcuno condivide un'attività con te",
+      "onComment": "Commenti su attività condivise",
+      "onCommentDescription": "Quando un collaboratore commenta un'attività condivisa",
+      "onDueDate": "Promemoria scadenza",
+      "onDueDateDescription": "24 ore prima della scadenza di un'attività"
     }
   },
   "auth": {

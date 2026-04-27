@@ -33,20 +33,14 @@ export function SettingsClient() {
   const updateAvatar = useMutation(api.users.updateAvatar);
   const removeAvatar = useMutation(api.users.removeAvatar);
   const updateNotifications = useMutation(
-    api.users.updateNotificationPreference
-  ).withOptimisticUpdate((localStore, { enabled }) => {
-    const queries = localStore.getAllQueries(api.users.getUser);
-    for (const { args, value } of queries) {
-      if (value !== undefined) {
-        localStore.setQuery(api.users.getUser, args, {
-          ...value,
-          preferences: { notifications: enabled },
-        });
-      }
-    }
-  });
+    api.users.updateNotificationPreferences
+  );
 
-  const notificationsEnabled = user?.preferences?.notifications ?? false;
+  const prefs = user?.preferences ?? {
+    notifyOnShare: true,
+    notifyOnComment: true,
+    notifyOnDueDate: true,
+  };
 
   const handleAvatarUpload = useCallback(
     async (storageId: Id<"_storage">) => {
@@ -59,9 +53,15 @@ export function SettingsClient() {
     await removeAvatar();
   }, [removeAvatar]);
 
-  const handleToggleNotifications = useCallback(async () => {
-    await updateNotifications({ enabled: !notificationsEnabled });
-  }, [updateNotifications, notificationsEnabled]);
+  const handleTogglePreference = useCallback(
+    async (key: "notifyOnShare" | "notifyOnComment" | "notifyOnDueDate") => {
+      await updateNotifications({
+        ...prefs,
+        [key]: !prefs[key],
+      });
+    },
+    [updateNotifications, prefs]
+  );
 
   if (!user) {
     return <SettingsSkeleton />;
@@ -136,43 +136,50 @@ export function SettingsClient() {
                 {t("notifications.description")}
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <motion.button
-                className="flex w-full items-center justify-between rounded-lg border p-4 transition-colors hover:bg-muted/50"
-                onClick={handleToggleNotifications}
-                transition={spring.snappy}
-                type="button"
-                whileTap={{ scale: 0.98 }}
-              >
-                <div className="flex items-center gap-3">
-                  {notificationsEnabled ? (
-                    <Bell className="size-5 text-primary" />
-                  ) : (
-                    <BellOff className="size-5 text-muted-foreground" />
-                  )}
-                  <div className="text-left">
-                    <p className="font-medium text-sm">
-                      {t("notifications.toggle")}
-                    </p>
-                    <p className="text-muted-foreground text-xs">
-                      {notificationsEnabled
-                        ? t("notifications.enabled")
-                        : t("notifications.disabled")}
-                    </p>
-                  </div>
-                </div>
-                <div
-                  className={`h-6 w-11 rounded-full p-0.5 transition-colors ${
-                    notificationsEnabled ? "bg-primary" : "bg-muted"
-                  }`}
+            <CardContent className="space-y-2">
+              {(
+                [
+                  { key: "notifyOnShare", label: "onShare" },
+                  { key: "notifyOnComment", label: "onComment" },
+                  { key: "notifyOnDueDate", label: "onDueDate" },
+                ] as const
+              ).map(({ key, label }) => (
+                <motion.button
+                  className="flex w-full items-center justify-between rounded-lg border p-4 transition-colors hover:bg-muted/50"
+                  key={key}
+                  onClick={() => handleTogglePreference(key)}
+                  transition={spring.snappy}
+                  type="button"
+                  whileTap={{ scale: 0.98 }}
                 >
-                  <motion.div
-                    animate={{ x: notificationsEnabled ? 20 : 0 }}
-                    className="size-5 rounded-full bg-white shadow-sm"
-                    transition={spring.snappy}
-                  />
-                </div>
-              </motion.button>
+                  <div className="flex items-center gap-3">
+                    {prefs[key] ? (
+                      <Bell className="size-5 text-primary" />
+                    ) : (
+                      <BellOff className="size-5 text-muted-foreground" />
+                    )}
+                    <div className="text-left">
+                      <p className="font-medium text-sm">
+                        {t(`notifications.${label}`)}
+                      </p>
+                      <p className="text-muted-foreground text-xs">
+                        {t(`notifications.${label}Description`)}
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    className={`h-6 w-11 rounded-full p-0.5 transition-colors ${
+                      prefs[key] ? "bg-primary" : "bg-muted"
+                    }`}
+                  >
+                    <motion.div
+                      animate={{ x: prefs[key] ? 20 : 0 }}
+                      className="size-5 rounded-full bg-white shadow-sm"
+                      transition={spring.snappy}
+                    />
+                  </div>
+                </motion.button>
+              ))}
             </CardContent>
           </Card>
         </motion.div>

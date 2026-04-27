@@ -180,10 +180,13 @@
     },
     "notifications": {
       "title": "Notifications",
-      "description": "Control how you receive notifications",
-      "toggle": "Email Notifications",
-      "enabled": "You will receive email notifications",
-      "disabled": "Email notifications are turned off"
+      "description": "Control which email notifications you receive",
+      "onShare": "Task shared with me",
+      "onShareDescription": "When someone shares a task with you",
+      "onComment": "Comments on shared tasks",
+      "onCommentDescription": "When a collaborator comments on a shared task",
+      "onDueDate": "Due date reminders",
+      "onDueDateDescription": "24 hours before a task is due"
     }
   },
   "auth": {
