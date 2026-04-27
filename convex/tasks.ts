@@ -1,6 +1,7 @@
 import { paginationOptsValidator } from "convex/server";
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { recordActivity } from "./model/activity";
 import { getAuthUser, getTaskWithAccess } from "./model/tasks";
 import { canTransition } from "./schema";
 
@@ -151,6 +152,12 @@ export const updateTaskStatus = mutation({
     }
 
     await ctx.db.patch(taskId, { status });
+    await recordActivity(ctx, {
+      taskId,
+      userId: user._id,
+      type: "status_changed",
+      metadata: { from: task.status, to: status },
+    });
   },
 });
 
@@ -209,6 +216,12 @@ export const addChecklistItem = mutation({
     await ctx.db.patch(taskId, {
       checklistItems: [...items, { key, title, checked: false }],
     });
+    await recordActivity(ctx, {
+      taskId,
+      userId: user._id,
+      type: "checklist_item_added",
+      metadata: { key, title },
+    });
   },
 });
 
@@ -230,10 +243,21 @@ export const toggleChecklistItem = mutation({
     }
 
     const items = task.checklistItems ?? [];
+    const item = items.find((i) => i.key === key);
+    const wasChecked = item?.checked ?? false;
+
     await ctx.db.patch(taskId, {
-      checklistItems: items.map((item) =>
-        item.key === key ? { ...item, checked: !item.checked } : item
+      checklistItems: items.map((i) =>
+        i.key === key ? { ...i, checked: !i.checked } : i
       ),
+    });
+    await recordActivity(ctx, {
+      taskId,
+      userId: user._id,
+      type: wasChecked
+        ? "checklist_item_uncompleted"
+        : "checklist_item_completed",
+      metadata: { key, title: item?.title },
     });
   },
 });
@@ -335,6 +359,12 @@ export const shareTask = mutation({
       addedAt: Date.now(),
       addedBy: user._id,
     });
+    await recordActivity(ctx, {
+      taskId,
+      userId: user._id,
+      type: "collaborator_added",
+      metadata: { collaboratorId: targetUser._id, email },
+    });
   },
 });
 
@@ -366,6 +396,68 @@ export const unshareTask = mutation({
     }
 
     await ctx.db.delete(collaborator._id);
+    await recordActivity(ctx, {
+      taskId,
+      userId: user._id,
+      type: "collaborator_removed",
+      metadata: { collaboratorId: userId },
+    });
+  },
+});
+
+/**
+ * Add a comment to a task
+ */
+export const addComment = mutation({
+  args: {
+    taskId: v.id("tasks"),
+    body: v.string(),
+  },
+  handler: async (ctx, { taskId, body }) => {
+    const user = await getAuthUser(ctx);
+    await getTaskWithAccess(ctx, taskId, user._id);
+
+    await recordActivity(ctx, {
+      taskId,
+      userId: user._id,
+      type: "comment",
+      body,
+    });
+  },
+});
+
+/**
+ * Get activity entries for a task (paginated, newest first)
+ */
+export const getActivity = query({
+  args: {
+    taskId: v.id("tasks"),
+    paginationOpts: paginationOptsValidator,
+  },
+  handler: async (ctx, { taskId, paginationOpts }) => {
+    const user = await getAuthUser(ctx);
+    await getTaskWithAccess(ctx, taskId, user._id);
+
+    const entries = await ctx.db
+      .query("activityEntries")
+      .withIndex("by_task", (q) => q.eq("taskId", taskId))
+      .order("desc")
+      .paginate(paginationOpts);
+
+    // Enrich entries with user data
+    const enrichedPage = await Promise.all(
+      entries.page.map(async (entry) => {
+        const entryUser = await ctx.db.get(entry.userId);
+        return {
+          ...entry,
+          user: entryUser
+            ? { _id: entryUser._id, email: entryUser.email }
+            : null,
+        };
+      })
+    );
+
+    return { ...entries, page: enrichedPage };
   },
 });
 

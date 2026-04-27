@@ -5,10 +5,12 @@ import { useQuery } from "convex/react";
 import { Calendar, CheckCircle2, Circle, Clock } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import type { Task, TaskStatus } from "../types";
+import { ActivityPanel } from "./activity-panel";
 import { ShareDialog } from "./share-dialog";
 
 const STATUS_ICONS: Record<TaskStatus, typeof Circle> = {
@@ -38,6 +40,7 @@ interface TaskDetailProps {
 
 export function TaskDetail({ task }: TaskDetailProps) {
   const t = useTranslations("tasks");
+  const [activityOpen, setActivityOpen] = useState(false);
   const imageUrl = useQuery(
     api.tasks.getStorageUrl,
     task.imageId ? { storageId: task.imageId } : "skip"
@@ -108,6 +111,12 @@ export function TaskDetail({ task }: TaskDetailProps) {
           </p>
           <ShareDialog taskId={task._id} />
         </div>
+
+        <ActivityPanel
+          onToggle={() => setActivityOpen((prev) => !prev)}
+          open={activityOpen}
+          taskId={task._id}
+        />
       </div>
     </div>
   );

@@ -132,7 +132,22 @@
     "detail": {
       "backToTasks": "Back to Tasks",
       "notFound": "Task not found",
-      "created": "Created on {date}"
+      "created": "Created on {date}",
+      "activity": "Activity",
+      "addComment": "Add a comment...",
+      "postComment": "Post",
+      "noActivity": "No activity yet"
+    },
+    "activity": {
+      "status_changed": "{user} changed status from {from} to {to}",
+      "priority_changed": "{user} changed priority from {from} to {to}",
+      "due_date_changed": "{user} changed the due date",
+      "collaborator_added": "{user} added {email} as a collaborator",
+      "collaborator_removed": "{user} removed a collaborator",
+      "checklist_item_added": "{user} added checklist item \"{title}\"",
+      "checklist_item_completed": "{user} completed \"{title}\"",
+      "checklist_item_uncompleted": "{user} unchecked \"{title}\"",
+      "comment": "{user} commented"
     },
     "empty": {
       "title": "No tasks yet",

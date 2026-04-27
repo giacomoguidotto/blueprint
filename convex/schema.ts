@@ -117,6 +117,30 @@ export default defineSchema({
     .index("by_task", ["taskId"])
     .index("by_task_and_user", ["taskId", "userId"])
     .index("by_user", ["userId"]),
+
+  /**
+   * Activity entries table
+   *
+   * Append-only log of events on a task. Includes both system-generated
+   * entries (status changes, etc.) and user-generated comments.
+   */
+  activityEntries: defineTable({
+    taskId: v.id("tasks"),
+    userId: v.id("users"),
+    type: v.union(
+      v.literal("status_changed"),
+      v.literal("priority_changed"),
+      v.literal("due_date_changed"),
+      v.literal("collaborator_added"),
+      v.literal("collaborator_removed"),
+      v.literal("checklist_item_added"),
+      v.literal("checklist_item_completed"),
+      v.literal("checklist_item_uncompleted"),
+      v.literal("comment")
+    ),
+    body: v.optional(v.string()),
+    metadata: v.optional(v.any()),
+  }).index("by_task", ["taskId"]),
 });
 
 /**

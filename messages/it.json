@@ -132,7 +132,22 @@
     "detail": {
       "backToTasks": "Torna alle Attività",
       "notFound": "Attività non trovata",
-      "created": "Creata il {date}"
+      "created": "Creata il {date}",
+      "activity": "Attività",
+      "addComment": "Aggiungi un commento...",
+      "postComment": "Invia",
+      "noActivity": "Nessuna attività"
+    },
+    "activity": {
+      "status_changed": "{user} ha cambiato lo stato da {from} a {to}",
+      "priority_changed": "{user} ha cambiato la priorità da {from} a {to}",
+      "due_date_changed": "{user} ha modificato la scadenza",
+      "collaborator_added": "{user} ha aggiunto {email} come collaboratore",
+      "collaborator_removed": "{user} ha rimosso un collaboratore",
+      "checklist_item_added": "{user} ha aggiunto l'elemento \"{title}\"",
+      "checklist_item_completed": "{user} ha completato \"{title}\"",
+      "checklist_item_uncompleted": "{user} ha deselezionato \"{title}\"",
+      "comment": "{user} ha commentato"
     },
     "empty": {
       "title": "Nessuna attività",
