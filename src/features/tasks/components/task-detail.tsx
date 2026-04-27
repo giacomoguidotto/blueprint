@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import type { Task, TaskStatus } from "../types";
+import { ShareDialog } from "./share-dialog";
 
 const STATUS_ICONS: Record<TaskStatus, typeof Circle> = {
   todo: Circle,
@@ -99,11 +100,14 @@ export function TaskDetail({ task }: TaskDetailProps) {
           ))}
         </div>
 
-        <p className="text-muted-foreground text-xs">
-          {t("detail.created", {
-            date: formatDate(task._creationTime),
-          })}
-        </p>
+        <div className="flex items-center justify-between">
+          <p className="text-muted-foreground text-xs">
+            {t("detail.created", {
+              date: formatDate(task._creationTime),
+            })}
+          </p>
+          <ShareDialog taskId={task._id} />
+        </div>
       </div>
     </div>
   );

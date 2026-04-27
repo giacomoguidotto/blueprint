@@ -85,9 +85,26 @@
       "markDone": "Mark as Done",
       "archive": "Archive",
       "delete": "Delete",
+      "share": "Share",
       "moveTo": {
         "in_progress": "Start",
         "done": "Complete"
+      }
+    },
+    "share": {
+      "title": "Share Task",
+      "description": "Share this task with another user by email",
+      "emailPlaceholder": "Enter email address",
+      "submit": "Share",
+      "remove": "Remove",
+      "owner": "Owner",
+      "collaborator": "Collaborator",
+      "collaborators": "Collaborators",
+      "noCollaborators": "No collaborators yet",
+      "errors": {
+        "notFound": "No user found with that email",
+        "self": "Cannot share a task with yourself",
+        "duplicate": "Task already shared with this user"
       }
     },
     "form": {

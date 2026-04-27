@@ -24,6 +24,8 @@ export default defineConfig({
             "@/": new URL("./src/", import.meta.url).pathname,
             "convex/_generated": new URL("./convex/_generated", import.meta.url)
               .pathname,
+            "convex/schema": new URL("./convex/schema.ts", import.meta.url)
+              .pathname,
           },
         },
         test: {

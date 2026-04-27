@@ -12,10 +12,17 @@ export const { authKitEvent } = authKit.events({
   "user.created": async (ctx, event) => {
     await ctx.db.insert("users", {
       authId: event.data.id,
+      email: event.data.email,
     });
   },
-  "user.updated": async (_ctx, _event) => {
-    // No-op: user updates are handled internally by the authkit component
+  "user.updated": async (ctx, event) => {
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_auth_id", (q) => q.eq("authId", event.data.id))
+      .unique();
+    if (user && event.data.email !== user.email) {
+      await ctx.db.patch(user._id, { email: event.data.email });
+    }
   },
   "user.deleted": async (ctx, event) => {
     const user = await ctx.db

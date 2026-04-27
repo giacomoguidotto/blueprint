@@ -85,9 +85,26 @@
       "markDone": "Segna come Completata",
       "archive": "Archivia",
       "delete": "Elimina",
+      "share": "Condividi",
       "moveTo": {
         "in_progress": "Inizia",
         "done": "Completa"
+      }
+    },
+    "share": {
+      "title": "Condividi Attività",
+      "description": "Condividi questa attività con un altro utente tramite email",
+      "emailPlaceholder": "Inserisci indirizzo email",
+      "submit": "Condividi",
+      "remove": "Rimuovi",
+      "owner": "Proprietario",
+      "collaborator": "Collaboratore",
+      "collaborators": "Collaboratori",
+      "noCollaborators": "Nessun collaboratore",
+      "errors": {
+        "notFound": "Nessun utente trovato con questa email",
+        "self": "Non puoi condividere un'attività con te stesso",
+        "duplicate": "Attività già condivisa con questo utente"
       }
     },
     "form": {

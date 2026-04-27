@@ -36,6 +36,7 @@ vi.mock("next-intl", () => ({
       "actions.markDone": "Mark as Done",
       "actions.archive": "Archive",
       "actions.delete": "Delete",
+      "actions.share": "Share",
       "actions.moveTo.in_progress": "Start",
       "actions.moveTo.done": "Complete",
     };
@@ -126,14 +127,16 @@ describe("TaskCard", () => {
     expect(link).toHaveAttribute("href", "/tasks/task123");
   });
 
-  it("opens dropdown menu on menu button click", async () => {
+  it("opens dropdown menu with valid transitions for todo task", async () => {
     const user = userEvent.setup();
     render(<TaskCard task={baseTask} />);
 
     await user.click(screen.getByRole("button", { name: "Task actions" }));
 
+    // todo can only transition to in_progress
     expect(screen.getByText("Mark as In Progress")).toBeInTheDocument();
-    expect(screen.getByText("Mark as Done")).toBeInTheDocument();
+    expect(screen.queryByText("Mark as Done")).not.toBeInTheDocument();
+    expect(screen.getByText("Share")).toBeInTheDocument();
     expect(screen.getByText("Delete")).toBeInTheDocument();
   });
 });

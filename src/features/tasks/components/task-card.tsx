@@ -2,6 +2,7 @@
 
 import { api } from "convex/_generated/api";
 import { useMutation, useQuery } from "convex/react";
+import { VALID_TRANSITIONS } from "convex/schema";
 import {
   ArrowRight,
   Calendar,
@@ -10,6 +11,7 @@ import {
   Clock,
   Loader2,
   MoreVertical,
+  Share2,
   Trash2,
 } from "lucide-react";
 import { motion } from "motion/react";
@@ -32,6 +34,7 @@ import { cardHover } from "@/lib/motion";
 import { useTracedMutation } from "@/lib/telemetry/use-traced-mutation";
 import { cn } from "@/lib/utils";
 import type { Task, TaskStatus } from "../types";
+import { ShareDialog } from "./share-dialog";
 
 interface TaskCardProps {
   task: Task;
@@ -50,16 +53,10 @@ const PRIORITY_COLORS: Record<Task["priority"], string> = {
   high: "bg-red-500/10 text-red-600 dark:text-red-400",
 };
 
-type NextableStatus = "in_progress" | "done";
-
-function getNextStatus(current: TaskStatus): NextableStatus | null {
-  if (current === "todo") {
-    return "in_progress";
-  }
-  if (current === "in_progress") {
-    return "done";
-  }
-  return null;
+function getNextStatus(current: TaskStatus): TaskStatus | null {
+  const targets = VALID_TRANSITIONS[current];
+  // The first valid transition is the "forward" one (skip reopening)
+  return targets[0] ?? null;
 }
 
 function formatDate(timestamp: number) {
@@ -235,6 +232,7 @@ export function TaskCard({ task }: TaskCardProps) {
               onStatusChange={handleStatusChange}
               status={task.status}
               t={t}
+              taskId={task._id}
             />
           </CardHeader>
 
@@ -273,24 +271,26 @@ export function TaskCard({ task }: TaskCardProps) {
                 </Badge>
               ))}
 
-              {nextStatus && (
-                <Button
-                  className="ml-auto"
-                  disabled={isUpdating}
-                  onClick={() => handleStatusChange(nextStatus)}
-                  size="xs"
-                  variant="ghost"
-                >
-                  {isUpdating ? (
-                    <Loader2 className="animate-spin" />
-                  ) : (
-                    <>
-                      {t(`actions.moveTo.${nextStatus}`)}
-                      <ArrowRight />
-                    </>
-                  )}
-                </Button>
-              )}
+              {nextStatus &&
+                nextStatus !== "todo" &&
+                nextStatus !== "archived" && (
+                  <Button
+                    className="ml-auto"
+                    disabled={isUpdating}
+                    onClick={() => handleStatusChange(nextStatus)}
+                    size="xs"
+                    variant="ghost"
+                  >
+                    {isUpdating ? (
+                      <Loader2 className="animate-spin" />
+                    ) : (
+                      <>
+                        {t(`actions.moveTo.${nextStatus}` as const)}
+                        <ArrowRight />
+                      </>
+                    )}
+                  </Button>
+                )}
             </div>
           </CardContent>
         </Card>
@@ -302,19 +302,36 @@ export function TaskCard({ task }: TaskCardProps) {
 /**
  * Dropdown menu for task actions
  */
+const STATUS_MENU_ICONS: Partial<Record<TaskStatus, typeof Circle>> = {
+  todo: Circle,
+  in_progress: Clock,
+  done: CheckCircle2,
+};
+
+const STATUS_MENU_LABELS = {
+  todo: "actions.markTodo",
+  in_progress: "actions.markInProgress",
+  done: "actions.markDone",
+  archived: "actions.archive",
+} as const;
+
 function TaskCardMenu({
+  taskId,
   status,
   isDeleting,
   onStatusChange,
   onDelete,
   t,
 }: {
+  taskId: Task["_id"];
   status: TaskStatus;
   isDeleting: boolean;
   onStatusChange: (status: TaskStatus) => void;
   onDelete: () => void;
   t: ReturnType<typeof useTranslations<"tasks">>;
 }) {
+  const validTargets = VALID_TRANSITIONS[status];
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -332,35 +349,46 @@ function TaskCardMenu({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        {status !== "todo" && (
-          <DropdownMenuItem onClick={() => onStatusChange("todo")}>
-            <Circle className="size-4" />
-            {t("actions.markTodo")}
-          </DropdownMenuItem>
-        )}
-        {status !== "in_progress" && (
-          <DropdownMenuItem onClick={() => onStatusChange("in_progress")}>
-            <Clock className="size-4" />
-            {t("actions.markInProgress")}
-          </DropdownMenuItem>
-        )}
-        {status !== "done" && (
-          <DropdownMenuItem onClick={() => onStatusChange("done")}>
-            <CheckCircle2 className="size-4" />
-            {t("actions.markDone")}
-          </DropdownMenuItem>
-        )}
+        {validTargets.map((target) => {
+          const Icon = STATUS_MENU_ICONS[target];
+          return (
+            <DropdownMenuItem
+              key={target}
+              onClick={() => onStatusChange(target)}
+            >
+              {Icon && <Icon className="size-4" />}
+              {t(STATUS_MENU_LABELS[target])}
+            </DropdownMenuItem>
+          );
+        })}
+        {validTargets.length > 0 && <DropdownMenuSeparator />}
+        <ShareDialogMenuItem t={t} taskId={taskId} />
         <DropdownMenuSeparator />
-        {status !== "archived" && (
-          <DropdownMenuItem onClick={() => onStatusChange("archived")}>
-            {t("actions.archive")}
-          </DropdownMenuItem>
-        )}
         <DropdownMenuItem className="text-destructive" onClick={onDelete}>
           <Trash2 className="size-4" />
           {t("actions.delete")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
+  );
+}
+
+function ShareDialogMenuItem({
+  taskId,
+  t,
+}: {
+  taskId: Task["_id"];
+  t: ReturnType<typeof useTranslations<"tasks">>;
+}) {
+  return (
+    <ShareDialog
+      taskId={taskId}
+      trigger={
+        <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+          <Share2 className="size-4" />
+          {t("actions.share")}
+        </DropdownMenuItem>
+      }
+    />
   );
 }

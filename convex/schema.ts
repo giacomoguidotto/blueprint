@@ -37,6 +37,8 @@ export default defineSchema({
   users: defineTable({
     // WorkOS user ID (matches identity.subject from JWT)
     authId: v.string(),
+    // User email (synced from WorkOS)
+    email: v.optional(v.string()),
     // Optional avatar image (Convex file storage)
     avatarId: v.optional(v.id("_storage")),
     // User preferences
@@ -46,8 +48,8 @@ export default defineSchema({
       })
     ),
   })
-    // Index for fast lookups by WorkOS user ID
-    .index("by_auth_id", ["authId"]),
+    .index("by_auth_id", ["authId"])
+    .index("by_email", ["email"]),
 
   /**
    * Example: Tasks table
@@ -99,6 +101,22 @@ export default defineSchema({
       searchField: "title",
       filterFields: ["userId"],
     }),
+
+  /**
+   * Collaborators table
+   *
+   * Join table between tasks and users for shared access.
+   * Carries metadata about who shared and when.
+   */
+  collaborators: defineTable({
+    taskId: v.id("tasks"),
+    userId: v.id("users"),
+    addedAt: v.number(),
+    addedBy: v.id("users"),
+  })
+    .index("by_task", ["taskId"])
+    .index("by_task_and_user", ["taskId", "userId"])
+    .index("by_user", ["userId"]),
 });
 
 /**
