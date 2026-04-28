@@ -42,18 +42,12 @@ export default defineSchema({
     // Optional avatar image (Convex file storage)
     avatarId: v.optional(v.id("_storage")),
     // User notification preferences (per event type)
-    // Accepts both old shape { notifications } and new shape for migration
     preferences: v.optional(
-      v.union(
-        v.object({
-          notifyOnShare: v.boolean(),
-          notifyOnComment: v.boolean(),
-          notifyOnDueDate: v.boolean(),
-        }),
-        v.object({
-          notifications: v.boolean(),
-        })
-      )
+      v.object({
+        notifyOnShare: v.boolean(),
+        notifyOnComment: v.boolean(),
+        notifyOnDueDate: v.boolean(),
+      })
     ),
   })
     .index("by_auth_id", ["authId"])
