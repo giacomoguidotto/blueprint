@@ -8,14 +8,24 @@ const DEFAULT_PREFS = {
   notifyOnDueDate: true,
 };
 
+type NewPrefs = typeof DEFAULT_PREFS;
+
 function getUserPrefs(user: {
-  preferences?: {
-    notifyOnShare: boolean;
-    notifyOnComment: boolean;
-    notifyOnDueDate: boolean;
-  } | null;
-}) {
-  return user.preferences ?? DEFAULT_PREFS;
+  preferences?: NewPrefs | { notifications: boolean } | null;
+}): NewPrefs {
+  const p = user.preferences;
+  if (!p) {
+    return DEFAULT_PREFS;
+  }
+  // Old shape: map single boolean to all three
+  if ("notifications" in p) {
+    return {
+      notifyOnShare: p.notifications,
+      notifyOnComment: p.notifications,
+      notifyOnDueDate: p.notifications,
+    };
+  }
+  return p;
 }
 
 /**

@@ -36,11 +36,14 @@ export function SettingsClient() {
     api.users.updateNotificationPreferences
   );
 
-  const prefs = user?.preferences ?? {
+  const defaults = {
     notifyOnShare: true,
     notifyOnComment: true,
     notifyOnDueDate: true,
   };
+  const rawPrefs = user?.preferences;
+  // Handle both old { notifications } and new { notifyOn* } shapes
+  const prefs = rawPrefs && "notifyOnShare" in rawPrefs ? rawPrefs : defaults;
 
   const handleAvatarUpload = useCallback(
     async (storageId: Id<"_storage">) => {
