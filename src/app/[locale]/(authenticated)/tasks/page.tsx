@@ -1,14 +1,7 @@
+import { withAuth } from "@workos-inc/authkit-nextjs";
 import { TasksClient } from "./tasks-client";
 
-/**
- * Tasks Page (Server Component)
- *
- * Protected by the (authenticated) layout which uses
- * server-side auth check via `withAuth({ ensureSignedIn: true })`.
- *
- * Task data is loaded client-side via usePaginatedQuery for
- * pagination, search, and real-time subscription support.
- */
-export default function TasksPage() {
+export default async function TasksPage() {
+  await withAuth({ ensureSignedIn: true });
   return <TasksClient />;
 }
