@@ -1,5 +1,7 @@
+import { withAuth } from "@workos-inc/authkit-nextjs";
 import { SettingsClient } from "./settings-client";
 
-export default function SettingsPage() {
+export default async function SettingsPage() {
+  await withAuth({ ensureSignedIn: true });
   return <SettingsClient />;
 }
