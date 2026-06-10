@@ -39,6 +39,7 @@ Thanks for wanting to contribute to Blueprint! Please read our [Code of Conduct]
 
 - Branch names: `feat/`, `fix/`, `docs/`, etc.
 - Commits: [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) (`feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `chore:`)
+- Releases: `fix:` bumps patch, `feat:` bumps minor, and breaking changes bump major on `main`
 - Components: PascalCase — Utilities/hooks: camelCase — Constants: SCREAMING_SNAKE_CASE
 - All UI must use shadcn/ui components (`src/components/ui/`)
 - Convex functions must have `args`, `returns`, and `handler`

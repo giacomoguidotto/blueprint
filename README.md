@@ -344,6 +344,16 @@ This project embeds production-grade patterns and architectural decisions:
 
 All checks (lint, typecheck, test, build) are available via `bun run ci`.
 
+## 📦 Template releases
+
+Blueprint is versioned with git tags. On pushes to `main`, CI reads Conventional Commits since the latest `v*` tag and creates the next SemVer tag:
+
+- `fix:` creates a patch release.
+- `feat:` creates a minor release.
+- `feat!:` or `BREAKING CHANGE:` creates a major release.
+
+The template is not published as an npm package. Use GitHub tags/releases to choose a stable starting point.
+
 ## 🤝 Contributing
 
 See [CONTRIBUTING.md](.github/CONTRIBUTING.md) for setup instructions and project conventions.
