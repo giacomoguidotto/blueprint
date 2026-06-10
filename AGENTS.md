@@ -27,3 +27,17 @@ Next.js 16 starter template with Convex real-time backend, WorkOS auth, and Open
 - [Backend](docs/agents/backend.md) — Convex functions, schema, auth
 - [Frontend](docs/agents/frontend.md) — Components, i18n, state, forms
 - [Observability](docs/agents/observability.md) — Effect, OpenTelemetry, telemetry
+
+## Agent skills
+
+### Issue tracker
+
+Issues are tracked in GitHub Issues on this repo. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Uses the default Matt Pocock skills label vocabulary. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context layout: one `CONTEXT.md`, with `docs/adr/` used when hard-to-reverse decisions exist. See `docs/agents/domain.md`.
