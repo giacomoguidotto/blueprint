@@ -39,10 +39,15 @@ Not just a template, but a live, working app. Clone it, plug in your keys, and y
 
 ### 0. Prerequisites
 
-You can choose to use [devenv](https://devenv.sh/getting-started/) to take advantage of the environment already set up in `devenv.nix`.  
-Otherwise, make sure you have:
-- the latest LTS of [Node.js](https://nodejs.org/en/download/) installed.
-- the latest version of [Bun](https://bun.sh/docs/installation) runtime installed.
+You can use [mise](https://mise.jdx.dev/getting-started.html) to install the toolchain declared in `mise.toml`:
+
+```bash
+mise install
+```
+
+Otherwise, make sure you have matching versions of:
+- [Node.js](https://nodejs.org/en/download/)
+- [Bun](https://bun.sh/docs/installation)
 
 You'll then need to setup a WorkOS account. You can [start here](https://dashboard.workos.com/get-started). After the entire setup process, you should have the following credentials:
 - `WORKOS_API_KEY`
