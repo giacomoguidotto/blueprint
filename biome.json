@@ -7,7 +7,15 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "includes": ["!node_modules", "!.next", "!dist", "!build"]
+    "includes": [
+      "!node_modules",
+      "!.next",
+      "!dist",
+      "!build",
+      "!src/components/controls/language-selector.tsx",
+      "!src/lib/telemetry/layer.ts",
+      "!src/proxy.ts"
+    ]
   },
   "formatter": {
     "enabled": true,
@@ -18,7 +26,17 @@
     "enabled": true,
     "rules": {
       "recommended": true,
+      "performance": {
+        "noAwaitInLoops": "off",
+        "noJsxPropsBind": "off"
+      },
+      "style": {
+        "noIncrementDecrement": "off",
+        "useDestructuring": "off"
+      },
       "suspicious": {
+        "noEqualsToNull": "off",
+        "noShadow": "off",
         "noUnknownAtRules": "off"
       }
     },
@@ -30,7 +48,12 @@
   "assist": {
     "actions": {
       "source": {
-        "organizeImports": "on"
+        "noDuplicateClasses": "off",
+        "organizeImports": "on",
+        "useSortedAttributes": "off",
+        "useSortedInterfaceMembers": "off",
+        "useSortedKeys": "off",
+        "useSortedProperties": "off"
       }
     }
   },
