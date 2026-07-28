@@ -41,10 +41,6 @@ export function TaskList() {
 
   // Sort tasks: by status priority, then by creation time
   const sortedTasks = useMemo(() => {
-    if (!results) {
-      return null;
-    }
-
     const statusOrder: Record<TaskStatus, number> = {
       in_progress: 0,
       todo: 1,

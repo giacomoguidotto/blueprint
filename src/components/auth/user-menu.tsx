@@ -55,7 +55,7 @@ export function UserMenu() {
     if (user?.firstName) {
       return user.firstName;
     }
-    return user?.email?.split("@")[0] || "User";
+    return user.email?.split("@")[0] || "User";
   };
 
   return (

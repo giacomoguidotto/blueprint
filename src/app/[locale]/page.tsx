@@ -210,7 +210,7 @@ function AuthenticatedView() {
   const tCommon = useTranslations("common");
   const { user, signOut } = useAuth({ ensureSignedIn: true });
 
-  const name = user?.firstName || user?.email?.split("@")[0] || "there";
+  const name = user.firstName || user.email?.split("@")[0] || "there";
 
   return (
     <div className="mx-auto max-w-4xl space-y-8">

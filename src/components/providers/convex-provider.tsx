@@ -29,7 +29,7 @@ function useAuthFromAuthKit() {
     loading: tokenLoading,
     error: tokenError,
   } = useAccessToken();
-  const loading = (isLoading ?? false) || (tokenLoading ?? false);
+  const loading = isLoading || tokenLoading;
   const authenticated = !!user && !!accessToken && !loading;
 
   const stableAccessToken = useRef<string | null>(null);
