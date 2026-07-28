@@ -210,7 +210,8 @@ function AuthenticatedView() {
   const tCommon = useTranslations("common");
   const { user, signOut } = useAuth({ ensureSignedIn: true });
 
-  const name = user.firstName || user.email?.split("@")[0] || "there";
+  // biome-ignore lint/suspicious/noUnnecessaryConditions: AuthKit can return a null user at runtime.
+  const name = user?.firstName || user?.email?.split("@")[0] || "there";
 
   return (
     <div className="mx-auto max-w-4xl space-y-8">

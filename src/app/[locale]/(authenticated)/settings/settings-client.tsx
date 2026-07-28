@@ -98,7 +98,10 @@ export function SettingsClient() {
                   <AvatarFallback className="text-xl">
                     {authUser?.firstName && authUser?.lastName
                       ? `${authUser.firstName[0]}${authUser.lastName[0]}`.toUpperCase()
-                      : (authUser.email?.slice(0, 2).toUpperCase() ?? "?")}
+                      : (
+                        // biome-ignore lint/suspicious/noUnnecessaryConditions: AuthKit can return a null user at runtime.
+                        authUser?.email?.slice(0, 2).toUpperCase() ?? "?"
+                      )}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1">

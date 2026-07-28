@@ -55,7 +55,8 @@ export function UserMenu() {
     if (user?.firstName) {
       return user.firstName;
     }
-    return user.email?.split("@")[0] || "User";
+    // biome-ignore lint/suspicious/noUnnecessaryConditions: AuthKit can return a null user at runtime.
+    return user?.email?.split("@")[0] || "User";
   };
 
   return (
