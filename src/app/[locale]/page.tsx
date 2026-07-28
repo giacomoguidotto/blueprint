@@ -210,6 +210,7 @@ function AuthenticatedView() {
   const tCommon = useTranslations("common");
   const { user, signOut } = useAuth({ ensureSignedIn: true });
 
+  // biome-ignore lint/suspicious/noUnnecessaryConditions: AuthKit can return a null user at runtime.
   const name = user?.firstName || user?.email?.split("@")[0] || "there";
 
   return (
